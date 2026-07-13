@@ -21,6 +21,7 @@ esphome:
       - lambda: |-
           esphome::netcfg_load();
           esphome::netcfg_apply_ntp();
+          esphome::netcfg_apply_hostname();
           auto *h = new esphome::TimerWebHandler();
           h->time1 = id(time1);
           h->time2 = id(time2);
@@ -58,11 +59,17 @@ wifi:
     ssid: "Feeder-Relais Setup"
     password: "feeder1234"
   on_connect:
-    # Nach jedem Verbinden ggf. die gespeicherte statische IP setzen
+    # Nach jedem Verbinden: statische IP + Hostname (DHCP-Name) erneut setzen
     # (per ESP-IDF-netif; DHCP ist Default, statisch wird nach Neustart aktiv).
-    - lambda: 'esphome::netcfg_apply_static();'
+    - lambda: |-
+        esphome::netcfg_apply_static();
+        esphome::netcfg_apply_hostname();
 
 captive_portal:
+
+# mDNS explizit (feeder-relais.local); noetig fuer die Laufzeit-Umbenennung
+# via mdns_hostname_set() in net_config.h.
+mdns:
 
 # Kein natives web_server-UI mehr: die eigene Mobil-App/JSON-API laeuft auf
 # web_server_base (Port 80, Default). captive_portal + OTA nutzen die Basis mit.

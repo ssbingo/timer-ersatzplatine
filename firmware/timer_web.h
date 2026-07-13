@@ -108,10 +108,12 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
    <button style="width:100%;margin-top:12px" onclick="saveNtp()">NTP speichern</button>
   </div>
   <div class=card>
-   <div class=row><span class=k>Hostname</span><span class=v id=n_host>&ndash;</span></div>
-   <span class=note>Hostname ist in der Firmware festgelegt (Default feeder-relais);
-   Änderung per Neu-Flashen. Statische IP wird nach einem Neustart aktiv.</span>
-   <button class=stop style="background:#b45309" onclick="reboot()">Neustart</button>
+   <b>Hostname</b>
+   <label>Gerätename (a–z, 0–9, „-")</label><input id=n_host autocomplete=off>
+   <button style="width:100%;margin-top:12px" onclick="saveHost()">Hostname speichern</button>
+   <span class=note>Der mDNS-Name (…&#8203;.local) wird sofort umgestellt; der
+   DHCP-Name (Router) und eine statische IP nach einem Neustart.</span>
+   <button class=stop style="background:#b45309;margin-top:10px" onclick="reboot()">Neustart</button>
   </div>
  </section>
 
@@ -163,7 +165,7 @@ function nav(p){['start','cfg','net','stat','svc'].forEach(function(x){$('p_'+x)
  if(p=='net')loadNet();}
 function loadNet(){api('/api/net').then(function(n){if(!n)return;
  $('n_static').value=n.static;$('n_ip').value=n.ip;$('n_gw').value=n.gw;$('n_sn').value=n.sn;
- $('n_dns').value=n.dns;$('n_ntp').value=n.ntp;$('n_host').textContent=n.hostname;ipmode();});}
+ $('n_dns').value=n.dns;$('n_ntp').value=n.ntp;$('n_host').value=n.hostname;ipmode();});}
 function ipmode(){$('ipfields').style.display=($('n_static').value=='1')?'block':'none';}
 function saveWifi(){api('/api/wifi?ssid='+encodeURIComponent($('w_ssid').value)+'&pw='+encodeURIComponent($('w_pw').value),'POST')
  .then(function(r){toast(r&&r.ok?'WLAN gespeichert':'Fehler');});}
@@ -171,6 +173,7 @@ function saveNet(){var q='static='+$('n_static').value+'&ip='+encodeURIComponent
  +'&gw='+encodeURIComponent($('n_gw').value)+'&sn='+encodeURIComponent($('n_sn').value)+'&dns='+encodeURIComponent($('n_dns').value);
  api('/api/net?'+q,'POST').then(function(r){toast(($('n_static').value=='1')?'Gespeichert - Neustart nötig':'Gespeichert');});}
 function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POST').then(function(r){toast(r&&r.ok?'NTP gespeichert':'Fehler');});}
+function saveHost(){api('/api/net?host='+encodeURIComponent($('n_host').value),'POST').then(function(r){toast('Hostname gespeichert');if(r&&r.hostname)$('n_host').value=r.hostname;});}
 function reboot(){if(confirm('Gerät jetzt neu starten?'))api('/api/reboot','POST').then(function(){toast('Neustart …');});}
 var lgTimer=null,lgSeq=0,LVL={1:'E',2:'W',3:'I',4:'C',5:'D',6:'V'};
 function logToggle(){if($('lg_on').checked){lgSeq=0;$('lg_out').textContent='';logPoll();lgTimer=setInterval(logPoll,1500);}
@@ -246,7 +249,7 @@ class TimerWebHandler : public AsyncWebHandler {
       "{\"ok\":true,\"static\":%d,\"ip\":\"%s\",\"gw\":\"%s\",\"sn\":\"%s\","
       "\"dns\":\"%s\",\"ntp\":\"%s\",\"hostname\":\"%s\"}",
       g_netcfg.use_static, g_netcfg.ip, g_netcfg.gw, g_netcfg.sn,
-      g_netcfg.dns, g_netcfg.ntp, App.get_name().c_str());
+      g_netcfg.dns, g_netcfg.ntp, g_netcfg.host);
     req->send(200, "application/json", buf);
   }
 
@@ -345,7 +348,12 @@ class TimerWebHandler : public AsyncWebHandler {
       if (req->hasParam("sn"))  { copy_param(req, "sn",  g_netcfg.sn,  sizeof(g_netcfg.sn));  changed = true; }
       if (req->hasParam("dns")) { copy_param(req, "dns", g_netcfg.dns, sizeof(g_netcfg.dns)); changed = true; }
       if (req->hasParam("ntp")) { copy_param(req, "ntp", g_netcfg.ntp, sizeof(g_netcfg.ntp)); changed = true; }
-      if (changed) { netcfg_save(); netcfg_apply_ntp(); }
+      if (req->hasParam("host")) {
+        copy_param(req, "host", g_netcfg.host, sizeof(g_netcfg.host));
+        netcfg_sanitize_host(g_netcfg.host);
+        changed = true;
+      }
+      if (changed) { netcfg_save(); netcfg_apply_ntp(); netcfg_apply_hostname(); }
       send_net(req);
       return;
     }

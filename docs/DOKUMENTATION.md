@@ -271,8 +271,7 @@ WLAN-Status, Uhr bzw. Countdown.
 - **Zeiten:** die drei Timerzeiten (1–600 s), persistent gespeichert.
 - **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
   **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server** und ein
-  **Neustart**-Knopf. Der Hostname wird angezeigt (fest in der Firmware,
-  Default `feeder-relais` → Änderung per Neu-Flashen).
+  **Hostname** (Default `feeder-relais`) und ein **Neustart**-Knopf.
 - **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID/IP/Signal/MAC,
   Reset-Grund, Relais.
 - **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
@@ -302,6 +301,10 @@ Query-String, Methode GET **oder** POST:
 **Statische IP** wird beim `wifi.on_connect` per ESP-IDF-netif gesetzt und ist
 deshalb nach einem **Neustart** aktiv (DHCP ist Default). **WLAN** nutzt
 ESPHomes eigenes `save_wifi_sta()`; Erstzugang immer übers Captive-Portal.
+**Hostname** wird zur Laufzeit umgestellt: der mDNS-Name (`…​.local`) sofort
+per `mdns_hostname_set()`, der DHCP-Name (im Router) per
+`esp_netif_set_hostname()` nach dem nächsten Verbinden/Neustart. Der Name wird
+auf ein gültiges DNS-Label reduziert (a–z, 0–9, „-").
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.

@@ -16,17 +16,19 @@
 #include <cstring>
 #include "esp_sntp.h"
 #include "esp_netif.h"
+#include <mdns.h>
 
 namespace esphome {
 
 struct NetCfg {
-  uint8_t version;      // Layout-Version (aktuell 1)
+  uint8_t version;      // Layout-Version (aktuell 2)
   uint8_t use_static;   // 0 = DHCP, 1 = statisch
   char ip[16];
   char gw[16];
   char sn[16];          // Subnetzmaske
   char dns[16];
   char ntp[48];
+  char host[32];        // Hostname (mDNS + DHCP)
 };
 
 static NetCfg g_netcfg;
@@ -35,19 +37,44 @@ static bool g_reboot_pending = false;
 
 inline void netcfg_defaults(NetCfg &c) {
   memset(&c, 0, sizeof(c));
-  c.version = 1;
+  c.version = 2;
   c.use_static = 0;
   strncpy(c.ip,  "192.168.1.50",   sizeof(c.ip) - 1);
   strncpy(c.gw,  "192.168.1.1",    sizeof(c.gw) - 1);
   strncpy(c.sn,  "255.255.255.0",  sizeof(c.sn) - 1);
   strncpy(c.dns, "192.168.1.1",    sizeof(c.dns) - 1);
   strncpy(c.ntp, "de.pool.ntp.org", sizeof(c.ntp) - 1);
+  strncpy(c.host, "feeder-relais", sizeof(c.host) - 1);
 }
 
 inline void netcfg_load() {
-  g_netcfg_pref = global_preferences->make_preference<NetCfg>((uint32_t) 0x4E657443);  // 'NetC'
-  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 1)
+  g_netcfg_pref = global_preferences->make_preference<NetCfg>((uint32_t) 0x4E657444);  // 'NetD'
+  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 2)
     netcfg_defaults(g_netcfg);
+}
+
+// Auf ein gueltiges DNS-Label reduzieren (a-z 0-9 '-'), Rand-'-' entfernen.
+inline void netcfg_sanitize_host(char *h) {
+  for (size_t i = 0; h[i]; i++) {
+    char c = h[i];
+    if (c >= 'A' && c <= 'Z') c = (char) (c - 'A' + 'a');
+    if (!((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-')) c = '-';
+    h[i] = c;
+  }
+  size_t len = strlen(h), s = 0;
+  while (h[s] == '-') s++;
+  while (len > s && h[len - 1] == '-') h[--len] = '\0';
+  if (s > 0) memmove(h, h + s, len - s + 1);
+  if (h[0] == '\0') strncpy(h, "feeder-relais", 31);
+}
+
+// Hostname zur Laufzeit anwenden: mDNS-Name (.local) sofort, DHCP-Name des
+// STA-netif (Router) - der greift sauber nach Reconnect/Neustart.
+inline void netcfg_apply_hostname() {
+  if (g_netcfg.host[0] == '\0') return;
+  mdns_hostname_set(g_netcfg.host);
+  esp_netif_t *nif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
+  if (nif != nullptr) esp_netif_set_hostname(nif, g_netcfg.host);
 }
 
 inline void netcfg_save() { g_netcfg_pref.save(&g_netcfg); }
