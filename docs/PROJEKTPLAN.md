@@ -52,8 +52,15 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
       Linkskante→Zentrum aktive Fläche (Annahme 23,5)
 - [ ] **Glaseinstand** messen → Stackhöhe J4 festlegen (~13–14 mm),
       Buchsen-/Stiftleisten-Kombination bestellen
-- [ ] **Dom-Durchmesser** der 6 Gehäuseschrauben prüfen (⌀10-Ausschnitt
-      ausreichend?)
+- [x] **Dom-Positionen neu vermessen** (Silvio 13.07., Messschieber):
+      Pitch 45 mm, Reihenabstand 70 mm, obere Linie 6 mm über Oberkante,
+      linke Spalte 6 mm neben Linkskante → absolut verankert
+      (x −6/39/84, y −6/+64); löst die Scan-Werte (y bis 2,6 mm daneben) ab
+- [x] **Dom-Ausschnitte auf randoffene U-Schlitze umgestellt** (Breite 10,
+      toleranter beim Einsetzen); Kontur bleibt geschlossene
+      Edge.Cuts-Schleife (programmatisch verifiziert)
+- [ ] **Dom-Durchmesser/-höhe** der 6 Gehäuseschrauben prüfen
+      (Schlitzbreite 10 ausreichend? bei der Papier-Anprobe der neuen Kontur)
 - [ ] Ggf. korrigierte Werte in `platine_template.py` eintragen,
       `python3 platine_template.py` ausführen, Anprobe wiederholen
 - [ ] **Meilenstein: Kontur eingefroren** (Datum eintragen: ________)
@@ -103,7 +110,7 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 
 | # | Risiko | Auswirkung | Gegenmaßnahme | Status |
 |---|--------|-----------|---------------|--------|
-| 1 | Dompositionen ±1,5 mm | Platine passt nicht über Dome | ⌀10 statt ⌀8; Papier-Anprobe | offen (Phase 3) |
+| 1 | Dom-Absolutlage noch ~±1 mm | Platine sitzt nicht satt über Dome | Positionen direkt vermessen; randoffene U-Schlitze fangen Rest-Streuung entlang der Achse; Papier-Anprobe | Schlitze erledigt, Anprobe offen |
 | 2 | Stegrichtungen falsch angenommen | Modul kollidiert mit Steg | Sichtprüfung + Keepout-Korrektur | offen (Phase 3) |
 | 3 | TSP-05 nicht HLK-pinkompatibel | Footprint falsch | Messschieber-Check vor Layout | offen (Phase 3) |
 | 4 | OLED-Modulmaße streuen | Display sitzt schief im Fenster | Messung am realen Modul; J4 parametrisch | offen (Phase 3) |
@@ -123,3 +130,5 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 | 2026-07-13 | TSP-05 statt HLK-PM05 | vorhanden, gleiche Klasse; Stellflächen-Rochade ESP↔PSU nötig |
 | 2026-07-13 | OLED gesteckt statt verdrahtet | Montage/Service; J4 von Fensterzentrierung rückwärts konstruiert |
 | 2026-07-13 | GPIO3/4/5/6 + 8/9 | Strapping-Pins gemieden; 8/9 = SDA/SCL wie Modulaufdruck |
+| 2026-07-13 | Dompositionen direkt per Messschieber statt aus Gehäusescan | Scan-y lag bis 2,6 mm daneben; Direktmaße (Pitch 45 / Reihen 70 / 6 mm Kantenabstand) sind genauer und lösen die ±1,5-Registrierung ab |
+| 2026-07-13 | Dom-Ausschnitte randoffen (U-Schlitze) statt ⌀10-Bohrungen | toleranter beim Einsetzen, verzeiht Dom-Streuung entlang der Schlitzachse; äußere Eckradien dafür lokal auf 3,2/2,1 reduziert (spitzere Ecke passt mit mehr Spiel ins Gehäuse) |

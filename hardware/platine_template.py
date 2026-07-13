@@ -9,7 +9,8 @@
 # Messbasis: Loetseiten-Scan der Platine + Gehaeusescan, beide 300 dpi.
 # Registrierung Gehaeuse->Platine ueber die 4 Rahmenschrauben (+/-0.4 mm).
 # Kontur = Rahmenaussenkante - WALL_T (Wandstaerke, ANNAHME 2.0) - 1.0 Spiel.
-# Genauigkeit: Kontur +/-1 mm (links +/-1.5), Schraubdome +/-1.5 mm.
+# Genauigkeit: Kontur +/-1 mm (links +/-1.5). Schraubdome direkt vermessen
+# (Messschieber, Silvio 2026-07-13) und als randoffene Schlitze ausgefuehrt.
 # VOR BESTELLUNG: DXF 1:1 auf Papier drucken und im Gehaeuse anprobieren!
 # ============================================================================
 
@@ -53,16 +54,20 @@ RIBS = [   # (x0, y0, x1, y1) je Steg-Band
     (73.4, 48.7, 91.1, 52.7),    # h4 Variante -> rechter Rand
 ]
 
-# ---- Ausschnitte fuer Gehaeuse-Schraubdome (Kreise in Edge.Cuts) -------------
-# Nach Vermessung eintragen: (x, y, durchmesser)
-BOSS_CUTS = [   # aus Gehaeusescan registriert, +/-1.5 mm - anprobieren!
-    ( 82.7, -7.9, 10.0),   # B1 oben rechts   (oeffnet zur Oberkante)
-    ( 37.9, -8.6, 10.0),   # B2 oben mitte    (oeffnet zur Oberkante)
-    ( -6.5, -6.9, 10.0),   # B3 oben links    (oeffnet zur Oberkante)
-    ( 82.7, 61.7, 10.0),   # B4 unten rechts
-    ( 38.8, 62.8, 10.0),   # B5 unten mitte   (ersetzt alte Aussparung)
-    ( -7.0, 62.3, 10.0),   # B6 unten links
-]
+# ---- Gehaeuse-Schraubdome: RANDOFFENE U-Ausschnitte (Edge.Cuts) --------------
+# Statt geschlossener Bohrungen randoffene Schlitze -> toleranter beim Einsetzen,
+# verzeiht Dom-Streuung entlang der Schlitzachse (Wunsch Silvio 2026-07-13).
+# Messung Silvio 2026-07-13 (Messschieber, bis Dom-Mitte):
+#   Rasterabstand je Reihe 45 mm, Reihenabstand 70 mm,
+#   obere Dom-Linie 6 mm ueber Platinen-Oberkante      -> y = -6.0
+#   linke Dom-Spalte  6 mm links der Platinen-Linkskante -> x = -6.0
+# Absolut verankert; loest die Scan-Werte (v3, in y bis 2.6 mm daneben) ab.
+DOME_D = 10.0                       # Schlitzbreite (klart Dom mit Reserve)
+DOME_TOP_Y = -6.0                   # obere Reihe, oeffnet zur Oberkante
+DOME_BOT_Y = DOME_TOP_Y + 70.0      # untere Reihe (Reihenabstand 70), zur Unterkante
+DOME_X = [-6.0, -6.0 + 45.0, -6.0 + 90.0]   # 3 Spalten, Pitch 45, oben=unten
+DOMES_TOP = [(x, DOME_TOP_Y) for x in DOME_X]   # B3, B2, B1
+DOMES_BOT = [(x, DOME_BOT_Y) for x in DOME_X]   # B6, B5, B4
 
 # ---- Kurzhubtaster 6x6 (Zentren) ---------------------------------------------
 BTN_SIZE = 6.0
@@ -101,7 +106,9 @@ ESP_CUT = (8.5, -10.0, 24.0, 18.0)     # quer liegend, USB-C zeigt zur Oberkante
 
 # ---- Netzteil TENSTAR TSP-05 (HLK-PM05-Klon, 34.7 x 20.5 x 15.05) -------------
 # Stellflaeche unten links, AC-Seite zeigt zum linken Platinenrand (230V-Zone).
-# Abstaende: 1.5 mm zu Dom B6, 1.6 mm zu Dom B5, 0.6 mm ueber Kopf Schraube h3.
+# ACHTUNG nach Dom-Neuvermessung: B6-Schlitz reicht bis x=-1.0 und ueberlappt
+# die PSU-Linkskante (-1.5) um ~0.5 mm; B5-Schlitz ab x=34.0 (0.8 mm Luft).
+# -> PSU im Layout ~1 mm nach rechts/oben ruecken. 0.6 mm ueber Kopf Schraube h3.
 PSU_REF = (-1.5, 44.2, 34.7, 20.5)
 
 # ============================================================================
@@ -130,24 +137,59 @@ def rect(x, y, w, h, layer):
     msp.add_lwpolyline([(x, Y(y)), (x+w, Y(y)), (x+w, Y(y+h)), (x, Y(y+h))],
                        close=True, dxfattribs={'layer': layer})
 
-# Aussenkontur (Ecken gerundet)
-seg(L+r, Tp, Rt-r, Tp)
-msp.add_arc((Rt-r, Y(Tp+r)), r, 0, 90, dxfattribs={'layer':'Edge_Cuts'})
-seg(Rt, Tp+r, Rt, Bt-r)
-msp.add_arc((Rt-r, Y(Bt-r)), r, 270, 0, dxfattribs={'layer':'Edge_Cuts'})
-seg(Rt-r, Bt, L+r, Bt)
-msp.add_arc((L+r, Y(Bt-r)), r, 180, 270, dxfattribs={'layer':'Edge_Cuts'})
-seg(L, Bt-r, L, Tp+r)
-msp.add_arc((L+r, Y(Tp+r)), r, 90, 180, dxfattribs={'layer':'Edge_Cuts'})
+# Aussenkontur mit randoffenen Dom-Schlitzen (Ecken gerundet).
+# Eckradien schrumpfen lokal, falls ein Schlitz bis in die Ecke reicht (die
+# aeusseren Dome sitzen dicht am Rand). Kleinerer Eckradius = spitzere
+# Platinenecke = passt mit MEHR Spiel in die gerundete Gehaeuseecke -> unkritisch.
+rr = DOME_D / 2
+xs_top = sorted(x for x, _ in DOMES_TOP)
+xs_bot = sorted(x for x, _ in DOMES_BOT)
+r_tl = max(0.0, min(r, (xs_top[0]  - rr) - L))
+r_tr = max(0.0, min(r, Rt - (xs_top[-1] + rr)))
+r_bl = max(0.0, min(r, (xs_bot[0]  - rr) - L))
+r_br = max(0.0, min(r, Rt - (xs_bot[-1] + rr)))
+
+def arc(cx, cy, radius, a0, a1):
+    msp.add_arc((cx, Y(cy)), radius, a0, a1, dxfattribs={'layer': 'Edge_Cuts'})
+
+# Oberkante (links -> rechts) mit nach unten gerundeten U-Schlitzen
+cx_ = L + r_tl
+for (dx, dy) in sorted(DOMES_TOP):
+    if dx - rr > cx_:
+        seg(cx_, Tp, dx - rr, Tp)     # Kantenstueck bis zum Schlitz
+    seg(dx - rr, Tp, dx - rr, dy)     # linke Schlitzwand
+    arc(dx, dy, rr, 180, 360)         # gerundetes Schlitzende (nach unten)
+    seg(dx + rr, dy, dx + rr, Tp)     # rechte Schlitzwand
+    cx_ = dx + rr
+if Rt - r_tr > cx_:
+    seg(cx_, Tp, Rt - r_tr, Tp)
+
+# rechte obere Ecke, rechte Kante, rechte untere Ecke
+arc(Rt - r_tr, Tp + r_tr, r_tr, 0, 90)
+seg(Rt, Tp + r_tr, Rt, Bt - r_br)
+arc(Rt - r_br, Bt - r_br, r_br, 270, 360)
+
+# Unterkante (rechts -> links) mit nach oben gerundeten U-Schlitzen
+cx_ = Rt - r_br
+for (dx, dy) in sorted(DOMES_BOT, reverse=True):
+    if dx + rr < cx_:
+        seg(cx_, Bt, dx + rr, Bt)     # Kantenstueck bis zum Schlitz
+    seg(dx + rr, Bt, dx + rr, dy)     # rechte Schlitzwand
+    arc(dx, dy, rr, 0, 180)           # gerundetes Schlitzende (nach oben)
+    seg(dx - rr, dy, dx - rr, Bt)     # linke Schlitzwand
+    cx_ = dx - rr
+if L + r_bl < cx_:
+    seg(cx_, Bt, L + r_bl, Bt)
+
+# linke untere Ecke, linke Kante, linke obere Ecke
+arc(L + r_bl, Bt - r_bl, r_bl, 180, 270)
+seg(L, Bt - r_bl, L, Tp + r_tl)
+arc(L + r_tl, Tp + r_tl, r_tl, 90, 180)
 
 # Loecher
 for (x, y) in HOLES:
     msp.add_circle((x, Y(y)), HOLE_DIA/2, dxfattribs={'layer': 'Holes'})
     seg(x-2, y, x+2, y, 'Holes'); seg(x, y-2, x, y+2, 'Holes')
-
-# Schraubdom-Ausschnitte
-for (x, y, d) in BOSS_CUTS:
-    msp.add_circle((x, Y(y)), d/2, dxfattribs={'layer': 'Edge_Cuts'})
 
 # Taster
 for (x, y) in BUTTONS:
@@ -196,4 +238,6 @@ for (rx0, ry0, rx1, ry1) in RIBS:
 
 doc.saveas('platine_original_geometrie.dxf')
 print(f'DXF geschrieben: Kontur {L}..{Rt} x {Tp}..{Bt} '
-      f'({Rt-L:.1f} x {Bt-Tp:.1f} mm), Shelly-Fenster={SHELLY_CUT_ENABLE}, ESP-Fenster={ESP_CUT_ENABLE}')
+      f'({Rt-L:.1f} x {Bt-Tp:.1f} mm), Dom-Schlitze D{DOME_D} '
+      f'oben y={DOME_TOP_Y} / unten y={DOME_BOT_Y}, '
+      f'Eckradien TL{r_tl:.1f}/TR{r_tr:.1f}/BR{r_br:.1f}/BL{r_bl:.1f}')

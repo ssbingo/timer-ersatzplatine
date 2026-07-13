@@ -124,18 +124,18 @@ gemessenen Werte bleiben für immer gültig, egal wie die Kontur wächst.
 | Raum **unter** der Platine | **≈ 1,8 mm** | 19,9 − 16,5 − 1,6 → nichts darf nach unten ragen! |
 | Höhenlimit im Fensterbereich | **≈ 12 mm** | Glas + davor gestecktes OLED |
 | Platinenbefestigung | 4 Schrauben auf 16,5-mm-Domen an der Frontplatte | mit Stabilisierungsstegen zum Rand |
-| Gehäuseverschraubung | 6 Schrauben außenliegend | Platine braucht ⌀10-Durchführungen |
+| Gehäuseverschraubung | 6 Schrauben außenliegend | Platine hat 6 randoffene U-Schlitze (Breite 10) statt geschlossener Durchführungen |
 
-### 4.3 Finale Platinengeometrie (Vorlage v8)
+### 4.3 Finale Platinengeometrie (Vorlage v9)
 
 Alle Werte stehen **maschinenlesbar** in `hardware/platine_template.py`
 (die einzige Quelle der Wahrheit!). Zusammenfassung:
 
 | Element | Koordinaten (mm) | Genauigkeit |
 |---------|------------------|-------------|
-| Kontur | x −14,2…91,1 / y −11,8…67,6 → **105,3 × 79,4**, Eckenradius 4 | ±1 (links ±1,5) |
+| Kontur | x −14,2…91,1 / y −11,8…67,6 → **105,3 × 79,4**, Eckenradius 4 (an den äußeren Dom-Schlitzen lokal auf 3,2 bzw. 2,1 reduziert) | ±1 (links ±1,5) |
 | 4 Befestigungslöcher ⌀3,0 | (3,8/4,1) (73,1/4,0) (3,7/39,6) (73,4/50,7) | ±0,3 |
-| 6 Dom-Ausschnitte ⌀10 | B1 (82,7/−7,9) · B2 (37,9/−8,6) · B3 (−6,5/−6,9) · B4 (82,7/61,7) · B5 (38,8/62,8) · B6 (−7,0/62,3) | ±1,5 → **anprobieren** |
+| 6 Dom-Schlitze (randoffene U, Breite 10) | obere Reihe y −6,0 (öffnet zur Oberkante), untere Reihe y +64,0 (öffnet zur Unterkante), Reihenabstand 70; Spalten x −6,0 / 39,0 / 84,0 (Pitch 45) | direkt vermessen (Silvio 13.07.); Absolutlage noch **anprobieren** |
 | Taster T1/T2/T3 (Zentren) | (13,2/12,3) (38,8/12,2) (64,1/12,0) | ±0,3 |
 | Sichtfenster (Referenz) | x 18,4…53,6 / y 23,3…40,0 | ±1 |
 | J4 OLED-Buchse (4 Pins senkr.) | Pins bei x = 15,0, y = 27,84 / 30,38 / 32,92 / 35,46 | Annahmen prüfen, Kap. 5.6 |
@@ -154,7 +154,7 @@ Fensterposition aus dem perspektivisch entzerrten Foto.
 
 Die trapezförmige Aussparung an der Unterkante der Originalplatine war
 die Freistellung des mittleren unteren Schraubdoms (B5). Sie ist in der
-neuen Platine **durch den ⌀10-Kreisausschnitt B5 ersetzt** und entfällt.
+neuen Platine **durch den randoffenen U-Schlitz B5 ersetzt** und entfällt.
 
 ---
 
@@ -316,7 +316,8 @@ der (noch leeren) Platine.
 3. **Maßkontrolle:** Mit dem Messwerkzeug T1→T2 messen — muss
    **25,6 mm** ergeben. Stimmt es, weiter; sonst Import-Einstellungen
    prüfen.
-4. Die Konturlinien (Außenkontur + 6 ⌀10-Kreise) markieren →
+4. Die Außenkontur markieren (**eine geschlossene Linie** — die 6 randoffenen
+   Dom-Schlitze sind bereits Teil der Kontur, keine separaten Kreise mehr) →
    Eigenschaften → Layer auf **Edge.Cuts** ändern. Alles andere
    (Taster-Kreuze, Stellflächen, Fenster, Keepouts, Texte) bleibt auf
    User-Layern; die Stellflächen-Rahmen samt Beschriftung optional
@@ -359,8 +360,8 @@ der (noch leeren) Platine.
 1. **Datei → Fertigungsdaten → Gerber** (Standardlayer) + Bohrdateien.
 2. 3D-Ansicht (Alt+3) als letzte Sichtprüfung.
 3. Hersteller (JLCPCB/PCBWay/Aisler): 2 Lagen, 1,6 mm FR4, HASL bleifrei
-   oder ENIG, Farbe egal. Die ⌀10-Kreise und die Außenkontur kommen
-   automatisch aus Edge.Cuts.
+   oder ENIG, Farbe egal. Die Außenkontur inkl. der 6 randoffenen
+   Dom-Schlitze kommt automatisch aus Edge.Cuts.
 4. **Vor dem Absenden:** 1:1-Papierdruck der Platine (Datei → Plotten →
    PDF, Maßstab 1:1) ausschneiden und im Gehäuse anprobieren!
 
@@ -413,3 +414,4 @@ der (noch leeren) Platine.
 | v6 | OLED rahmenmontiert: Fensterbereich freigegeben, J4-Anschluss |
 | v7 | Beschriftete Platzhalter (DXF-Texte) |
 | v8 | OLED-Steckmontage: J4 senkrecht auf Fensterzentrierung konstruiert |
+| v9 | Dompositionen direkt vermessen (Silvio 13.07.: Pitch 45, Reihenabstand 70, obere Linie 6 mm über Ober-, linke Spalte 6 mm neben Linkskante → x −6/39/84, y −6/+64); 6 Dom-Ausschnitte von ⌀10-Bohrungen auf **randoffene U-Schlitze** umgestellt (toleranter beim Einsetzen); Eckradien an den äußeren Schlitzen lokal auf 3,2/2,1 reduziert; Kontur bleibt geschlossene Edge.Cuts-Schleife (verifiziert) |
