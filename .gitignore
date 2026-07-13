@@ -1,0 +1,24 @@
+# ESPHome-Secrets (lokal ergänzt, nie einchecken)
+firmware/secrets.yaml
+secrets.yaml
+
+# ESPHome-Build-Artefakte
+.esphome/
+*.bin
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# KiCad-Backups/Autosave
+*-bak
+*.kicad_sch-bak
+*.kicad_pcb-bak
+_autosave-*
+fp-info-cache
+
+# OS
+.DS_Store
+Thumbs.db
