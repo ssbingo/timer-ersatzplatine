@@ -42,6 +42,10 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
    Pinbelegung tragen: T1/T2/T3 = GPIO3/4/5, PhotoMOS = GPIO6 (über
    330 Ω), SDA = GPIO8, SCL = GPIO9, J4 = GND/VCC/SCL/SDA von oben.
    Wer eine Seite ändert, ändert alle drei.
+   Gehäuse-Beschriftung der Taster (Firmware/Doku): **S1 = Down/Manual
+   (T1), S2 = SET (T2), S3 = UP (T3)**. Firmware-Gerätename/Default-
+   Hostname ist **`feeder-relais`** (Produktname Feeder-Relais); der
+   Board-/Repo-Name „timer-ersatzplatine" bleibt davon unberührt.
 
 ## Dateikarte
 

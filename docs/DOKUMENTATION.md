@@ -21,12 +21,14 @@ schaltet eine 230-V-Last für eine einstellbare Zeit ein:
 | T3     | 15 Sekunden  | 1–600 s über WLAN |
 
 Ein kleines OLED-Display hinter der Sichtscheibe zeigt im Ruhezustand
-**„ON"** und während eines Laufs den **Sekunden-Countdown**. Ein erneuter
-Tastendruck während des Laufs startet die zugehörige Zeit neu.
+oben den **WLAN-Status** und rechts **AN/AUS**, unten die **Uhrzeit** (NTP);
+sobald ein Timer läuft, steht unten der **Sekunden-Countdown**. Die drei
+Tasten (**S1 Down/Manual**, **S2 SET**, **S3 UP**) lösen Timer aus, stoppen
+und blättern durch ein Info-Menü — Details in Kap. 6.5.
 
 Die Bedienung läuft **ohne App und ohne Cloud** über eine kleine, für
 Mobilgeräte optimierte Webseite, die der ESP32 selbst auf **Port 80**
-bereitstellt (im Browser `http://timer-relais.local` aufrufen): Taster
+bereitstellt (im Browser `http://feeder-relais.local` aufrufen): Taster
 auslösen, Zeiten einstellen, Netzwerk- und Statuswerte ansehen. Für die
 Anbindung (z. B. ioBroker) bietet der ESP zusätzlich eine schlanke
 **JSON-API** (siehe Kap. 6.4). Optional lässt sich das Gerät auch in
@@ -240,10 +242,12 @@ Display-Face liegt (mit dünnem Schaumstoffpad) an der Glasscheibe an.
 
 ## 6. Firmware (ESPHome)
 
-Datei: `firmware/timer-relais-c3.yaml`. Enthält komplett: WLAN mit
-Fallback-Hotspot („Timer-Relais Setup"), Webserver zum Einstellen der
-drei Zeiten (gespeichert über Neustart hinweg), Tasterlogik mit
-Entprellung, Countdown-Anzeige, „ON" im Ruhezustand.
+Datei: `firmware/timer-relais-c3.yaml` (Gerätename **`feeder-relais`**,
+mDNS `feeder-relais.local`). Enthält komplett: WLAN mit Fallback-Hotspot
+(„Feeder-Relais Setup", Captive-Portal), **NTP-Uhr** (`de.pool.ntp.org`),
+mobile Web-App + JSON-API (Kap. 6.4), die drei persistenten Zeiten,
+Tasterlogik mit Entprellung/Langdruck/Menü (Kap. 6.5) und ein OLED mit
+WLAN-Status, Uhr bzw. Countdown.
 
 **Erstinstallation (einmalig, vor dem Einbau!):**
 1. ESPHome installieren (Home-Assistant-Add-on **oder**
@@ -260,7 +264,7 @@ Entprellung, Countdown-Anzeige, „ON" im Ruhezustand.
 
 ### 6.4 Web-Bedienung und JSON-API (Port 80)
 
-`http://timer-relais.local` öffnet eine mobile Web-App mit vier Reitern:
+`http://feeder-relais.local` öffnet eine mobile Web-App mit vier Reitern:
 
 - **Bedienung:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
   Zeit aus), Live-Countdown und **Stopp**.
@@ -284,7 +288,36 @@ Parameter als Query-String, Methode GET **oder** POST:
 | `POST /api/config?time1=A&time2=B&time3=C` | Zeiten setzen (je 1–600 s, persistent) — Felder auch einzeln |
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
-`POST http://timer-relais.local/api/config?time1=8`.
+`POST http://feeder-relais.local/api/config?time1=8`.
+
+### 6.5 Bedienung an den drei Tasten und OLED
+
+Die Tasten sind am Gehäuse beschriftet: **S1 = Down/Manual**, **S2 = SET**,
+**S3 = UP** (GPIO3/4/5).
+
+**Normalzustand:**
+
+- **kurz S1 / S2 / S3** → löst Timer 1 / 2 / 3 mit der eingestellten Zeit aus
+  (schaltet den Shelly an, bis die Zeit abläuft).
+- **lang UP (S3) ≥ 1,2 s** → stoppt alle Timer und schaltet den Shelly **aus**.
+- **lang SET (S2) ≥ 3 s** → öffnet das **Info-Menü**.
+
+**Info-Menü** (nur Ansicht — die Konfiguration läuft über die Web-App):
+
+- **S1** blättert vor, **S3** zurück; **kurz SET** oder **10 s ohne Druck**
+  schließt das Menü wieder.
+- Seiten: 1) WLAN (SSID + Signal) · 2) IP-Adresse · 3) Zeit + NTP · 4) System
+  (Firmware + Laufzeit).
+
+**OLED-Anzeige (128 × 32):**
+
+- **Oben:** WLAN-Signalbalken (aus RSSI) links, Status **AN/AUS** rechts; im
+  Menü stattdessen der Seitenzähler (z. B. „2/4").
+- **Unten:** im Ruhezustand die **Uhrzeit** groß (HH:MM), bei laufendem Timer
+  der **Countdown** groß (z. B. „10 s").
+
+Die Zeitbasis kommt per NTP; bis zur ersten Synchronisation zeigt die Uhr
+„--:--". Zeitzone `Europe/Berlin`.
 
 ---
 
@@ -409,9 +442,9 @@ der (noch leeren) Platine.
 5. **Sichtprüfung + Durchgangsprüfung:** kein Schluss zwischen L/N/PE,
    ≥ 6 mm Abstände eingehalten, keine Lötspritzer.
 6. **Erster Netztest:** Gehäuse geschlossen, über PRCD/RCD einschalten.
-   OLED zeigt „ON" → Shelly per Knopf/App einrichten (WLAN, Input Mode
+   OLED zeigt Uhr/Status → Shelly per Knopf/App einrichten (WLAN, Input Mode
    „Switch") → Tastertest mit Last.
-7. Zeiten nach Wunsch über `http://timer-relais.local` einstellen.
+7. Zeiten nach Wunsch über `http://feeder-relais.local` einstellen.
 
 ---
 

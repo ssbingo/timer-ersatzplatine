@@ -1,14 +1,15 @@
 # =====================================================================
 # Timer-Ersatzplatine: ESP32-C3 Super Mini + OLED 0,91" + PhotoMOS
 # Pinbelegung passend zum KiCad-Schaltplan timer_ersatzplatine.kicad_sch
-#   Taster T1/T2/T3: GPIO3 / GPIO4 / GPIO5 (gegen GND, interne Pullups)
+#   Taster S1/S2/S3 = Down/Manual / SET / UP: GPIO3 / GPIO4 / GPIO5
+#     (gegen GND, interne Pullups)
 #   PhotoMOS (-> Shelly SW): GPIO6 (ueber 330R an LED-Anode)
 #   I2C OLED: SDA=GPIO8, SCL=GPIO9
 # =====================================================================
 
 esphome:
-  name: timer-relais
-  friendly_name: Timer-Relais
+  name: feeder-relais
+  friendly_name: Feeder-Relais
   includes:
     - timer_web.h
   on_boot:
@@ -45,8 +46,8 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   ap:
-    ssid: "Timer-Relais Setup"
-    password: "timer1234"
+    ssid: "Feeder-Relais Setup"
+    password: "feeder1234"
 
 captive_portal:
 
@@ -54,6 +55,14 @@ captive_portal:
 # web_server_base (Port 80, Default). captive_portal + OTA nutzen die Basis mit.
 web_server_base:
   id: web_base
+
+# Uhrzeit per NTP (Default de.pool.ntp.org; NTP-Server spaeter per Web - Stufe B)
+time:
+  - platform: sntp
+    id: sntp_time
+    timezone: "Europe/Berlin"
+    servers:
+      - de.pool.ntp.org
 
 number:
   - platform: template
@@ -94,8 +103,20 @@ number:
     mode: box
 
 globals:
-  - id: remaining
+  - id: remaining          # Restsekunden des laufenden Timers (0 = aus)
     type: int
+    restore_value: no
+    initial_value: '0'
+  - id: ui_mode            # 0 = Normal (Uhr/Timer), 1 = Menue
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: menu_page          # aktuelle Menue-Infoseite (0..3)
+    type: int
+    restore_value: no
+    initial_value: '0'
+  - id: press_ms           # Zeitstempel des letzten Tastendrucks (fuer Langdruck)
+    type: uint32_t
     restore_value: no
     initial_value: '0'
 
@@ -107,13 +128,12 @@ switch:
     restore_mode: ALWAYS_OFF
 
 script:
-  - id: start_timer
+  - id: ui_timeout
+    # 10 s ohne Tastendruck -> zurueck in den Normalzustand (Menue verlassen)
     mode: restart
-    parameters:
-      seconds: int
     then:
-      - lambda: 'id(remaining) = seconds;'
-      - switch.turn_on: shelly_trigger
+      - delay: 10s
+      - lambda: 'id(ui_mode) = 0; id(menu_page) = 0;'
       - component.update: oled
 
 interval:
@@ -130,6 +150,7 @@ interval:
       - component.update: oled
 
 binary_sensor:
+  # S1 = Down / Manual : kurz -> Timer 1 (im Menue: vorblaettern)
   - platform: gpio
     pin:
       number: GPIO3
@@ -137,13 +158,24 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
-    name: "Taster 1"
+    name: "S1 Down-Manual"
+    id: btn_s1
     filters:
       - delayed_on: 30ms
     on_press:
-      - script.execute:
-          id: start_timer
-          seconds: !lambda 'return (int) id(time1).state;'
+      - lambda: 'id(press_ms) = millis();'
+    on_release:
+      - lambda: |-
+          if (id(ui_mode) == 0) {                 // Normal: Timer 1 ausloesen
+            id(remaining) = (int) id(time1).state;
+            id(shelly_trigger).turn_on();
+          } else {                                // Menue: vorblaettern
+            id(menu_page) = (id(menu_page) + 1) % 4;
+          }
+      - script.execute: ui_timeout
+      - component.update: oled
+
+  # S2 = SET : kurz -> Timer 2 (im Menue: schliessen) ; lang >=3 s -> Menue
   - platform: gpio
     pin:
       number: GPIO4
@@ -151,13 +183,29 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
-    name: "Taster 2"
+    name: "S2 SET"
+    id: btn_s2
     filters:
       - delayed_on: 30ms
     on_press:
-      - script.execute:
-          id: start_timer
-          seconds: !lambda 'return (int) id(time2).state;'
+      - lambda: 'id(press_ms) = millis();'
+    on_release:
+      - lambda: |-
+          uint32_t dur = millis() - id(press_ms);
+          if (dur >= 3000) {                      // langer Druck: Menue umschalten
+            id(ui_mode) = (id(ui_mode) == 0) ? 1 : 0;
+            id(menu_page) = 0;
+          } else if (id(ui_mode) == 0) {          // kurz, Normal: Timer 2
+            id(remaining) = (int) id(time2).state;
+            id(shelly_trigger).turn_on();
+          } else {                                // kurz, im Menue: schliessen
+            id(ui_mode) = 0;
+            id(menu_page) = 0;
+          }
+      - script.execute: ui_timeout
+      - component.update: oled
+
+  # S3 = UP : kurz -> Timer 3 (im Menue: zurueckblaettern) ; lang >=1,2 s -> alles STOP
   - platform: gpio
     pin:
       number: GPIO5
@@ -165,13 +213,26 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
-    name: "Taster 3"
+    name: "S3 UP"
+    id: btn_s3
     filters:
       - delayed_on: 30ms
     on_press:
-      - script.execute:
-          id: start_timer
-          seconds: !lambda 'return (int) id(time3).state;'
+      - lambda: 'id(press_ms) = millis();'
+    on_release:
+      - lambda: |-
+          uint32_t dur = millis() - id(press_ms);
+          if (id(ui_mode) == 1) {                 // Menue: zurueckblaettern
+            id(menu_page) = (id(menu_page) + 3) % 4;
+          } else if (dur >= 1200) {               // Normal + lang: alle Timer STOP
+            id(remaining) = 0;
+            id(shelly_trigger).turn_off();
+          } else {                                // Normal + kurz: Timer 3
+            id(remaining) = (int) id(time3).state;
+            id(shelly_trigger).turn_on();
+          }
+      - script.execute: ui_timeout
+      - component.update: oled
 
 # Diagnose-Werte fuer die Status-/Netzwerk-Seite der Web-App (und HA/ioBroker)
 sensor:
@@ -218,9 +279,60 @@ display:
     id: oled
     update_interval: never
     lambda: |-
+      // ----- WLAN-Balken oben links (x 0..11) -----
+      bool conn = esphome::wifi::global_wifi_component->is_connected();
+      int rssi = id(wifi_rssi).has_state() ? (int) id(wifi_rssi).state : -100;
+      int bars = 0;
+      if (conn) {
+        if (rssi >= -55) bars = 4; else if (rssi >= -65) bars = 3;
+        else if (rssi >= -75) bars = 2; else bars = 1;
+      }
+      for (int i = 0; i < 4; i++) {
+        int h = 2 + i * 2;
+        if (i < bars) it.filled_rectangle(i * 3, 9 - h, 2, h);
+        else          it.rectangle(i * 3, 9 - h, 2, h);
+      }
+      if (!conn) it.line(0, 1, 11, 9);
+
+      if (id(ui_mode) == 1) {
+        // ----- Menue: Info-Seiten (nur Ansicht) -----
+        int pg = id(menu_page);
+        it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%d/4", pg + 1);
+        if (pg == 0) {
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "WLAN");
+          it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "%s",
+                    id(wifi_ssid_txt).state.empty() ? "-" : id(wifi_ssid_txt).state.c_str());
+          it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "%d dBm", rssi);
+        } else if (pg == 1) {
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "IP-Adresse");
+          it.printf(0, 14, id(font_small), TextAlign::TOP_LEFT, "%s",
+                    id(ip_addr).state.empty() ? "-" : id(ip_addr).state.c_str());
+        } else if (pg == 2) {
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "Zeit / NTP");
+          auto t = id(sntp_time).now();
+          if (t.is_valid())
+            it.strftime(0, 11, id(font_small), TextAlign::TOP_LEFT, "%d.%m. %H:%M:%S", t);
+          else
+            it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "nicht synchron");
+          it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "de.pool.ntp.org");
+        } else {
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "System");
+          it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "FW %s", App.get_compilation_time().c_str());
+          it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "Up %.0f s",
+                    id(uptime_s).has_state() ? id(uptime_s).state : 0.0f);
+        }
+        return;
+      }
+
+      // ----- Normalzustand: Status oben rechts, unten Uhr bzw. Countdown -----
+      const char *st = (id(remaining) > 0 || id(shelly_trigger).state) ? "AN" : "AUS";
+      it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%s", st);
       if (id(remaining) > 0) {
-        it.printf(0, 16, id(font_small), TextAlign::CENTER_LEFT, "Aktiv");
-        it.printf(128, 16, id(font_big), TextAlign::CENTER_RIGHT, "%d s", id(remaining));
+        it.printf(64, 31, id(font_big), TextAlign::BASELINE_CENTER, "%d s", id(remaining));
       } else {
-        it.printf(64, 16, id(font_big), TextAlign::CENTER, "ON");
+        auto t = id(sntp_time).now();
+        if (t.is_valid())
+          it.strftime(64, 31, id(font_big), TextAlign::BASELINE_CENTER, "%H:%M", t);
+        else
+          it.printf(64, 31, id(font_big), TextAlign::BASELINE_CENTER, "--:--");
       }

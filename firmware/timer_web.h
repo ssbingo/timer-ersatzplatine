@@ -20,7 +20,7 @@ namespace esphome {
 static const char TIMER_INDEX_HTML[] PROGMEM = R"HTMLPAGE(<!doctype html>
 <html lang=de><head><meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Timer-Relais</title>
+<title>Feeder-Relais</title>
 <style>
 :root{--bg:#0f1420;--card:#1a2232;--line:#232d42;--mut:#8595ad;--fg:#eef2f8;
 --acc:#3b82f6;--ok:#22c55e;--warn:#f59e0b}
@@ -56,7 +56,7 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
 .toast.show{opacity:1}
 </style></head><body>
 <div class=wrap>
- <h1><span class=dot id=dot></span>Timer-Relais</h1>
+ <h1><span class=dot id=dot></span>Feeder-Relais</h1>
 
  <section id=p_start>
   <div class="card state"><div class=big id=stBig>&ndash;</div><div class=sub id=stSub></div></div>
@@ -79,9 +79,9 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
 
  <section id=p_net class=hide>
   <div class=card id=netbox></div>
-  <span class=note>WLAN-Zugangsdaten werden über das Setup-AP &bdquo;Timer-Relais Setup&ldquo;
+  <span class=note>WLAN-Zugangsdaten werden über das Setup-AP &bdquo;Feeder-Relais Setup&ldquo;
   (Captive-Portal) gesetzt. Hostname und feste IP sind derzeit in der Firmware
-  festgelegt &ndash; Änderung per Neu-Flashen.</span>
+  festgelegt &ndash; Änderung per Neu-Flashen (Netzwerk-Konfig folgt in Stufe B).</span>
  </section>
 
  <section id=p_stat class=hide><div class=card id=statbox></div></section>
@@ -187,7 +187,7 @@ class TimerWebHandler : public AsyncWebHandler {
       ssid_s.c_str(),
       (rssi != nullptr) ? (int) rssi->state : 0,
       mac_s.c_str(),
-      "Timer-Relais Setup",
+      "Feeder-Relais Setup",
       App.get_compilation_time().c_str(),
       up,
       (unsigned) esp_get_free_heap_size(),
