@@ -264,15 +264,17 @@ Alle späteren Updates laufen dann drahtlos (Kap. 6.6).
 
 ![USB-Verbindung PC zum ESP32-C3](img/flash_verbindung.png)
 
-**Das fertige Image** heißt **`firmware.factory.bin`** (Voll-Image für den
-Erstflash: Bootloader + Partitionen + App). Es entsteht bei
-`esphome compile firmware/timer-relais-c3.yaml` und liegt hier:
+**Fertige Images liegen bereit** — du musst also nicht selbst kompilieren:
 
-```
-firmware/.esphome/build/feeder-relais/.pioenvs/feeder-relais/firmware.factory.bin
-```
+- im Repo unter **`firmware/build/`** (immer der aktuelle Stand):
+  - `feeder-relais.factory.bin` — Voll-Image für den **Erstflash** (Adresse 0x0)
+  - `feeder-relais.ota.bin` — App-Image für **OTA/Web-Update** (Kap. 6.6)
+- als **GitHub-Release** (versionierter Dateiname, z. B.
+  `feeder-relais-v0.0.1.factory.bin`) im Bereich *Releases* des Repositories.
 
-(Für spätere OTA-Updates ist es die kleinere `firmware.bin`, siehe Kap. 6.6.)
+Selbst neu bauen: `./firmware/build_images.sh` (kompiliert und aktualisiert
+`firmware/build/`). Die Roh-Dateien liegen sonst unter
+`firmware/.esphome/build/feeder-relais/.pioenvs/feeder-relais/`.
 
 #### Weg A — mit ESPHome (empfohlen, ein Befehl)
 
@@ -580,6 +582,8 @@ der (noch leeren) Platine.
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (C++-Handler auf web_server_base) | Hand-gepflegt |
 | `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP-Modus, statische IP, NTP) | Hand-gepflegt |
 | `firmware/log_ring.h` | Log-/Debug-Ringpuffer für den Service-Tab (`/api/log`) | Hand-gepflegt |
+| `firmware/build/*.bin` | fertige Flash-Images (factory + ota), aktueller Stand | generiert |
+| `firmware/build_images.sh` | kompiliert und aktualisiert `firmware/build/` | Quelle |
 | `docs/DOKUMENTATION.md` | dieses Dokument | Hand-gepflegt |
 | `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |

@@ -5,6 +5,8 @@ secrets.yaml
 # ESPHome-Build-Artefakte
 .esphome/
 *.bin
+# ...aber die fertigen Release-Images in firmware/build/ werden mitgeführt
+!firmware/build/*.bin
 
 # Python
 __pycache__/
