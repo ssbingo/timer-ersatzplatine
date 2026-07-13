@@ -21,6 +21,7 @@ pre { background: #f5f5f5; border: 1px solid #ddd; padding: 6px 8px; font-size: 
 pre code { background: none; }
 blockquote { border-left: 3px solid #2c5f8a; margin-left: 0; padding-left: 10px; color: #444; }
 li { margin: 2px 0; }
+img { max-width: 100%; height: auto; display: block; margin: 8px auto; border: 1px solid #ddd; border-radius: 4px; }
 """
 
 for src in sys.argv[1:]:
@@ -28,5 +29,6 @@ for src in sys.argv[1:]:
     html = markdown.markdown(p.read_text(encoding="utf-8"),
                              extensions=["tables", "fenced_code", "sane_lists"])
     out = p.with_suffix(".pdf")
-    HTML(string=f"<html><head><style>{CSS}</style></head><body>{html}</body></html>").write_pdf(out)
+    HTML(string=f"<html><head><style>{CSS}</style></head><body>{html}</body></html>",
+         base_url=str(p.parent.resolve())).write_pdf(out)
     print(f"{out} geschrieben")

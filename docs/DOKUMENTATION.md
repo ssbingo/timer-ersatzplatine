@@ -249,18 +249,93 @@ mobile Web-App + JSON-API (Kap. 6.4), die drei persistenten Zeiten,
 Tasterlogik mit Entprellung/Langdruck/Menü (Kap. 6.5) und ein OLED mit
 WLAN-Status, Uhr bzw. Countdown.
 
-**Erstinstallation (einmalig, vor dem Einbau!):**
-1. ESPHome installieren (Home-Assistant-Add-on **oder**
-   `pip install esphome` auf dem PC).
-2. Datei `secrets.yaml` neben die YAML legen:
+### 6.1 Erstes Flashen — Schritt für Schritt (für Einsteiger)
+
+Beim **allerersten Mal** kommt die Firmware **per USB-Kabel** auf den ESP32-C3.
+Alle späteren Updates laufen dann drahtlos (Kap. 6.6).
+
+**Das brauchst du:**
+
+- den **ESP32-C3 Super Mini**,
+- ein **USB-C-Datenkabel** — Achtung: viele billige Kabel können nur *laden*;
+  damit wird der Chip **nicht erkannt**!
+- einen PC mit **Google Chrome** oder **Microsoft Edge** (Browser-Weg B) —
+  oder ESPHome auf dem PC (Weg A).
+
+![USB-Verbindung PC zum ESP32-C3](img/flash_verbindung.png)
+
+**Das fertige Image** heißt **`firmware.factory.bin`** (Voll-Image für den
+Erstflash: Bootloader + Partitionen + App). Es entsteht bei
+`esphome compile firmware/timer-relais-c3.yaml` und liegt hier:
+
+```
+firmware/.esphome/build/feeder-relais/.pioenvs/feeder-relais/firmware.factory.bin
+```
+
+(Für spätere OTA-Updates ist es die kleinere `firmware.bin`, siehe Kap. 6.6.)
+
+#### Weg A — mit ESPHome (empfohlen, ein Befehl)
+
+1. **`secrets.yaml`** neben die YAML legen (`firmware/secrets.yaml`) — hier
+   stehen **deine** WLAN-Daten, die gleich mit eingebaut werden:
    ```yaml
    wifi_ssid: "DeinWLAN"
    wifi_password: "DeinPasswort"
    ```
-3. ESP per USB-C anschließen und flashen:
-   `esphome run firmware/timer-relais-c3.yaml`
-4. Danach gehen Updates kabellos (OTA) — deshalb darf die USB-Buchse
-   im eingebauten Zustand ruhig schlecht erreichbar sein.
+2. ESP per **USB-C** anstecken.
+3. Im Projektordner ausführen:
+   ```
+   esphome run firmware/timer-relais-c3.yaml
+   ```
+   ESPHome kompiliert, fragt den **seriellen Port** ab (Linux z. B.
+   `/dev/ttyACM0`, Windows ein `COMx`) und flasht. Danach zeigt es das
+   Live-Log; der ESP verbindet sich mit deinem WLAN.
+
+> **Linux-Tipp:** Bei „Permission denied" auf `/dev/ttyACM0` deinen Benutzer in
+> die Gruppe `dialout` aufnehmen: `sudo usermod -aG dialout $USER` (neu anmelden).
+
+#### Weg B — im Browser, ohne Installation (esptool-js)
+
+Für die fertige `firmware.factory.bin` ganz ohne ESPHome:
+
+![Ablauf: Flashen über den Browser](img/flash_ablauf.png)
+
+1. In **Chrome/Edge** die Seite **`https://espressif.github.io/esptool-js/`**
+   öffnen.
+2. ESP per **USB-C-Datenkabel** anstecken.
+3. Baudrate `115200` lassen, **Connect** klicken und im Fenster den seriellen
+   Port des ESP wählen (heißt oft „USB JTAG/serial debug unit" oder ein `COMx`).
+4. Bei **Flash Address** `0` eintragen, mit **Choose File** die
+   `firmware.factory.bin` wählen, dann **Program**. Warten, bis
+   „Hard resetting…" erscheint.
+5. Weiter mit der WLAN-Einrichtung (Kap. 6.2).
+
+> Klappt „Connect" nicht: **Boot-Modus** erzwingen — **BOOT** gedrückt halten,
+> kurz **RESET** tippen, **BOOT** loslassen, dann erneut „Connect".
+
+### 6.2 Nach dem Flashen: WLAN einrichten
+
+Wenn im Image noch keine (oder falsche) WLAN-Daten stecken, startet der ESP
+einen eigenen **Setup-Hotspot**:
+
+1. Am Handy/PC ins WLAN **„Feeder-Relais Setup"** gehen (Passwort **`feeder1234`**).
+2. Es öffnet sich ein **Captive-Portal** (sonst `http://192.168.4.1` aufrufen).
+3. Dein Heim-WLAN auswählen, Passwort eingeben, speichern — der ESP startet neu
+   und verbindet sich.
+4. Ab jetzt erreichbar unter **`http://feeder-relais.local`**.
+
+### 6.3 Problemlösung beim Flashen
+
+| Symptom | Ursache / Lösung |
+|---|---|
+| ESP wird gar nicht erkannt | **Ladekabel** statt Datenkabel → anderes USB-C-Kabel, anderer USB-Port |
+| Kein Port im Browser | Chrome/Edge nutzen (WebSerial); Windows ggf. **CH340**-/**CP210x**-Treiber; C3 mit nativem USB braucht meist keinen |
+| „Connect" schlägt fehl | **Boot-Modus**: BOOT halten + RESET tippen + BOOT loslassen |
+| Linux „Permission denied" | Benutzer in Gruppe `dialout` (`sudo usermod -aG dialout $USER`) |
+| Nach dem Flash kein `…​.local` | erst WLAN über den Setup-Hotspot einrichten (Kap. 6.2); mDNS braucht einen Moment |
+
+> Nach dem Erstflash gehen alle Updates **drahtlos** (Kap. 6.6) — die USB-Buchse
+> darf im eingebauten Zustand ruhig schlecht erreichbar sein.
 
 ### 6.4 Web-Bedienung und JSON-API (Port 80)
 
@@ -509,7 +584,8 @@ der (noch leeren) Platine.
 | `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |
 | `docs/DOKUMENTATION.pdf`, `docs/PROJEKTPLAN.pdf` | PDF-Fassungen (**Pflicht bei jeder Änderung**) | ja: `python3 tools/md2pdf.py docs/*.md` |
-| `tools/md2pdf.py` | Markdown→PDF-Generator | Quelle |
+| `tools/md2pdf.py` | Markdown→PDF-Generator (bettet Bilder ein) | Quelle |
+| `docs/img/*.png` | Diagramme der Flash-Anleitung (Kap. 6.1) | generiert (PIL) |
 
 ## 10. Änderungshistorie der Geometrie-Vorlage
 
