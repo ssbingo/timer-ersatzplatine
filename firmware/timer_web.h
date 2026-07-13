@@ -14,6 +14,8 @@
 #pragma once
 #include "esphome.h"
 #include <esp_system.h>
+#include "net_config.h"
+#include "esphome/components/wifi/wifi_component.h"
 
 namespace esphome {
 
@@ -78,10 +80,38 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
  </section>
 
  <section id=p_net class=hide>
-  <div class=card id=netbox></div>
-  <span class=note>WLAN-Zugangsdaten werden über das Setup-AP &bdquo;Feeder-Relais Setup&ldquo;
-  (Captive-Portal) gesetzt. Hostname und feste IP sind derzeit in der Firmware
-  festgelegt &ndash; Änderung per Neu-Flashen (Netzwerk-Konfig folgt in Stufe B).</span>
+  <div class=card>
+   <b>WLAN</b>
+   <label>Netzwerkname (SSID)</label><input id=w_ssid autocomplete=off>
+   <label>Passwort</label><input id=w_pw type=password autocomplete=off>
+   <button style="width:100%;margin-top:12px" onclick="saveWifi()">WLAN speichern &amp; verbinden</button>
+  </div>
+  <div class=card>
+   <b>IP-Konfiguration</b>
+   <label>Modus</label>
+   <select id=n_static onchange="ipmode()">
+    <option value=0>DHCP (automatisch)</option>
+    <option value=1>Statisch</option>
+   </select>
+   <div id=ipfields>
+    <label>IP-Adresse</label><input id=n_ip inputmode=decimal>
+    <label>Gateway</label><input id=n_gw inputmode=decimal>
+    <label>Subnetzmaske</label><input id=n_sn inputmode=decimal>
+    <label>DNS-Server</label><input id=n_dns inputmode=decimal>
+   </div>
+   <button style="width:100%;margin-top:12px" onclick="saveNet()">IP-Konfig speichern</button>
+  </div>
+  <div class=card>
+   <b>NTP-Zeitserver</b>
+   <label>Server</label><input id=n_ntp autocomplete=off>
+   <button style="width:100%;margin-top:12px" onclick="saveNtp()">NTP speichern</button>
+  </div>
+  <div class=card>
+   <div class=row><span class=k>Hostname</span><span class=v id=n_host>&ndash;</span></div>
+   <span class=note>Hostname ist in der Firmware festgelegt (Default feeder-relais);
+   Änderung per Neu-Flashen. Statische IP wird nach einem Neustart aktiv.</span>
+   <button class=stop style="background:#b45309" onclick="reboot()">Neustart</button>
+  </div>
  </section>
 
  <section id=p_stat class=hide><div class=card id=statbox></div></section>
@@ -98,7 +128,19 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
 <script>
 var $=function(i){return document.getElementById(i)};
 function nav(p){['start','cfg','net','stat'].forEach(function(x){$('p_'+x).classList.toggle('hide',x!=p)});
- var a=document.querySelectorAll('nav a');for(var i=0;i<a.length;i++)a[i].classList.toggle('act',a[i].dataset.p==p);}
+ var a=document.querySelectorAll('nav a');for(var i=0;i<a.length;i++)a[i].classList.toggle('act',a[i].dataset.p==p);
+ if(p=='net')loadNet();}
+function loadNet(){api('/api/net').then(function(n){if(!n)return;
+ $('n_static').value=n.static;$('n_ip').value=n.ip;$('n_gw').value=n.gw;$('n_sn').value=n.sn;
+ $('n_dns').value=n.dns;$('n_ntp').value=n.ntp;$('n_host').textContent=n.hostname;ipmode();});}
+function ipmode(){$('ipfields').style.display=($('n_static').value=='1')?'block':'none';}
+function saveWifi(){api('/api/wifi?ssid='+encodeURIComponent($('w_ssid').value)+'&pw='+encodeURIComponent($('w_pw').value),'POST')
+ .then(function(r){toast(r&&r.ok?'WLAN gespeichert':'Fehler');});}
+function saveNet(){var q='static='+$('n_static').value+'&ip='+encodeURIComponent($('n_ip').value)
+ +'&gw='+encodeURIComponent($('n_gw').value)+'&sn='+encodeURIComponent($('n_sn').value)+'&dns='+encodeURIComponent($('n_dns').value);
+ api('/api/net?'+q,'POST').then(function(r){toast(($('n_static').value=='1')?'Gespeichert - Neustart nötig':'Gespeichert');});}
+function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POST').then(function(r){toast(r&&r.ok?'NTP gespeichert':'Fehler');});}
+function reboot(){if(confirm('Gerät jetzt neu starten?'))api('/api/reboot','POST').then(function(){toast('Neustart …');});}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1600);}
 function api(u,m){return fetch(u,{method:m||'GET'}).then(function(r){return r.json()}).catch(function(){return null});}
 function trig(n){api('/api/trigger?button='+n,'POST').then(refresh);}
@@ -115,10 +157,9 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  $('stSub').textContent=s.active?('läuft – Taster '+(s.last||'?')):'bereit';
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
- rows('netbox',[['Hostname',s.host],['IP-Adresse',s.ip],['WLAN (SSID)',s.ssid||'&ndash;'],
-  ['Signal',s.rssi+' dBm'],['MAC',s.mac],['Setup-AP',s.ap]]);
  rows('statbox',[['Firmware',s.fw],['Laufzeit',up(s.uptime)],['Freier Speicher',(s.heap/1024).toFixed(1)+' kB'],
-  ['WLAN',s.wifi],['Reset-Grund',s.reset],['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
+  ['WLAN',s.wifi],['SSID',s.ssid||'&ndash;'],['IP-Adresse',s.ip||'&ndash;'],['Signal',s.rssi+' dBm'],
+  ['MAC',s.mac],['Setup-AP',s.ap],['Reset-Grund',s.reset],['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
 });}
 refresh();setInterval(refresh,1000);
 </script></body></html>)HTMLPAGE";
@@ -145,6 +186,23 @@ class TimerWebHandler : public AsyncWebHandler {
   int qparam(AsyncWebServerRequest *req, const char *name, int def) {
     if (req->hasParam(name)) return atoi(req->getParam(name)->value().c_str());
     return def;
+  }
+
+  void copy_param(AsyncWebServerRequest *req, const char *name, char *dst, size_t n) {
+    if (!req->hasParam(name)) return;
+    std::string v = req->getParam(name)->value();
+    strncpy(dst, v.c_str(), n - 1);
+    dst[n - 1] = '\0';
+  }
+
+  void send_net(AsyncWebServerRequest *req) {
+    char buf[420];
+    snprintf(buf, sizeof(buf),
+      "{\"ok\":true,\"static\":%d,\"ip\":\"%s\",\"gw\":\"%s\",\"sn\":\"%s\","
+      "\"dns\":\"%s\",\"ntp\":\"%s\",\"hostname\":\"%s\"}",
+      g_netcfg.use_static, g_netcfg.ip, g_netcfg.gw, g_netcfg.sn,
+      g_netcfg.dns, g_netcfg.ntp, App.get_name().c_str());
+    req->send(200, "application/json", buf);
   }
 
   void apply_num(number::Number *n, int v) {
@@ -188,7 +246,7 @@ class TimerWebHandler : public AsyncWebHandler {
       (rssi != nullptr) ? (int) rssi->state : 0,
       mac_s.c_str(),
       "Feeder-Relais Setup",
-      App.get_compilation_time().c_str(),
+      (__DATE__ " " __TIME__),
       up,
       (unsigned) esp_get_free_heap_size(),
       connected ? "verbunden" : "getrennt",
@@ -232,6 +290,32 @@ class TimerWebHandler : public AsyncWebHandler {
     }
     if (u == "/api/status") {
       send_status(req);
+      return;
+    }
+    if (u == "/api/net") {                       // Netzwerk-Konfig lesen/speichern
+      bool changed = false;
+      if (req->hasParam("static")) { g_netcfg.use_static = qparam(req, "static", 0) ? 1 : 0; changed = true; }
+      if (req->hasParam("ip"))  { copy_param(req, "ip",  g_netcfg.ip,  sizeof(g_netcfg.ip));  changed = true; }
+      if (req->hasParam("gw"))  { copy_param(req, "gw",  g_netcfg.gw,  sizeof(g_netcfg.gw));  changed = true; }
+      if (req->hasParam("sn"))  { copy_param(req, "sn",  g_netcfg.sn,  sizeof(g_netcfg.sn));  changed = true; }
+      if (req->hasParam("dns")) { copy_param(req, "dns", g_netcfg.dns, sizeof(g_netcfg.dns)); changed = true; }
+      if (req->hasParam("ntp")) { copy_param(req, "ntp", g_netcfg.ntp, sizeof(g_netcfg.ntp)); changed = true; }
+      if (changed) { netcfg_save(); netcfg_apply_ntp(); }
+      send_net(req);
+      return;
+    }
+    if (u == "/api/wifi") {                       // WLAN-Zugangsdaten setzen (nativ)
+      if (req->hasParam("ssid")) {
+        std::string s = req->getParam("ssid")->value();
+        std::string p = req->hasParam("pw") ? req->getParam("pw")->value() : std::string();
+        if (!s.empty()) wifi::global_wifi_component->save_wifi_sta(s, p);
+      }
+      req->send(200, "application/json", "{\"ok\":true}");
+      return;
+    }
+    if (u == "/api/reboot") {                     // Neustart (verzoegert ueber Interval)
+      g_reboot_pending = true;
+      req->send(200, "application/json", "{\"ok\":true}");
       return;
     }
     req->send(404, "application/json", "{\"ok\":false,\"error\":\"not found\"}");

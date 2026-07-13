@@ -269,15 +269,18 @@ WLAN-Status, Uhr bzw. Countdown.
 - **Bedienung:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
   Zeit aus), Live-Countdown und **Stopp**.
 - **Einstellungen:** die drei Timerzeiten (1–600 s), persistent gespeichert.
-- **Netzwerk:** Hostname, IP, SSID, Signal, MAC, Setup-AP (Anzeige; der
-  WLAN-Zugang wird über das Setup-AP/Captive-Portal gesetzt, Hostname und
-  feste IP sind fest in der Firmware → Neu-Flashen).
-- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, Reset-Grund, Relais.
+- **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
+  **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server** und ein
+  **Neustart**-Knopf. Der Hostname wird angezeigt (fest in der Firmware,
+  Default `feeder-relais` → Änderung per Neu-Flashen).
+- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID/IP/Signal/MAC,
+  Reset-Grund, Relais.
 
-Technisch liefert `firmware/timer_web.h` diese Seite als eigener
-`AsyncWebHandler` auf `web_server_base` (das native ESPHome-Web-UI ist
-deaktiviert). Dieselbe **JSON-API** nutzt auch die Anbindung (z. B. ioBroker) —
-Parameter als Query-String, Methode GET **oder** POST:
+Technisch liefert `firmware/timer_web.h` (mit `firmware/net_config.h` für die
+persistente Netzwerk-Konfig) diese Seite als eigener `AsyncWebHandler` auf
+`web_server_base` (das native ESPHome-Web-UI ist deaktiviert). Dieselbe
+**JSON-API** nutzt auch die Anbindung (z. B. ioBroker) — Parameter als
+Query-String, Methode GET **oder** POST:
 
 | Endpoint | Wirkung |
 |----------|---------|
@@ -286,6 +289,16 @@ Parameter als Query-String, Methode GET **oder** POST:
 | `POST /api/trigger?seconds=N` | ad-hoc für N Sekunden schalten |
 | `POST /api/stop` | sofort abschalten |
 | `POST /api/config?time1=A&time2=B&time3=C` | Zeiten setzen (je 1–600 s, persistent) — Felder auch einzeln |
+| `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname` |
+| `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
+| `POST /api/wifi?ssid=&pw=` | WLAN-Zugangsdaten setzen (verbindet neu) |
+| `POST /api/reboot` | Gerät neu starten |
+
+**Anwendung der Netzwerk-Konfig:** Die Werte liegen in den ESPHome-Preferences
+(Flash). **NTP-Server** wirkt beim nächsten Sync (`esp_sntp_setservername`).
+**Statische IP** wird beim `wifi.on_connect` per ESP-IDF-netif gesetzt und ist
+deshalb nach einem **Neustart** aktiv (DHCP ist Default). **WLAN** nutzt
+ESPHomes eigenes `save_wifi_sta()`; Erstzugang immer übers Captive-Portal.
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.
@@ -458,6 +471,7 @@ der (noch leeren) Platine.
 | `hardware/timer_ersatzplatine.kicad_sch` | kompletter Schaltplan (KiCad 8+) | Hand-gepflegt |
 | `firmware/timer-relais-c3.yaml` | ESPHome-Konfiguration | Hand-gepflegt |
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (C++-Handler auf web_server_base) | Hand-gepflegt |
+| `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP-Modus, statische IP, NTP) | Hand-gepflegt |
 | `docs/DOKUMENTATION.md` | dieses Dokument | Hand-gepflegt |
 | `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |

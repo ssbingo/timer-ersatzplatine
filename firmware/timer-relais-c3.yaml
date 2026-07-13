@@ -11,14 +11,15 @@ esphome:
   name: feeder-relais
   friendly_name: Feeder-Relais
   includes:
+    - net_config.h
     - timer_web.h
   on_boot:
-    # Eigene Web-App + JSON-API als Handler an web_server_base haengen.
-    # Zeiger auf die ESPHome-Entitaeten werden hier gesetzt (id() ist nur
-    # im Lambda verfuegbar) und im Handler benutzt.
+    # Netzwerk-Konfig laden + anwenden, dann Web-App-Handler registrieren.
     priority: -100
     then:
       - lambda: |-
+          esphome::netcfg_load();
+          esphome::netcfg_apply_ntp();
           auto *h = new esphome::TimerWebHandler();
           h->time1 = id(time1);
           h->time2 = id(time2);
@@ -48,6 +49,10 @@ wifi:
   ap:
     ssid: "Feeder-Relais Setup"
     password: "feeder1234"
+  on_connect:
+    # Nach jedem Verbinden ggf. die gespeicherte statische IP setzen
+    # (per ESP-IDF-netif; DHCP ist Default, statisch wird nach Neustart aktiv).
+    - lambda: 'esphome::netcfg_apply_static();'
 
 captive_portal:
 
@@ -147,6 +152,7 @@ interval:
               id(shelly_trigger).turn_off();
             }
           }
+          if (esphome::g_reboot_pending) { App.safe_reboot(); }
       - component.update: oled
 
 binary_sensor:
@@ -314,10 +320,10 @@ display:
             it.strftime(0, 11, id(font_small), TextAlign::TOP_LEFT, "%d.%m. %H:%M:%S", t);
           else
             it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "nicht synchron");
-          it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "de.pool.ntp.org");
+          it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "%s", esphome::g_netcfg.ntp);
         } else {
           it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "System");
-          it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "FW %s", App.get_compilation_time().c_str());
+          it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "FW %s", (__DATE__ " " __TIME__));
           it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "Up %.0f s",
                     id(uptime_s).has_state() ? id(uptime_s).state : 0.0f);
         }
