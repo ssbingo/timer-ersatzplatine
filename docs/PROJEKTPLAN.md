@@ -132,3 +132,4 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 | 2026-07-13 | GPIO3/4/5/6 + 8/9 | Strapping-Pins gemieden; 8/9 = SDA/SCL wie Modulaufdruck |
 | 2026-07-13 | Dompositionen direkt per Messschieber statt aus Gehäusescan | Scan-y lag bis 2,6 mm daneben; Direktmaße (Pitch 45 / Reihen 70 / 6 mm Kantenabstand) sind genauer und lösen die ±1,5-Registrierung ab |
 | 2026-07-13 | Dom-Ausschnitte randoffen (U-Schlitze) statt ⌀10-Bohrungen | toleranter beim Einsetzen, verzeiht Dom-Streuung entlang der Schlitzachse; äußere Eckradien dafür lokal auf 3,2/2,1 reduziert (spitzere Ecke passt mit mehr Spiel ins Gehäuse) |
+| 2026-07-13 | Eigene Mobil-Web-App (`timer_web.h`) + JSON-API statt ESPHome-Standard-UI | mobile Bedien-/Einstell-/Netzwerk-/Statusseiten auf Port 80; eine `/api/*`-JSON-Schnittstelle bedient Handy und ioBroker gleich; mit `esphome compile` verifiziert |

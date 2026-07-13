@@ -9,6 +9,27 @@
 esphome:
   name: timer-relais
   friendly_name: Timer-Relais
+  includes:
+    - timer_web.h
+  on_boot:
+    # Eigene Web-App + JSON-API als Handler an web_server_base haengen.
+    # Zeiger auf die ESPHome-Entitaeten werden hier gesetzt (id() ist nur
+    # im Lambda verfuegbar) und im Handler benutzt.
+    priority: -100
+    then:
+      - lambda: |-
+          auto *h = new esphome::TimerWebHandler();
+          h->time1 = id(time1);
+          h->time2 = id(time2);
+          h->time3 = id(time3);
+          h->relay = id(shelly_trigger);
+          h->remaining = &id(remaining);
+          h->rssi = id(wifi_rssi);
+          h->uptime = id(uptime_s);
+          h->ip = id(ip_addr);
+          h->ssid = id(wifi_ssid_txt);
+          h->mac = id(wifi_mac_txt);
+          id(web_base)->add_handler(h);
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -29,9 +50,10 @@ wifi:
 
 captive_portal:
 
-web_server:
-  port: 80
-  version: 3
+# Kein natives web_server-UI mehr: die eigene Mobil-App/JSON-API laeuft auf
+# web_server_base (Port 80, Default). captive_portal + OTA nutzen die Basis mit.
+web_server_base:
+  id: web_base
 
 number:
   - platform: template
@@ -150,6 +172,31 @@ binary_sensor:
       - script.execute:
           id: start_timer
           seconds: !lambda 'return (int) id(time3).state;'
+
+# Diagnose-Werte fuer die Status-/Netzwerk-Seite der Web-App (und HA/ioBroker)
+sensor:
+  - platform: wifi_signal
+    name: "WLAN-Signal"
+    id: wifi_rssi
+    update_interval: 10s
+    entity_category: diagnostic
+  - platform: uptime
+    name: "Laufzeit"
+    id: uptime_s
+    update_interval: 10s
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP-Adresse"
+      id: ip_addr
+    ssid:
+      name: "WLAN-SSID"
+      id: wifi_ssid_txt
+    mac_address:
+      name: "MAC-Adresse"
+      id: wifi_mac_txt
 
 i2c:
   sda: GPIO8

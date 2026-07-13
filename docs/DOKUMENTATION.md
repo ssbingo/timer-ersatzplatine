@@ -24,10 +24,13 @@ Ein kleines OLED-Display hinter der Sichtscheibe zeigt im Ruhezustand
 **„ON"** und während eines Laufs den **Sekunden-Countdown**. Ein erneuter
 Tastendruck während des Laufs startet die zugehörige Zeit neu.
 
-Die drei Zeiten werden **ohne App und ohne Cloud** über eine Webseite
-eingestellt, die der ESP32 selbst bereitstellt (im Browser
-`http://timer-relais.local` aufrufen). Optional kann das Gerät in
-Home Assistant oder ioBroker (esphome-Adapter) eingebunden werden.
+Die Bedienung läuft **ohne App und ohne Cloud** über eine kleine, für
+Mobilgeräte optimierte Webseite, die der ESP32 selbst auf **Port 80**
+bereitstellt (im Browser `http://timer-relais.local` aufrufen): Taster
+auslösen, Zeiten einstellen, Netzwerk- und Statuswerte ansehen. Für die
+Anbindung (z. B. ioBroker) bietet der ESP zusätzlich eine schlanke
+**JSON-API** (siehe Kap. 6.4). Optional lässt sich das Gerät auch in
+Home Assistant oder ioBroker (esphome-Adapter) einbinden.
 
 ### 1.1 Die Signalkette (so fließt das Signal)
 
@@ -255,8 +258,33 @@ Entprellung, Countdown-Anzeige, „ON" im Ruhezustand.
 4. Danach gehen Updates kabellos (OTA) — deshalb darf die USB-Buchse
    im eingebauten Zustand ruhig schlecht erreichbar sein.
 
-**Bedienung:** Zeiten ändern unter `http://timer-relais.local`
-(drei Zahlenfelder „Zeit Taster 1/2/3").
+### 6.4 Web-Bedienung und JSON-API (Port 80)
+
+`http://timer-relais.local` öffnet eine mobile Web-App mit vier Reitern:
+
+- **Bedienung:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
+  Zeit aus), Live-Countdown und **Stopp**.
+- **Einstellungen:** die drei Timerzeiten (1–600 s), persistent gespeichert.
+- **Netzwerk:** Hostname, IP, SSID, Signal, MAC, Setup-AP (Anzeige; der
+  WLAN-Zugang wird über das Setup-AP/Captive-Portal gesetzt, Hostname und
+  feste IP sind fest in der Firmware → Neu-Flashen).
+- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, Reset-Grund, Relais.
+
+Technisch liefert `firmware/timer_web.h` diese Seite als eigener
+`AsyncWebHandler` auf `web_server_base` (das native ESPHome-Web-UI ist
+deaktiviert). Dieselbe **JSON-API** nutzt auch die Anbindung (z. B. ioBroker) —
+Parameter als Query-String, Methode GET **oder** POST:
+
+| Endpoint | Wirkung |
+|----------|---------|
+| `GET /api/status` | JSON mit allen Werten: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset` |
+| `POST /api/trigger?button=N` | Taster N (1–3) auslösen (nutzt dessen eingestellte Zeit) |
+| `POST /api/trigger?seconds=N` | ad-hoc für N Sekunden schalten |
+| `POST /api/stop` | sofort abschalten |
+| `POST /api/config?time1=A&time2=B&time3=C` | Zeiten setzen (je 1–600 s, persistent) — Felder auch einzeln |
+
+Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
+`POST http://timer-relais.local/api/config?time1=8`.
 
 ---
 
@@ -396,6 +424,7 @@ der (noch leeren) Platine.
 | `hardware/platine_vorschau.png` | Render der DXF | ja (Renderskript siehe CLAUDE.md) |
 | `hardware/timer_ersatzplatine.kicad_sch` | kompletter Schaltplan (KiCad 8+) | Hand-gepflegt |
 | `firmware/timer-relais-c3.yaml` | ESPHome-Konfiguration | Hand-gepflegt |
+| `firmware/timer_web.h` | Mobile Web-App + JSON-API (C++-Handler auf web_server_base) | Hand-gepflegt |
 | `docs/DOKUMENTATION.md` | dieses Dokument | Hand-gepflegt |
 | `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |

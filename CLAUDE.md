@@ -52,6 +52,7 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
 | `hardware/platine_vorschau.png` | generierter Render (Skript unten) |
 | `hardware/timer_ersatzplatine.kicad_sch` | Schaltplan, KiCad-8-Format, eingebettete Symbole, Verbindungen über Netzlabels |
 | `firmware/timer-relais-c3.yaml` | ESPHome; `secrets.yaml` wird lokal ergänzt, nicht einchecken |
+| `firmware/timer_web.h` | Mobile Web-App + JSON-API (`AsyncWebHandler` auf `web_server_base`, Port 80); Endpunkte `/api/status\|trigger\|stop\|config` |
 | `docs/DOKUMENTATION.md` | Gesamtdoku inkl. KiCad-Anleitung |
 | `docs/PROJEKTPLAN.md` | Phasen, Checklisten, Risiken, Entscheidungslog |
 | `docs/*.pdf` | generierte PDF-Fassungen (Pflichtabgabe, nie von Hand editieren) |

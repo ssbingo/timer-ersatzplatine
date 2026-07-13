@@ -10,6 +10,13 @@ dadurch WLAN-unabhängig.
 **⚠️ 230 V — Lebensgefahr. Sicherheitshinweise in `docs/DOKUMENTATION.md`
 Kap. 2 zuerst lesen.**
 
+## Bedienung
+
+Mobile Web-App auf **Port 80** (`http://timer-relais.local`): Taster
+auslösen, Zeiten einstellen, Netzwerk-/Statuswerte. Für die Anbindung
+(z. B. ioBroker) gibt es eine JSON-API (`/api/status|trigger|stop|config`,
+siehe Doku Kap. 6.4).
+
 ## Einstieg
 
 1. `docs/DOKUMENTATION.md` — vollständige, laienverständliche Doku
