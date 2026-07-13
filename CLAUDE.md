@@ -58,6 +58,7 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
 | `firmware/timer-relais-c3.yaml` | ESPHome; `secrets.yaml` wird lokal ergänzt, nicht einchecken |
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (`AsyncWebHandler` auf `web_server_base`, Port 80); Endpunkte `/api/status\|trigger\|stop\|config\|net\|wifi\|reboot` |
 | `firmware/net_config.h` | Persistente Netzwerk-Konfig (Prefs): IP-Modus DHCP/statisch (ESP-IDF-netif bei `wifi.on_connect`), NTP-Server (`esp_sntp_setservername`) |
+| `firmware/log_ring.h` | Log-/Debug-Ringpuffer (`logger: on_message:` → `/api/log`); Web-OTA via `ota: platform: web_server` (`POST /update`) |
 | `docs/DOKUMENTATION.md` | Gesamtdoku inkl. KiCad-Anleitung |
 | `docs/PROJEKTPLAN.md` | Phasen, Checklisten, Risiken, Entscheidungslog |
 | `docs/*.pdf` | generierte PDF-Fassungen (Pflichtabgabe, nie von Hand editieren) |

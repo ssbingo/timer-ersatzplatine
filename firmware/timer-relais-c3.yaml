@@ -12,6 +12,7 @@ esphome:
   friendly_name: Feeder-Relais
   includes:
     - net_config.h
+    - log_ring.h
     - timer_web.h
   on_boot:
     # Netzwerk-Konfig laden + anwenden, dann Web-App-Handler registrieren.
@@ -39,9 +40,16 @@ esp32:
     type: arduino
 
 logger:
+  level: DEBUG            # bis DEBUG erfassen; Anzeige-Stufe waehlt man im Service-Tab
+  on_message:
+    # jede Log-Zeile in den Ringpuffer (aktiviert zugleich die Log-Listener)
+    - lambda: 'esphome::log_ring_push(level, tag, message);'
+
 api:
+
 ota:
   - platform: esphome
+  - platform: web_server   # Firmware-Upload per Browser: POST /update (Port 80)
 
 wifi:
   ssid: !secret wifi_ssid

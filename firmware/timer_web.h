@@ -15,6 +15,7 @@
 #include "esphome.h"
 #include <esp_system.h>
 #include "net_config.h"
+#include "log_ring.h"
 #include "esphome/components/wifi/wifi_component.h"
 
 namespace esphome {
@@ -115,19 +116,49 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
  </section>
 
  <section id=p_stat class=hide><div class=card id=statbox></div></section>
+
+ <section id=p_svc class=hide>
+  <div class=card>
+   <b>Log / Debug</b>
+   <label>Anzeige-Stufe</label>
+   <select id=lg_lvl onchange="logLevelChange()">
+    <option value=1>ERROR</option>
+    <option value=2>WARN</option>
+    <option value=3 selected>INFO</option>
+    <option value=5>DEBUG</option>
+   </select>
+   <label style="display:flex;align-items:center;gap:8px;margin-top:12px">
+    <input type=checkbox id=lg_on onchange="logToggle()"> Live-Anzeige aktivieren</label>
+   <pre id=lg_out style="margin:10px 0;max-height:240px;overflow:auto;background:#0d1424;border:1px solid #2b3855;border-radius:10px;padding:8px;font:11px/1.35 ui-monospace,monospace;white-space:pre-wrap;word-break:break-all"></pre>
+   <button class=sec style="width:100%;background:#26304a" onclick="logClear()">Anzeige leeren</button>
+  </div>
+  <div class=card>
+   <b>Firmware-Update (OTA)</b>
+   <span class=note>Kompilierte .bin hochladen (bei ESPHome die firmware.bin aus dem Build).
+   Das Gerät startet danach neu. Alternativ per Netzwerk: <b>esphome run</b> (Port 3232).</span>
+   <input type=file id=ota_file accept=".bin,application/octet-stream" style="margin-top:10px">
+   <button style="width:100%;margin-top:10px" onclick="otaUpload()">Hochladen &amp; aktualisieren</button>
+   <div id=ota_stat class=note></div>
+  </div>
+  <div class=card>
+   <b>Gerät</b>
+   <button class=stop style="background:#b45309;margin-top:4px" onclick="reboot()">Neustart</button>
+  </div>
+ </section>
 </div>
 
 <nav>
- <a href="#" class=act data-p=start onclick="nav('start');return false">Bedienung</a>
- <a href="#" data-p=cfg  onclick="nav('cfg');return false">Einstellungen</a>
+ <a href="#" class=act data-p=start onclick="nav('start');return false">Start</a>
+ <a href="#" data-p=cfg  onclick="nav('cfg');return false">Zeiten</a>
  <a href="#" data-p=net  onclick="nav('net');return false">Netzwerk</a>
  <a href="#" data-p=stat onclick="nav('stat');return false">Status</a>
+ <a href="#" data-p=svc  onclick="nav('svc');return false">Service</a>
 </nav>
 <div class=toast id=toast></div>
 
 <script>
 var $=function(i){return document.getElementById(i)};
-function nav(p){['start','cfg','net','stat'].forEach(function(x){$('p_'+x).classList.toggle('hide',x!=p)});
+function nav(p){['start','cfg','net','stat','svc'].forEach(function(x){$('p_'+x).classList.toggle('hide',x!=p)});
  var a=document.querySelectorAll('nav a');for(var i=0;i<a.length;i++)a[i].classList.toggle('act',a[i].dataset.p==p);
  if(p=='net')loadNet();}
 function loadNet(){api('/api/net').then(function(n){if(!n)return;
@@ -141,6 +172,20 @@ function saveNet(){var q='static='+$('n_static').value+'&ip='+encodeURIComponent
  api('/api/net?'+q,'POST').then(function(r){toast(($('n_static').value=='1')?'Gespeichert - Neustart nötig':'Gespeichert');});}
 function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POST').then(function(r){toast(r&&r.ok?'NTP gespeichert':'Fehler');});}
 function reboot(){if(confirm('Gerät jetzt neu starten?'))api('/api/reboot','POST').then(function(){toast('Neustart …');});}
+var lgTimer=null,lgSeq=0,LVL={1:'E',2:'W',3:'I',4:'C',5:'D',6:'V'};
+function logToggle(){if($('lg_on').checked){lgSeq=0;$('lg_out').textContent='';logPoll();lgTimer=setInterval(logPoll,1500);}
+ else{if(lgTimer)clearInterval(lgTimer);lgTimer=null;}}
+function logLevelChange(){if($('lg_on').checked){lgSeq=0;$('lg_out').textContent='';logPoll();}}
+function logPoll(){api('/api/log?level='+$('lg_lvl').value+'&since='+lgSeq).then(function(d){if(!d||!d.lines)return;
+ var o=$('lg_out');d.lines.forEach(function(x){if(x.s>lgSeq)lgSeq=x.s;o.textContent+='['+(LVL[x.l]||x.l)+'] '+x.t+'\n';});
+ if(d.lines.length)o.scrollTop=o.scrollHeight;});}
+function logClear(){$('lg_out').textContent='';}
+function otaUpload(){var f=$('ota_file').files[0];if(!f){toast('Keine Datei gewählt');return;}
+ $('ota_stat').textContent='Lade hoch … Gerät nicht trennen.';
+ var fd=new FormData();fd.append('file',f,f.name);
+ fetch('/update',{method:'POST',body:fd}).then(function(r){return r.text();})
+  .then(function(){$('ota_stat').textContent='Übertragen – Gerät startet neu.';})
+  .catch(function(){$('ota_stat').textContent='Verbindung getrennt (vermutlich Neustart nach Update).';});}
 function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1600);}
 function api(u,m){return fetch(u,{method:m||'GET'}).then(function(r){return r.json()}).catch(function(){return null});}
 function trig(n){api('/api/trigger?button='+n,'POST').then(refresh);}
@@ -316,6 +361,13 @@ class TimerWebHandler : public AsyncWebHandler {
     if (u == "/api/reboot") {                     // Neustart (verzoegert ueber Interval)
       g_reboot_pending = true;
       req->send(200, "application/json", "{\"ok\":true}");
+      return;
+    }
+    if (u == "/api/log") {                         // Log-Ringpuffer gefiltert lesen
+      uint8_t sel = (uint8_t) qparam(req, "level", 3);      // Default INFO
+      uint32_t since = (uint32_t) qparam(req, "since", 0);
+      std::string j = log_ring_json(sel, since);
+      req->send(200, "application/json", j.c_str());
       return;
     }
     req->send(404, "application/json", "{\"ok\":false,\"error\":\"not found\"}");

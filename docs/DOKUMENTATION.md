@@ -264,17 +264,19 @@ WLAN-Status, Uhr bzw. Countdown.
 
 ### 6.4 Web-Bedienung und JSON-API (Port 80)
 
-`http://feeder-relais.local` öffnet eine mobile Web-App mit vier Reitern:
+`http://feeder-relais.local` öffnet eine mobile Web-App mit fünf Reitern:
 
-- **Bedienung:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
+- **Start:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
   Zeit aus), Live-Countdown und **Stopp**.
-- **Einstellungen:** die drei Timerzeiten (1–600 s), persistent gespeichert.
+- **Zeiten:** die drei Timerzeiten (1–600 s), persistent gespeichert.
 - **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
   **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server** und ein
   **Neustart**-Knopf. Der Hostname wird angezeigt (fest in der Firmware,
   Default `feeder-relais` → Änderung per Neu-Flashen).
 - **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID/IP/Signal/MAC,
   Reset-Grund, Relais.
+- **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
+  aktivierbar), **Firmware-Update** (.bin-Upload, Kap. 6.6) und **Neustart**.
 
 Technisch liefert `firmware/timer_web.h` (mit `firmware/net_config.h` für die
 persistente Netzwerk-Konfig) diese Seite als eigener `AsyncWebHandler` auf
@@ -293,6 +295,7 @@ Query-String, Methode GET **oder** POST:
 | `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
 | `POST /api/wifi?ssid=&pw=` | WLAN-Zugangsdaten setzen (verbindet neu) |
 | `POST /api/reboot` | Gerät neu starten |
+| `GET /api/log?level=N&since=M` | Log-Ringpuffer als JSON (Zeilen mit Level ≤ N, `seq` > M); Level 1=ERROR…5=DEBUG |
 
 **Anwendung der Netzwerk-Konfig:** Die Werte liegen in den ESPHome-Preferences
 (Flash). **NTP-Server** wirkt beim nächsten Sync (`esp_sntp_setservername`).
@@ -331,6 +334,32 @@ Die Tasten sind am Gehäuse beschriftet: **S1 = Down/Manual**, **S2 = SET**,
 
 Die Zeitbasis kommt per NTP; bis zur ersten Synchronisation zeigt die Uhr
 „--:--". Zeitzone `Europe/Berlin`.
+
+### 6.6 Firmware-Updates (OTA)
+
+Nach dem ersten USB-Flash sind **zwei drahtlose Update-Wege** eingerichtet:
+
+- **Netzwerk-OTA (ESPHome):** `esphome run firmware/timer-relais-c3.yaml`
+  aktualisiert über WLAN (Port 3232) — USB nicht mehr nötig. Konfiguriert
+  über `ota: platform: esphome`.
+- **Web-Upload:** Im **Service**-Tab die kompilierte `firmware.bin` hochladen
+  (bzw. direkt `POST /update` auf Port 80). Konfiguriert über
+  `ota: platform: web_server` — läuft über `web_server_base`, das native
+  ESPHome-Web-UI wird dafür **nicht** gebraucht. Das Gerät startet nach dem
+  Update automatisch neu.
+
+Die `firmware.bin` entsteht bei `esphome compile …` und liegt unter
+`.esphome/build/feeder-relais/.pioenvs/feeder-relais/firmware.bin`. Auch das
+Captive-Portal kann Updates einspielen.
+
+### 6.7 Service-Log / Debugging
+
+Der **Service**-Tab zeigt bei aktivierter „Live-Anzeige" die letzten
+Log-Zeilen (Ringpuffer, 40 Zeilen) gefiltert nach gewählter Stufe
+(ERROR/WARN/INFO/DEBUG). Technik: `logger: on_message:` schreibt jede Zeile in
+`firmware/log_ring.h`; der Web-Endpunkt `GET /api/log?level=&since=` liefert
+sie als JSON. Der Logger läuft auf `level: DEBUG` (für VERBOSE die Stufe in der
+YAML anheben). Vollständige Logs zusätzlich per `esphome logs …` (UART/Netz).
 
 ---
 
@@ -472,6 +501,7 @@ der (noch leeren) Platine.
 | `firmware/timer-relais-c3.yaml` | ESPHome-Konfiguration | Hand-gepflegt |
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (C++-Handler auf web_server_base) | Hand-gepflegt |
 | `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP-Modus, statische IP, NTP) | Hand-gepflegt |
+| `firmware/log_ring.h` | Log-/Debug-Ringpuffer für den Service-Tab (`/api/log`) | Hand-gepflegt |
 | `docs/DOKUMENTATION.md` | dieses Dokument | Hand-gepflegt |
 | `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |
