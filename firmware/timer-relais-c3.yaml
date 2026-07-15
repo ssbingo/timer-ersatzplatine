@@ -34,6 +34,9 @@ esphome:
           h->ssid = id(wifi_ssid_txt);
           h->mac = id(wifi_mac_txt);
           id(web_base)->add_handler(h);
+          // WICHTIG: ohne natives web_server-UI startet den HTTP-Listener
+          // (Port 80) sonst niemand im STA-Betrieb -> hier selbst initialisieren.
+          id(web_base)->init();
 
 esp32:
   board: esp32-c3-devkitm-1
@@ -55,6 +58,9 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
+  # Kein Modem-Power-Save: sonst schwankende Latenz/„mangelhafte" Verbindung
+  # (fuer ein netzgespeistes Geraet unkritisch).
+  power_save_mode: none
   ap:
     ssid: "Feeder-Relais Setup"
     password: "feeder1234"
