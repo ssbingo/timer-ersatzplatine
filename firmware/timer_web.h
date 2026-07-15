@@ -83,7 +83,8 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
  <section id=p_net class=hide>
   <div class=card>
    <b>WLAN</b>
-   <label>Netzwerkname (SSID)</label><input id=w_ssid autocomplete=off>
+   <div class=row><span class=k>Aktuell verbunden</span><span class=v id=cur_ssid>&ndash;</span></div>
+   <label>Auf anderes WLAN wechseln &ndash; Netzwerkname (SSID)</label><input id=w_ssid autocomplete=off>
    <label>Passwort</label><input id=w_pw type=password autocomplete=off>
    <button style="width:100%;margin-top:12px" onclick="saveWifi()">WLAN speichern &amp; verbinden</button>
   </div>
@@ -200,6 +201,7 @@ function up(s){var d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor
 function rows(box,arr){$(box).innerHTML=arr.map(function(kv){
  return '<div class=row><span class=k>'+kv[0]+'</span><span class=v>'+kv[1]+'</span></div>'}).join('');}
 function refresh(){return api('/api/status').then(function(s){if(!s)return;
+ var cs=$('cur_ssid');if(cs)cs.textContent=(s.wifi=='verbunden'&&s.ssid)?s.ssid:'nicht verbunden';
  $('dot').classList.toggle('on',s.relay);
  $('stBig').textContent=s.active?s.remaining+' s':(s.relay?'AN':'AUS');
  $('stSub').textContent=s.active?('läuft – Taster '+(s.last||'?')):'bereit';
