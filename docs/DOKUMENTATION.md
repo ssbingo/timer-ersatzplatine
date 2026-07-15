@@ -276,22 +276,23 @@ Selbst neu bauen: `./firmware/build_images.sh` (kompiliert und aktualisiert
 `firmware/build/`). Die Roh-Dateien liegen sonst unter
 `firmware/.esphome/build/feeder-relais/.pioenvs/feeder-relais/`.
 
+> **Die Images enthalten KEINE WLAN-Zugangsdaten.** Die Einrichtung läuft nach
+> dem Flashen über den Setup-Hotspot (Kap. 6.2). Damit kommt kein fremdes WLAN
+> in die Auslieferung, und die eingerichteten Daten überstehen OTA-Updates
+> (fester Speicher-Schlüssel).
+
 #### Weg A — mit ESPHome (empfohlen, ein Befehl)
 
-1. **`secrets.yaml`** neben die YAML legen (`firmware/secrets.yaml`) — hier
-   stehen **deine** WLAN-Daten, die gleich mit eingebaut werden:
-   ```yaml
-   wifi_ssid: "DeinWLAN"
-   wifi_password: "DeinPasswort"
-   ```
-2. ESP per **USB-C** anstecken.
-3. Im Projektordner ausführen:
+Eine `secrets.yaml` ist **nicht** nötig — es werden keine WLAN-Daten einkompiliert.
+
+1. ESP per **USB-C** anstecken.
+2. Im Projektordner ausführen:
    ```
    esphome run firmware/timer-relais-c3.yaml
    ```
    ESPHome kompiliert, fragt den **seriellen Port** ab (Linux z. B.
-   `/dev/ttyACM0`, Windows ein `COMx`) und flasht. Danach zeigt es das
-   Live-Log; der ESP verbindet sich mit deinem WLAN.
+   `/dev/ttyACM0`, Windows ein `COMx`) und flasht.
+3. Nach dem Neustart öffnet der ESP den Setup-Hotspot → weiter mit Kap. 6.2.
 
 > **Linux-Tipp:** Bei „Permission denied" auf `/dev/ttyACM0` deinen Benutzer in
 > die Gruppe `dialout` aufnehmen: `sudo usermod -aG dialout $USER` (neu anmelden).
@@ -317,14 +318,24 @@ Für die fertige `firmware.factory.bin` ganz ohne ESPHome:
 
 ### 6.2 Nach dem Flashen: WLAN einrichten
 
-Wenn im Image noch keine (oder falsche) WLAN-Daten stecken, startet der ESP
-einen eigenen **Setup-Hotspot**:
+Die Firmware bringt **absichtlich keine** WLAN-Zugangsdaten mit — nach dem
+Flashen startet der ESP einen eigenen **Setup-Hotspot**:
 
 1. Am Handy/PC ins WLAN **„Feeder-Relais Setup"** gehen (Passwort **`feeder1234`**).
 2. Es öffnet sich ein **Captive-Portal** (sonst `http://192.168.4.1` aufrufen).
 3. Dein Heim-WLAN auswählen, Passwort eingeben, speichern — der ESP startet neu
    und verbindet sich.
 4. Ab jetzt erreichbar unter **`http://feeder-relais.local`**.
+
+**Persistenz & Werksreset:**
+
+- Die eingegebenen WLAN-Daten liegen unter einem **festen Speicher-Schlüssel**
+  und bleiben bei **OTA-/Web-Updates erhalten** (Kap. 6.6) — einmal einrichten,
+  dann nie wieder.
+- Für einen **Werksreset** (alte WLAN-Daten löschen) das **Factory-Image mit
+  Flash-Erase** flashen: im Web-Flasher „Erase all flash" ankreuzen bzw.
+  `esptool.py erase_flash` vor dem Schreiben. Ein reines OTA-Update löscht die
+  Daten **nicht**.
 
 ### 6.3 Problemlösung beim Flashen
 

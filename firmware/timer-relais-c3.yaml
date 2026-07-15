@@ -56,10 +56,13 @@ ota:
   - platform: web_server   # Firmware-Upload per Browser: POST /update (Port 80)
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  # Kein Modem-Power-Save: sonst schwankende Latenz/„mangelhafte" Verbindung
-  # (fuer ein netzgespeistes Geraet unkritisch).
+  # KEINE einkompilierten Zugangsdaten! Einrichtung ausschliesslich ueber das
+  # Setup-AP/Captive-Portal. Vorteile:
+  #  1) Auslieferung ohne fremden WLAN-Namen/-Passwort im Image.
+  #  2) has_sta()==false -> die per Portal gespeicherten Daten liegen unter
+  #     einem FESTEN Preference-Key (88491487) und ueberleben OTA-Updates
+  #     (mit einkompiliertem WLAN haengt der Key am Config-Hash -> geht verloren).
+  # Werksreset (keine alten Daten): Factory-Image MIT Flash-Erase flashen.
   power_save_mode: none
   ap:
     ssid: "Feeder-Relais Setup"
