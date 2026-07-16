@@ -37,6 +37,16 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
    python3 tools/md2pdf.py docs/DOKUMENTATION.md docs/PROJEKTPLAN.md
    ```
    Ein Commit/Abgabestand ohne aktuelle PDFs ist unvollständig.
+   **Sprachpolitik Doku:** Die **deutsche** `DOKUMENTATION.md` ist die
+   **Quelle der Wahrheit** und wird bei jeder Änderung gepflegt. Die
+   Übersetzungen `DOKUMENTATION.en.md` / `DOKUMENTATION.fr.md` werden **je
+   Release** nachgezogen (nicht bei jeder Mini-Änderung); beim Release-Build
+   dann alle drei Handbuch-PDFs + Projektplan-PDF erzeugen:
+   ```bash
+   python3 tools/md2pdf.py docs/DOKUMENTATION.md docs/DOKUMENTATION.en.md \
+     docs/DOKUMENTATION.fr.md docs/PROJEKTPLAN.md
+   ```
+   `PROJEKTPLAN.md` bleibt nur Deutsch.
 7. **Konsistenz-Dreieck:** Schaltplan (`timer_ersatzplatine.kicad_sch`),
    Firmware (`firmware/timer-relais-c3.yaml`) und Doku müssen dieselbe
    Pinbelegung tragen: T1/T2/T3 = GPIO3/4/5, PhotoMOS = GPIO6 (über
@@ -59,10 +69,11 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
 | `hardware/timer_ersatzplatine.kicad_sch` | Schaltplan, KiCad-8-Format, eingebettete Symbole, Verbindungen über Netzlabels |
 | `firmware/timer-relais-c3.yaml` | ESPHome; `secrets.yaml` wird lokal ergänzt, nicht einchecken |
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (`AsyncWebHandler` auf `web_server_base`, Port 80); Endpunkte `/api/status\|trigger\|stop\|config\|net\|wifi\|reboot` |
-| `firmware/net_config.h` | Persistente Netzwerk-Konfig (Prefs): IP-Modus DHCP/statisch (ESP-IDF-netif bei `wifi.on_connect`), NTP-Server (`esp_sntp_setservername`), Hostname zur Laufzeit (`mdns_hostname_set` + `esp_netif_set_hostname`) |
+| `firmware/net_config.h` | Persistente Netzwerk-Konfig (Prefs, NetCfg v4): IP-Modus DHCP/statisch (ESP-IDF-netif bei `wifi.on_connect`), NTP-Server (`esp_sntp_setservername`), Hostname zur Laufzeit (`mdns_hostname_set` + `esp_netif_set_hostname`), 802.11k/v-Roaming (`set_btm/set_rrm`), UI-Sprache `lang` (de/en/fr, `netcfg_lang_idx()`) |
 | `firmware/log_ring.h` | Log-/Debug-Ringpuffer (`logger: on_message:` → `/api/log`); Web-OTA via `ota: platform: web_server` (`POST /update`) |
-| `docs/DOKUMENTATION.md` | Gesamtdoku inkl. KiCad-Anleitung |
-| `docs/PROJEKTPLAN.md` | Phasen, Checklisten, Risiken, Entscheidungslog |
+| `docs/DOKUMENTATION.md` | Gesamtdoku inkl. KiCad-Anleitung (deutsche **Quelle der Wahrheit**) |
+| `docs/DOKUMENTATION.en.md` / `.fr.md` | Handbuch-Übersetzungen EN/FR (je Release nachgezogen; DE führend) |
+| `docs/PROJEKTPLAN.md` | Phasen, Checklisten, Risiken, Entscheidungslog (nur Deutsch) |
 | `docs/*.pdf` | generierte PDF-Fassungen (Pflichtabgabe, nie von Hand editieren) |
 | `tools/md2pdf.py` | erzeugt die PDFs aus den Markdown-Quellen |
 

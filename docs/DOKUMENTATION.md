@@ -370,7 +370,9 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
 
 - **Start:** drei große Taster (lösen T1/T2/T3 mit ihrer eingestellten
   Zeit aus), Live-Countdown und **Stopp**.
-- **Zeiten:** die drei Timerzeiten (1–600 s), persistent gespeichert.
+- **Zeiten (Einstellungen):** ganz oben die **Sprachauswahl**
+  (Deutsch/English/Français), darunter die drei Timerzeiten (1–600 s),
+  persistent gespeichert.
 - **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
   **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server**, ein
   **Hostname** (Default `feeder-relais`), ein Schalter **WLAN-Roaming
@@ -380,6 +382,18 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
   IP/MAC, Reset-Grund, Relais.
 - **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
   aktivierbar), **Firmware-Update** (.bin-Upload, Kap. 6.6) und **Neustart**.
+
+**Sprache (mehrsprachige Oberfläche):** Die Web-App und das OLED sprechen
+**Deutsch, Englisch und Französisch**. Die Auswahl steht **ganz oben im Reiter
+Zeiten** und gilt **geräteweit** (Web *und* OLED), gespeichert in
+`g_netcfg.lang` (persistent, Default Deutsch). Die Web-Texte liegen als
+JS-Wörterbuch in der Seite (Umschalten ohne Neuladen); sprachabhängige
+Statuswerte (WLAN-Zustand, Reset-Grund) kommen als neutrale Codes aus der
+Firmware und werden im Browser übersetzt. Das OLED übersetzt Wochentage, den
+Status (Ruhe/Futter) und die Menütitel (bewusst akzentfrei wegen des
+Display-Zeichensatzes). Das Handbuch selbst gibt es zusätzlich in
+[Englisch](DOKUMENTATION.en.md) und [Französisch](DOKUMENTATION.fr.md)
+(die deutsche Fassung ist maßgeblich).
 
 In der **Kopfzeile** stehen der **Hostname** und ein **Statuspunkt**: grün = alles
 in Ordnung, gelb = ein Timer läuft, rot = Störung im Ruhezustand (z. B. OLED
@@ -394,13 +408,13 @@ Query-String, Methode GET **oder** POST:
 
 | Endpoint | Wirkung |
 |----------|---------|
-| `GET /api/status` | JSON mit allen Werten: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset` |
+| `GET /api/status` | JSON mit allen Werten: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang` (`wifi`/`reset` sind sprachneutrale Codes, die das Web-JS übersetzt) |
 | `POST /api/trigger?button=N` | Taster N (1–3) auslösen (nutzt dessen eingestellte Zeit) |
 | `POST /api/trigger?seconds=N` | ad-hoc für N Sekunden schalten |
 | `POST /api/stop` | sofort abschalten |
 | `POST /api/config?time1=A&time2=B&time3=C` | Zeiten setzen (je 1–600 s, persistent) — Felder auch einzeln |
-| `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname, roaming` |
-| `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=&host=&roaming=0\|1` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
+| `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname, roaming, lang` |
+| `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=&host=&roaming=0\|1&lang=de\|en\|fr` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
 | `POST /api/wifi?ssid=&pw=` | WLAN-Zugangsdaten setzen (verbindet neu) |
 | `POST /api/reconnect` | WLAN sauber neu verbinden (übernimmt u. a. geändertes Roaming sofort) |
 | `POST /api/reboot` | Gerät neu starten |
@@ -463,7 +477,8 @@ Die Tasten sind am Gehäuse beschriftet: **S1 = Down/Manual**, **S2 = SET**,
   Speicher** (kB).
 
 Die Zeitbasis kommt per NTP; bis zur ersten Synchronisation zeigt die Uhr
-„--:--". Zeitzone `Europe/Berlin`.
+„--:--". Zeitzone `Europe/Berlin`. Wochentag, Status (Ruhe/Futter) und die
+Menütitel folgen der **eingestellten Sprache** (Kap. 6.4).
 
 ### 6.6 Firmware-Updates (OTA)
 
@@ -634,8 +649,9 @@ der (noch leeren) Platine.
 | `firmware/log_ring.h` | Log-/Debug-Ringpuffer für den Service-Tab (`/api/log`) | Hand-gepflegt |
 | `firmware/build/*.bin` | fertige Flash-Images (factory + ota), aktueller Stand | generiert |
 | `firmware/build_images.sh` | kompiliert und aktualisiert `firmware/build/` | Quelle |
-| `docs/DOKUMENTATION.md` | dieses Dokument | Hand-gepflegt |
-| `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten | Hand-gepflegt |
+| `docs/DOKUMENTATION.md` | dieses Dokument (deutsche **Quelle**, maßgeblich) | Hand-gepflegt |
+| `docs/DOKUMENTATION.en.md`, `docs/DOKUMENTATION.fr.md` | Handbuch in Englisch/Französisch (Übersetzung, je Release nachgezogen) | Hand-gepflegt |
+| `docs/PROJEKTPLAN.md` | Phasen, Status, Checklisten (nur Deutsch) | Hand-gepflegt |
 | `CLAUDE.md` | Arbeitsanweisung für Claude Code | Hand-gepflegt |
 | `docs/DOKUMENTATION.pdf`, `docs/PROJEKTPLAN.pdf` | PDF-Fassungen (**Pflicht bei jeder Änderung**) | ja: `python3 tools/md2pdf.py docs/*.md` |
 | `tools/md2pdf.py` | Markdown→PDF-Generator (bettet Bilder ein) | Quelle |

@@ -361,29 +361,36 @@ display:
       }
       if (!conn) it.line(0, 1, 11, 9);
 
+      // Sprache (0=de,1=en,2=fr); OLED-Texte bewusst akzentfrei (Font-Glyphsatz)
+      int L = esphome::netcfg_lang_idx();
       if (id(ui_mode) == 1) {
         // ----- Menue: Info-Seiten (nur Ansicht) -----
+        static const char *const M_WIFI[]  = {"WLAN", "Wi-Fi", "Wi-Fi"};
+        static const char *const M_IP[]    = {"IP-Adresse", "IP address", "Adresse IP"};
+        static const char *const M_TIME[]  = {"Zeit / NTP", "Time / NTP", "Heure / NTP"};
+        static const char *const M_SYS[]   = {"System", "System", "Systeme"};
+        static const char *const M_NOSYNC[]= {"nicht synchron", "not synced", "non synchro"};
         int pg = id(menu_page);
         it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%d/4", pg + 1);
         if (pg == 0) {
-          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "WLAN");
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "%s", M_WIFI[L]);
           it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "%s",
                     id(wifi_ssid_txt).state.empty() ? "-" : id(wifi_ssid_txt).state.c_str());
           it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "%d dBm", rssi);
         } else if (pg == 1) {
-          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "IP-Adresse");
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "%s", M_IP[L]);
           it.printf(0, 14, id(font_small), TextAlign::TOP_LEFT, "%s",
                     id(ip_addr).state.empty() ? "-" : id(ip_addr).state.c_str());
         } else if (pg == 2) {
-          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "Zeit / NTP");
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "%s", M_TIME[L]);
           auto t = id(sntp_time).now();
           if (t.is_valid())
             it.strftime(0, 11, id(font_small), TextAlign::TOP_LEFT, "%d.%m. %H:%M:%S", t);
           else
-            it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "nicht synchron");
+            it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "%s", M_NOSYNC[L]);
           it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "%s", esphome::g_netcfg.ntp);
         } else {
-          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "System");
+          it.printf(16, 0, id(font_small), TextAlign::TOP_LEFT, "%s", M_SYS[L]);
           it.printf(0, 11, id(font_small), TextAlign::TOP_LEFT, "FW %s", (__DATE__ " " __TIME__));
           it.printf(0, 22, id(font_small), TextAlign::TOP_LEFT, "Up %.0f s",
                     id(uptime_s).has_state() ? id(uptime_s).state : 0.0f);
@@ -393,7 +400,9 @@ display:
 
       // ----- Normalzustand (kompakt): oben Uhr/Countdown (Mitte) + Status (rechts);
       //        unten Datum (links) + freier Speicher (rechts) -----
-      const char *st = (id(remaining) > 0 || id(shelly_trigger).state) ? "Futter" : "Ruhe";
+      static const char *const ST_FEED[] = {"Futter", "Feed", "Repas"};
+      static const char *const ST_IDLE[] = {"Ruhe", "Idle", "Repos"};
+      const char *st = (id(remaining) > 0 || id(shelly_trigger).state) ? ST_FEED[L] : ST_IDLE[L];
       it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%s", st);
       auto t = id(sntp_time).now();
       if (id(remaining) > 0)
@@ -403,7 +412,12 @@ display:
       else
         it.printf(64, -3, id(font_big), TextAlign::TOP_CENTER, "--:--");
       if (t.is_valid()) {
-        static const char *const WD[] = {"", "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"};
+        // Wochentage je Sprache (day_of_week: 1=So ... 7=Sa)
+        static const char *const WD_DE[] = {"", "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"};
+        static const char *const WD_EN[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
+        static const char *const WD_FR[] = {"", "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"};
+        static const char *const *const WD_ALL[] = {WD_DE, WD_EN, WD_FR};
+        const char *const *WD = WD_ALL[L];
         it.printf(0, 31, id(font_small), TextAlign::BASELINE_LEFT, "%s %02d.%02d.%04d",
                   WD[t.day_of_week], (int) t.day_of_month, (int) t.month, (int) t.year);
       }

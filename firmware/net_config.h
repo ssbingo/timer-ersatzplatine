@@ -22,7 +22,7 @@
 namespace esphome {
 
 struct NetCfg {
-  uint8_t version;      // Layout-Version (aktuell 3)
+  uint8_t version;      // Layout-Version (aktuell 4)
   uint8_t use_static;   // 0 = DHCP, 1 = statisch
   char ip[16];
   char gw[16];
@@ -31,6 +31,7 @@ struct NetCfg {
   char ntp[48];
   char host[32];        // Hostname (mDNS + DHCP)
   uint8_t roaming;      // 0 = aus (ESPHome-Scan-Roaming), 1 = 802.11k/v (BTM/RRM)
+  char lang[4];         // UI-/OLED-Sprache: "de" | "en" | "fr"
 };
 
 static NetCfg g_netcfg;
@@ -49,12 +50,24 @@ inline void netcfg_defaults(NetCfg &c) {
   strncpy(c.ntp, "de.pool.ntp.org", sizeof(c.ntp) - 1);
   strncpy(c.host, "feeder-relais", sizeof(c.host) - 1);
   c.roaming = 0;  // Default: kein k/v -> ESPHome-Scan-Roaming wie bisher
+  strncpy(c.lang, "de", sizeof(c.lang) - 1);  // Default-Sprache Deutsch
 }
 
 inline void netcfg_load() {
   g_netcfg_pref = global_preferences->make_preference<NetCfg>((uint32_t) 0x4E657444);  // 'NetD'
-  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 3)
+  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 4)
     netcfg_defaults(g_netcfg);
+}
+
+// Nur "de"/"en"/"fr" zulassen, sonst auf "de". Liefert den Index 0/1/2.
+inline uint8_t netcfg_lang_idx() {
+  if (strcmp(g_netcfg.lang, "en") == 0) return 1;
+  if (strcmp(g_netcfg.lang, "fr") == 0) return 2;
+  return 0;
+}
+inline void netcfg_sanitize_lang() {
+  if (strcmp(g_netcfg.lang, "en") != 0 && strcmp(g_netcfg.lang, "fr") != 0)
+    strncpy(g_netcfg.lang, "de", sizeof(g_netcfg.lang) - 1);
 }
 
 // Auf ein gueltiges DNS-Label reduzieren (a-z 0-9 '-'), Rand-'-' entfernen.
