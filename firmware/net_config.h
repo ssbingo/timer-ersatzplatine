@@ -72,9 +72,20 @@ inline void netcfg_sanitize_host(char *h) {
 // STA-netif (Router) - der greift sauber nach Reconnect/Neustart.
 inline void netcfg_apply_hostname() {
   if (g_netcfg.host[0] == '\0') return;
-  mdns_hostname_set(g_netcfg.host);
+  mdns_hostname_set(g_netcfg.host);                 // mDNS (.local) sofort
   esp_netif_t *nif = esp_netif_get_handle_from_ifkey("WIFI_STA_DEF");
-  if (nif != nullptr) esp_netif_set_hostname(nif, g_netcfg.host);
+  if (nif == nullptr) return;
+  // Compile-Default (feeder-relais) hat ESPHome bereits gesetzt -> nichts noetig.
+  if (strcmp(g_netcfg.host, App.get_name().c_str()) == 0) return;
+  if (g_netcfg.use_static) {
+    esp_netif_set_hostname(nif, g_netcfg.host);
+  } else {
+    // DHCP-Client neu starten, damit der Router den neuen Namen (Option 12)
+    // per frischem DISCOVER erhaelt. esp_netif_set_hostname verlangt DHCP=aus.
+    esp_netif_dhcpc_stop(nif);
+    esp_netif_set_hostname(nif, g_netcfg.host);
+    esp_netif_dhcpc_start(nif);
+  }
 }
 
 inline void netcfg_save() { g_netcfg_pref.save(&g_netcfg); }

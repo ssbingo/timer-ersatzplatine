@@ -60,7 +60,7 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
 .toast.show{opacity:1}
 </style></head><body>
 <div class=wrap>
- <h1><span class=dot id=dot></span>Feeder-Relais</h1>
+ <h1><span class=dot id=dot></span><span id=hdr>Feeder-Relais</span></h1>
 
  <section id=p_start>
   <div class="card state"><div class=big id=stBig>&ndash;</div><div class=sub id=stSub></div></div>
@@ -208,7 +208,9 @@ function bars(rssi){var n=rssi>=-55?4:(rssi>=-65?3:(rssi>=-75?2:1));
  return s+'</span>';}
 function refresh(){return api('/api/status').then(function(s){if(!s)return;
  var cs=$('cur_ssid');if(cs)cs.textContent=(s.wifi=='verbunden'&&s.ssid)?s.ssid:'nicht verbunden';
- $('dot').classList.toggle('on',s.relay);
+ var dc=s.active?'#f59e0b':(s.fault?'#ef4444':'#22c55e');
+ $('dot').style.background=dc;$('dot').style.boxShadow='0 0 8px '+dc;
+ if(s.host){$('hdr').textContent=s.host;if(document.title!=s.host)document.title=s.host;}
  $('stBig').textContent=s.active?s.remaining+' s':(s.relay?'AN':'AUS');
  $('stSub').textContent=s.active?('läuft – Taster '+(s.last||'?')):'bereit';
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
@@ -216,6 +218,7 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  rows('statbox',[['Firmware',s.fw],['Laufzeit',up(s.uptime)],['Freier Speicher',(s.heap/1024).toFixed(1)+' kB'],
   ['WLAN',s.wifi],['SSID',s.ssid||'&ndash;'],
   ['Kanal / Signal',s.chan?('Kanal '+s.chan+bars(s.rssi)+s.rssi+' dBm'):'&ndash;'],
+  ['Hostname',s.host||'&ndash;'],
   ['IP-Adresse',s.ip||'&ndash;'],['MAC',s.mac],['Setup-AP',s.ap],['Reset-Grund',s.reset],
   ['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
 });}
@@ -234,6 +237,7 @@ class TimerWebHandler : public AsyncWebHandler {
   text_sensor::TextSensor *ip{nullptr};
   text_sensor::TextSensor *ssid{nullptr};
   text_sensor::TextSensor *mac{nullptr};
+  Component *oled{nullptr};   // fuer Stoerungs-Erkennung (is_failed)
 
   bool canHandle(AsyncWebServerRequest *req) const override {
     const std::string u = req->url();
@@ -293,15 +297,18 @@ class TimerWebHandler : public AsyncWebHandler {
     uint8_t chan = 0;
     wifi_second_chan_t sch;
     if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
-    char buf[800];
+    // Stoerung im Ruhezustand: OLED fehlerhaft oder kein WLAN.
+    bool fault = (oled != nullptr && oled->is_failed()) || !connected;
+    char buf[820];
     snprintf(buf, sizeof(buf),
-      "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,"
+      "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,\"fault\":%s,"
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
       "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\"}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
+      fault ? "true" : "false",
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
-      App.get_name().c_str(),
+      g_netcfg.host,
       ip_s.c_str(),
       ssid_s.c_str(),
       (rssi != nullptr) ? (int) rssi->state : 0,

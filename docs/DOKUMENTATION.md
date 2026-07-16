@@ -366,6 +366,10 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
 - **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
   aktivierbar), **Firmware-Update** (.bin-Upload, Kap. 6.6) und **Neustart**.
 
+In der **Kopfzeile** stehen der **Hostname** und ein **Statuspunkt**: grün = alles
+in Ordnung, gelb = ein Timer läuft, rot = Störung im Ruhezustand (z. B. OLED
+nicht erreichbar oder kein WLAN).
+
 Technisch liefert `firmware/timer_web.h` (mit `firmware/net_config.h` für die
 persistente Netzwerk-Konfig) diese Seite als eigener `AsyncWebHandler` auf
 `web_server_base` (das native ESPHome-Web-UI ist deaktiviert). Dieselbe
@@ -390,10 +394,12 @@ Query-String, Methode GET **oder** POST:
 **Statische IP** wird beim `wifi.on_connect` per ESP-IDF-netif gesetzt und ist
 deshalb nach einem **Neustart** aktiv (DHCP ist Default). **WLAN** nutzt
 ESPHomes eigenes `save_wifi_sta()`; Erstzugang immer übers Captive-Portal.
-**Hostname** wird zur Laufzeit umgestellt: der mDNS-Name (`…​.local`) sofort
-per `mdns_hostname_set()`, der DHCP-Name (im Router) per
-`esp_netif_set_hostname()` nach dem nächsten Verbinden/Neustart. Der Name wird
-auf ein gültiges DNS-Label reduziert (a–z, 0–9, „-").
+**Hostname** wird zur Laufzeit umgestellt: mDNS (`…​.local`) sofort per
+`mdns_hostname_set()`; der DHCP-Name (im Router) durch einen **Neustart des
+DHCP-Clients** (`esp_netif_dhcpc_stop/start` → frisches DISCOVER mit Option 12),
+also ebenfalls ohne Reboot. Der Name erscheint auch in der **Kopfzeile** der
+Web-App und im Browser-Tab. Er wird auf ein gültiges DNS-Label reduziert
+(a–z, 0–9, „-").
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.

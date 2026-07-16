@@ -33,6 +33,7 @@ esphome:
           h->ip = id(ip_addr);
           h->ssid = id(wifi_ssid_txt);
           h->mac = id(wifi_mac_txt);
+          h->oled = id(oled);
           id(web_base)->add_handler(h);
           // WICHTIG: ohne natives web_server-UI startet den HTTP-Listener
           // (Port 80) sonst niemand im STA-Betrieb -> hier selbst initialisieren.
