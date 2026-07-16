@@ -377,9 +377,10 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
   **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server**, ein
   **Hostname** (Default `feeder-relais`), ein Schalter **WLAN-Roaming
   (802.11k/v)** und ein **Neustart**-Knopf.
-- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID mit **Kanal ·
-  farbigem Signalbalken · Signal** (dBm; 1 Balken rot, 2 gelb, 3–4 grün),
-  **WLAN-Roaming (802.11k/v) EIN/AUS**, IP/MAC, Reset-Grund, Relais.
+- **Status:** ganz oben die geflashte **Version**, dann Firmware-Baustand,
+  Laufzeit, freier Speicher, WLAN, SSID mit **Kanal · farbigem Signalbalken ·
+  Signal** (dBm; 1 Balken rot, 2 gelb, 3–4 grün), **WLAN-Roaming (802.11k/v)
+  EIN/AUS**, IP/MAC, Reset-Grund, Relais.
 - **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
   aktivierbar), **Firmware-Update** (.bin-Upload, Kap. 6.6) und **Neustart**.
 
@@ -408,7 +409,7 @@ Query-String, Methode GET **oder** POST:
 
 | Endpoint | Wirkung |
 |----------|---------|
-| `GET /api/status` | JSON mit allen Werten: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang, roaming` (`wifi`/`reset` sind sprachneutrale Codes, die das Web-JS übersetzt) |
+| `GET /api/status` | JSON mit allen Werten: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, ver, uptime, heap, wifi, reset, lang, roaming` (`ver` = geflashte Version; `wifi`/`reset` sind sprachneutrale Codes, die das Web-JS übersetzt) |
 | `POST /api/trigger?button=N` | Taster N (1–3) auslösen (nutzt dessen eingestellte Zeit) |
 | `POST /api/trigger?seconds=N` | ad-hoc für N Sekunden schalten |
 | `POST /api/stop` | sofort abschalten |
@@ -446,11 +447,16 @@ STA-Config; dafür gibt es in derselben Karte den Knopf **„Jetzt neu verbinden
 (`POST /api/reconnect` → `wifi.disable`+`enable`, das WLAN trennt kurz), sonst
 wirkt es beim nächsten Neustart. Default: **aus**. Der Haken spiegelt **laufend
 den echten Gerätezustand** (aus `/api/status`) und bleibt daher nach dem
-Neuverbinden sichtbar gesetzt; die Einstellung wird **sofort dauerhaft** ins
-Flash geschrieben (`netcfg_save()` ruft `global_preferences->sync()`, da ESPHomes
-`save()` auf dem ESP32 sonst nur in eine RAM-Warteschlange legt). Der aktuelle
-Zustand steht zusätzlich als Zeile **„WLAN-Roaming (802.11k/v): EIN/AUS"** auf der
-**Status**-Seite.
+Neuverbinden sichtbar gesetzt; der aktuelle Zustand steht zusätzlich als Zeile
+**„WLAN-Roaming (802.11k/v): EIN/AUS"** auf der **Status**-Seite.
+
+**Persistenz (wichtig):** Die Web-Handler laufen im **Webserver-Task**. ESPHomes
+Preferences (globale Warteschlange + NVS) sind **nicht threadsicher** gegen den
+Main-Task — ein Flash-Schreiben (`save()`/`sync()`) direkt aus dem Handler
+verursachte **Panik-Neustarts**. Deshalb setzt `netcfg_save()` nur ein Flag; das
+eigentliche, dauerhafte Schreiben (`netcfg_flush()` → `global_preferences->sync()`)
+erledigt das **1-s-Interval im Main-Task** (dieselbe Task wie ESPHomes eigener
+Preferences-Sync). Das gilt für **alle** Netzwerk-Einstellungen.
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.

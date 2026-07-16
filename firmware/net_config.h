@@ -38,6 +38,7 @@ static NetCfg g_netcfg;
 static ESPPreferenceObject g_netcfg_pref;
 static bool g_reboot_pending = false;
 static bool g_reconnect_pending = false;
+static bool g_prefs_save_pending = false;
 
 inline void netcfg_defaults(NetCfg &c) {
   memset(&c, 0, sizeof(c));
@@ -105,12 +106,17 @@ inline void netcfg_apply_hostname() {
   }
 }
 
-inline void netcfg_save() {
+// ACHTUNG: Wird aus dem WEBSERVER-Task aufgerufen. ESPHomes Preferences
+// (globale s_pending_save-Liste + NVS-Handle) sind NICHT threadsicher gegen den
+// Main-Task -> save()/sync() hier direkt = Data-Race -> Panik/Neustart. Deshalb
+// nur markieren; das eigentliche Schreiben macht netcfg_flush() im Main-Task
+// (1s-Interval, dieselbe Task wie ESPHomes eigener Preferences-Sync).
+inline void netcfg_save() { g_prefs_save_pending = true; }
+
+// Nur im MAIN-Task aufrufen (Interval). Schreibt g_netcfg dauerhaft ins Flash.
+inline void netcfg_flush() {
   g_netcfg_pref.save(&g_netcfg);
-  // ESP32: save() legt nur in die RAM-Warteschlange; erst sync() schreibt ins
-  // Flash (nvs_commit). Sofort synchronisieren, damit die Einstellung auch einen
-  // sofortigen Neustart/Reconnect ueberlebt (sonst "verschwindet" z. B. der Haken).
-  global_preferences->sync();
+  global_preferences->sync();  // nvs_commit; sofort dauerhaft
 }
 
 // Nur den Servernamen aendern - erhaelt den von der ESPHome-sntp-Komponente

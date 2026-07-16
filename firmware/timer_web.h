@@ -19,6 +19,10 @@
 #include "log_ring.h"
 #include "esphome/components/wifi/wifi_component.h"
 
+// Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
+// mitziehen (siehe Release-Ablauf / github-repo-Memory).
+#define FW_VERSION "0.0.14"
+
 namespace esphome {
 
 static const char TIMER_INDEX_HTML[] PROGMEM = R"HTMLPAGE(<!doctype html>
@@ -230,6 +234,7 @@ var T={
  nav_net:{de:'Netzwerk',en:'Network',fr:'Réseau'},
  nav_stat:{de:'Status',en:'Status',fr:'État'},
  nav_svc:{de:'Service',en:'Service',fr:'Service'},
+ st_ver:{de:'Version',en:'Version',fr:'Version'},
  st_fw:{de:'Firmware',en:'Firmware',fr:'Firmware'},
  st_uptime:{de:'Laufzeit',en:'Uptime',fr:'Durée de service'},
  st_heap:{de:'Freier Speicher',en:'Free memory',fr:'Mémoire libre'},
@@ -346,7 +351,7 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
  var rn=$('n_roam');if(rn&&rn!==document.activeElement&&Date.now()>roamHold)rn.checked=!!s.roaming;
- rows('statbox',[[tr('st_fw'),s.fw],[tr('st_uptime'),up(s.uptime)],[tr('st_heap'),(s.heap/1024).toFixed(1)+' kB'],
+ rows('statbox',[[tr('st_ver'),s.ver||'&ndash;'],[tr('st_fw'),s.fw],[tr('st_uptime'),up(s.uptime)],[tr('st_heap'),(s.heap/1024).toFixed(1)+' kB'],
   [tr('st_wifi'),twifi(s.wifi)],[tr('st_ssid'),s.ssid||'&ndash;'],
   [tr('st_chansig'),s.chan?(tr('chan_pfx')+s.chan+bars(s.rssi)+s.rssi+' dBm'):'&ndash;'],
   [tr('st_roam'),s.roaming?tr('ein'):tr('aus')],
@@ -433,12 +438,13 @@ class TimerWebHandler : public AsyncWebHandler {
     if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
     // Stoerung im Ruhezustand: OLED fehlerhaft oder kein WLAN.
     bool fault = (oled != nullptr && oled->is_failed()) || !connected;
-    char buf[860];
+    char buf[896];
     snprintf(buf, sizeof(buf),
       "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,\"fault\":%s,"
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
-      "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\",\"roaming\":%d}",
+      "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\",\"roaming\":%d,"
+      "\"ver\":\"%s\"}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
       fault ? "true" : "false",
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
@@ -455,7 +461,8 @@ class TimerWebHandler : public AsyncWebHandler {
       connected ? "up" : "down",   // sprachneutraler Code -> JS uebersetzt (wifi_*)
       reset_reason(),
       g_netcfg.lang,
-      g_netcfg.roaming);
+      g_netcfg.roaming,
+      FW_VERSION);
     req->send(200, "application/json", buf);
   }
 
