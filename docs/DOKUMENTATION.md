@@ -181,9 +181,18 @@ neuen Platine **durch den randoffenen U-Schlitz B5 ersetzt** und entfällt.
 | +3V3 | Kleinspannung | ESP-3V3-Ausgang → OLED VCC |
 | BTN1/2/3 | Signal | Taster → GPIO3/4/5 (interne Pullups) |
 | PMOS_DRV → PMOS_A | Signal | GPIO6 → R1 330 Ω → PhotoMOS-Anode |
-| SDA / SCL | I2C | GPIO8 / GPIO9 → OLED |
+| SDA / SCL | I2C | GPIO7 / GPIO9 → OLED |
+| RGB-LED | Signal | GPIO8 → Onboard-WS2812 (Status-LED, gedimmt) |
 
-### 5.2 ESP32-C3-Super-Mini-Pinbelegung
+### 5.2 ESP32-C3-Super-Mini: Board und Pinbelegung
+
+Modul-Variante „ESP32-C3FN4". Die von uns genutzten Pins im Überblick:
+
+![GPIO-Belegung des ESP32-C3 Super Mini](img/board_belegung.png)
+
+Bauteile auf dem Modul: **1** USB-Type-C · **2** BOOT-Taster · **3** RESET-Taster ·
+**4** LDO CAT6219 (3,3 V, 500 mA) · **5** ESP32-C3FN4 · **6** 2,4-GHz-Antenne ·
+**7 RGB-Modul (WS2812, GPIO8)** · **8** Antennen-Anschluss (u.FL).
 
 | Pin | Funktion | Anmerkung |
 |-----|----------|-----------|
@@ -193,11 +202,14 @@ neuen Platine **durch den randoffenen U-Schlitz B5 ersetzt** und entfällt.
 | GPIO4 | Taster T2 | dito |
 | GPIO5 | Taster T3 | dito |
 | GPIO6 | PhotoMOS-Treiber | high = Shelly ein |
-| GPIO8 | SDA | auf dem Modul so beschriftet |
-| GPIO9 | SCL | dito |
+| GPIO7 | SDA (I2C) | OLED — **statt GPIO8**, dort sitzt die RGB-LED |
+| GPIO8 | RGB-LED (WS2812) | Onboard-Status-LED, gedimmt |
+| GPIO9 | SCL (I2C) | OLED |
 
-Bewusst vermieden: GPIO2/8/9 als Taster (Strapping-Pins — GPIO8/9 sind
-mit I2C-Pullups bootkompatibel, als Tastereingänge wären sie riskant).
+Bewusst vermieden: GPIO2/8/9 als Taster (Strapping-Pins). **GPIO8 trägt die
+Onboard-RGB-LED (WS2812)** — deshalb liegt I2C-**SDA auf GPIO7** (nicht GPIO8),
+sonst würde der I2C-Verkehr die LED hell ansteuern (Hitze). SCL bleibt GPIO9
+(mit I2C-Pullup bootkompatibel).
 
 ### 5.3 Shelly 1PM Mini Gen4
 
@@ -370,7 +382,8 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
 
 In der **Kopfzeile** stehen der **Hostname** und ein **Statuspunkt**: grün = alles
 in Ordnung, gelb = ein Timer läuft, rot = Störung im Ruhezustand (z. B. OLED
-nicht erreichbar oder kein WLAN).
+nicht erreichbar oder kein WLAN). **Dieselbe Ampel** zeigt am Gerät die gedimmte
+**Onboard-RGB-LED** (WS2812 auf GPIO8, siehe Kap. 5.2).
 
 Technisch liefert `firmware/timer_web.h` (mit `firmware/net_config.h` für die
 persistente Netzwerk-Konfig) diese Seite als eigener `AsyncWebHandler` auf

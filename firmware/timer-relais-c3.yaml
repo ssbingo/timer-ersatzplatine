@@ -4,7 +4,8 @@
 #   Taster S1/S2/S3 = Down/Manual / SET / UP: GPIO3 / GPIO4 / GPIO5
 #     (gegen GND, interne Pullups)
 #   PhotoMOS (-> Shelly SW): GPIO6 (ueber 330R an LED-Anode)
-#   I2C OLED: SDA=GPIO8, SCL=GPIO9
+#   I2C OLED: SDA=GPIO7, SCL=GPIO9  (SDA war GPIO8 - kollidiert mit der RGB-LED!)
+#   RGB-Status-LED (WS2812, onboard Super Mini): GPIO8
 # =====================================================================
 
 esphome:
@@ -178,6 +179,20 @@ interval:
             }
           }
           if (esphome::g_reboot_pending) { App.safe_reboot(); }
+          // Status-LED: gruen=OK, gelb=Timer laeuft, rot=Stoerung; ~8% Helligkeit.
+          {
+            float r = 0, g = 0, b = 0;
+            bool fault = id(oled).is_failed() ||
+                         !esphome::wifi::global_wifi_component->is_connected();
+            if (fault) r = 1;
+            else if (id(remaining) > 0) { r = 1; g = 1; }
+            else g = 1;
+            auto c = id(status_led).turn_on();
+            c.set_rgb(r, g, b);
+            c.set_brightness(0.08f);
+            c.set_transition_length(0);
+            c.perform();
+          }
       - component.update: oled
 
 binary_sensor:
@@ -291,9 +306,23 @@ text_sensor:
       id: wifi_mac_txt
 
 i2c:
-  sda: GPIO8
+  sda: GPIO7            # war GPIO8 -> dort sitzt die Onboard-RGB-LED (WS2812)
   scl: GPIO9
   frequency: 400kHz
+
+# Onboard-RGB-LED (WS2812 auf GPIO8) als dezente Status-LED (gedimmt).
+# Wird im 1s-Interval gesetzt: gruen=OK, gelb=Timer laeuft, rot=Stoerung.
+light:
+  - platform: esp32_rmt_led_strip
+    id: status_led
+    name: "Status-LED"
+    internal: true
+    pin: GPIO8
+    num_leds: 1
+    chipset: WS2812
+    rgb_order: GRB
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
 
 font:
   - file: "gfonts://Roboto"

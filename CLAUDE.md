@@ -40,7 +40,9 @@ der Doku Kap. 10, Checkboxen/Entscheidungslog im Projektplan).
 7. **Konsistenz-Dreieck:** Schaltplan (`timer_ersatzplatine.kicad_sch`),
    Firmware (`firmware/timer-relais-c3.yaml`) und Doku müssen dieselbe
    Pinbelegung tragen: T1/T2/T3 = GPIO3/4/5, PhotoMOS = GPIO6 (über
-   330 Ω), SDA = GPIO8, SCL = GPIO9, J4 = GND/VCC/SCL/SDA von oben.
+   330 Ω), SDA = GPIO7, SCL = GPIO9 (SDA war GPIO8 — dort sitzt die
+   Onboard-RGB-LED WS2812, siehe unten), J4 = GND/VCC/SCL/SDA von oben.
+   RGB-Status-LED (WS2812, onboard Super Mini) = GPIO8.
    Wer eine Seite ändert, ändert alle drei.
    Gehäuse-Beschriftung der Taster (Firmware/Doku): **S1 = Down/Manual
    (T1), S2 = SET (T2), S3 = UP (T3)**. Firmware-Gerätename/Default-
