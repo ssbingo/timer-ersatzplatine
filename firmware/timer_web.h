@@ -201,6 +201,11 @@ function up(s){var d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor
  return (d?d+'d ':'')+('0'+h).slice(-2)+':'+('0'+m).slice(-2);}
 function rows(box,arr){$(box).innerHTML=arr.map(function(kv){
  return '<div class=row><span class=k>'+kv[0]+'</span><span class=v>'+kv[1]+'</span></div>'}).join('');}
+function bars(rssi){var n=rssi>=-55?4:(rssi>=-65?3:(rssi>=-75?2:1));
+ var col=n>=3?'#22c55e':(n==2?'#f59e0b':'#ef4444');var h=[4,7,10,13];
+ var s='<span style="display:inline-flex;align-items:flex-end;gap:2px;height:13px;vertical-align:-2px;margin:0 6px">';
+ for(var i=0;i<4;i++)s+='<span style="width:3px;height:'+h[i]+'px;border-radius:1px;background:'+(i<n?col:'#333c52')+'"></span>';
+ return s+'</span>';}
 function refresh(){return api('/api/status').then(function(s){if(!s)return;
  var cs=$('cur_ssid');if(cs)cs.textContent=(s.wifi=='verbunden'&&s.ssid)?s.ssid:'nicht verbunden';
  $('dot').classList.toggle('on',s.relay);
@@ -210,7 +215,7 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
  rows('statbox',[['Firmware',s.fw],['Laufzeit',up(s.uptime)],['Freier Speicher',(s.heap/1024).toFixed(1)+' kB'],
   ['WLAN',s.wifi],['SSID',s.ssid||'&ndash;'],
-  ['Kanal / Signal',(s.chan?('Kanal '+s.chan):'&ndash;')+' &middot; '+s.rssi+' dBm'],
+  ['Kanal / Signal',s.chan?('Kanal '+s.chan+bars(s.rssi)+s.rssi+' dBm'):'&ndash;'],
   ['IP-Adresse',s.ip||'&ndash;'],['MAC',s.mac],['Setup-AP',s.ap],['Reset-Grund',s.reset],
   ['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
 });}
