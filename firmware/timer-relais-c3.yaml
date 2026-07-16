@@ -189,7 +189,7 @@ interval:
             else g = 1;
             auto c = id(status_led).turn_on();
             c.set_rgb(r, g, b);
-            c.set_brightness(0.08f);
+            c.set_brightness(0.25f);
             c.set_transition_length(0);
             c.perform();
           }
