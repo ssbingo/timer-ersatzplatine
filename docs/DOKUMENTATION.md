@@ -360,8 +360,8 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
 - **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
   **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server** und ein
   **Hostname** (Default `feeder-relais`) und ein **Neustart**-Knopf.
-- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID/IP/Signal/MAC,
-  Reset-Grund, Relais.
+- **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID mit
+  **Kanal · Signal** (dBm), IP/MAC, Reset-Grund, Relais.
 - **Service:** Live-**Log** (Anzeige-Stufe ERROR/WARN/INFO/DEBUG wählbar,
   aktivierbar), **Firmware-Update** (.bin-Upload, Kap. 6.6) und **Neustart**.
 

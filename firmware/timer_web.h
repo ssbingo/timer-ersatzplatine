@@ -14,6 +14,7 @@
 #pragma once
 #include "esphome.h"
 #include <esp_system.h>
+#include <esp_wifi.h>
 #include "net_config.h"
 #include "log_ring.h"
 #include "esphome/components/wifi/wifi_component.h"
@@ -208,8 +209,10 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
  rows('statbox',[['Firmware',s.fw],['Laufzeit',up(s.uptime)],['Freier Speicher',(s.heap/1024).toFixed(1)+' kB'],
-  ['WLAN',s.wifi],['SSID',s.ssid||'&ndash;'],['IP-Adresse',s.ip||'&ndash;'],['Signal',s.rssi+' dBm'],
-  ['MAC',s.mac],['Setup-AP',s.ap],['Reset-Grund',s.reset],['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
+  ['WLAN',s.wifi],['SSID',s.ssid||'&ndash;'],
+  ['Kanal / Signal',(s.chan?('Kanal '+s.chan):'&ndash;')+' &middot; '+s.rssi+' dBm'],
+  ['IP-Adresse',s.ip||'&ndash;'],['MAC',s.mac],['Setup-AP',s.ap],['Reset-Grund',s.reset],
+  ['Relais',s.relay?'AN':'AUS'],['Restzeit',s.remaining+' s']]);
 });}
 refresh();setInterval(refresh,1000);
 </script></body></html>)HTMLPAGE";
@@ -282,11 +285,14 @@ class TimerWebHandler : public AsyncWebHandler {
     bool connected = !ip_s.empty() && ip_s != "0.0.0.0";
     unsigned long up = (uptime != nullptr) ? (unsigned long) uptime->state
                                            : (unsigned long) (millis() / 1000UL);
-    char buf[760];
+    uint8_t chan = 0;
+    wifi_second_chan_t sch;
+    if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
+    char buf[800];
     snprintf(buf, sizeof(buf),
       "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,"
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
-      "\"rssi\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
+      "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
       "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\"}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
@@ -294,6 +300,7 @@ class TimerWebHandler : public AsyncWebHandler {
       ip_s.c_str(),
       ssid_s.c_str(),
       (rssi != nullptr) ? (int) rssi->state : 0,
+      (int) chan,
       mac_s.c_str(),
       "Feeder-Relais Setup",
       (__DATE__ " " __TIME__),
