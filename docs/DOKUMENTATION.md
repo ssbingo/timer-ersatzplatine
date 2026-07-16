@@ -372,8 +372,9 @@ Flashen startet der ESP einen eigenen **Setup-Hotspot**:
   Zeit aus), Live-Countdown und **Stopp**.
 - **Zeiten:** die drei Timerzeiten (1–600 s), persistent gespeichert.
 - **Netzwerk (konfigurierbar):** WLAN (SSID/Passwort), IP-Modus
-  **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server** und ein
-  **Hostname** (Default `feeder-relais`) und ein **Neustart**-Knopf.
+  **DHCP/statisch** (+ IP/Gateway/Maske/DNS), **NTP-Server**, ein
+  **Hostname** (Default `feeder-relais`), ein Schalter **WLAN-Roaming
+  (802.11k/v)** und ein **Neustart**-Knopf.
 - **Status:** Firmware, Laufzeit, freier Speicher, WLAN, SSID mit **Kanal ·
   farbigem Signalbalken · Signal** (dBm; 1 Balken rot, 2 gelb, 3–4 grün),
   IP/MAC, Reset-Grund, Relais.
@@ -398,8 +399,8 @@ Query-String, Methode GET **oder** POST:
 | `POST /api/trigger?seconds=N` | ad-hoc für N Sekunden schalten |
 | `POST /api/stop` | sofort abschalten |
 | `POST /api/config?time1=A&time2=B&time3=C` | Zeiten setzen (je 1–600 s, persistent) — Felder auch einzeln |
-| `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname` |
-| `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
+| `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname, roaming` |
+| `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=&host=&roaming=0\|1` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
 | `POST /api/wifi?ssid=&pw=` | WLAN-Zugangsdaten setzen (verbindet neu) |
 | `POST /api/reboot` | Gerät neu starten |
 | `GET /api/log?level=N&since=M` | Log-Ringpuffer als JSON (Zeilen mit Level ≤ N, `seq` > M); Level 1=ERROR…5=DEBUG |
@@ -415,6 +416,19 @@ DHCP-Clients** (`esp_netif_dhcpc_stop/start` → frisches DISCOVER mit Option 12
 also ebenfalls ohne Reboot. Der Name erscheint auch in der **Kopfzeile** der
 Web-App und im Browser-Tab. Er wird auf ein gültiges DNS-Label reduziert
 (a–z, 0–9, „-").
+
+**WLAN-Roaming (802.11k/v):** Die *Fähigkeit* ist fest einkompiliert
+(`enable_btm`/`enable_rrm` in der YAML → `CONFIG_WPA_11KV_SUPPORT` im
+wpa_supplicant); das **Ein/Aus** schaltet der Web-Schalter zur Laufzeit über
+`g_netcfg.roaming` (persistent). *Ein* setzt in der STA-Config die Bits
+802.11v **BTM** (`set_btm`, der AP/Router kann das Gerät gezielt auf den
+stärkeren AP umbuchen) und 802.11k **RRM** (`set_rrm`, Nachbar-AP-Listen) und
+schaltet ESPHomes eigenes Scan-Roaming ab (Treiber übernimmt); *Aus* macht es
+umgekehrt (`set_post_connect_roaming(true)`). Sinnvoll nur bei **mehreren
+Access-Points mit gleicher SSID** (UniFi/Mesh) und wenn diese 802.11k/v
+unterstützen. Die Bits gehen erst beim **nächsten (Re)Connect** in die
+STA-Config — voll wirksam also nach dem nächsten Verbinden/Neustart. Default:
+**aus**.
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.
@@ -614,7 +628,7 @@ der (noch leeren) Platine.
 | `hardware/timer_ersatzplatine.kicad_sch` | kompletter Schaltplan (KiCad 8+) | Hand-gepflegt |
 | `firmware/timer-relais-c3.yaml` | ESPHome-Konfiguration | Hand-gepflegt |
 | `firmware/timer_web.h` | Mobile Web-App + JSON-API (C++-Handler auf web_server_base) | Hand-gepflegt |
-| `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP-Modus, statische IP, NTP) | Hand-gepflegt |
+| `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP-Modus, statische IP, NTP, Hostname, 802.11k/v-Roaming) | Hand-gepflegt |
 | `firmware/log_ring.h` | Log-/Debug-Ringpuffer für den Service-Tab (`/api/log`) | Hand-gepflegt |
 | `firmware/build/*.bin` | fertige Flash-Images (factory + ota), aktueller Stand | generiert |
 | `firmware/build_images.sh` | kompiliert und aktualisiert `firmware/build/` | Quelle |

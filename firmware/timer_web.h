@@ -117,6 +117,15 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
    DHCP-Name (Router) und eine statische IP nach einem Neustart.</span>
    <button class=stop style="background:#b45309;margin-top:10px" onclick="reboot()">Neustart</button>
   </div>
+  <div class=card>
+   <b>WLAN-Roaming (802.11k/v)</b>
+   <label style="display:flex;align-items:center;gap:8px;margin-top:8px">
+    <input type=checkbox id=n_roam onchange="saveRoam()"> BTM/RRM aktivieren</label>
+   <span class=note>Nur bei mehreren Access-Points mit gleicher SSID sinnvoll
+   (z.&#8203;B. UniFi/Mesh): Der Router kann das Gerät gezielt auf den stärkeren
+   AP umbuchen (802.11v BTM) und nutzt Nachbar-Listen (802.11k RRM). Aus =
+   klassisches ESPHome-Scan-Roaming. Wirkt voll ab dem nächsten Verbinden/Neustart.</span>
+  </div>
  </section>
 
  <section id=p_stat class=hide><div class=card id=statbox></div></section>
@@ -167,7 +176,7 @@ function nav(p){['start','cfg','net','stat','svc'].forEach(function(x){$('p_'+x)
  if(p=='net')loadNet();}
 function loadNet(){api('/api/net').then(function(n){if(!n)return;
  $('n_static').value=n.static;$('n_ip').value=n.ip;$('n_gw').value=n.gw;$('n_sn').value=n.sn;
- $('n_dns').value=n.dns;$('n_ntp').value=n.ntp;$('n_host').value=n.hostname;ipmode();});}
+ $('n_dns').value=n.dns;$('n_ntp').value=n.ntp;$('n_host').value=n.hostname;$('n_roam').checked=!!n.roaming;ipmode();});}
 function ipmode(){$('ipfields').style.display=($('n_static').value=='1')?'block':'none';}
 function saveWifi(){api('/api/wifi?ssid='+encodeURIComponent($('w_ssid').value)+'&pw='+encodeURIComponent($('w_pw').value),'POST')
  .then(function(r){toast(r&&r.ok?'WLAN gespeichert':'Fehler');});}
@@ -176,6 +185,7 @@ function saveNet(){var q='static='+$('n_static').value+'&ip='+encodeURIComponent
  api('/api/net?'+q,'POST').then(function(r){toast(($('n_static').value=='1')?'Gespeichert - Neustart nötig':'Gespeichert');});}
 function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POST').then(function(r){toast(r&&r.ok?'NTP gespeichert':'Fehler');});}
 function saveHost(){api('/api/net?host='+encodeURIComponent($('n_host').value),'POST').then(function(r){toast('Hostname gespeichert');if(r&&r.hostname)$('n_host').value=r.hostname;});}
+function saveRoam(){api('/api/net?roaming='+($('n_roam').checked?1:0),'POST').then(function(r){toast($('n_roam').checked?'Roaming aktiviert':'Roaming aus');});}
 function reboot(){if(confirm('Gerät jetzt neu starten?'))api('/api/reboot','POST').then(function(){toast('Neustart …');});}
 var lgTimer=null,lgSeq=0,LVL={1:'E',2:'W',3:'I',4:'C',5:'D',6:'V'};
 function logToggle(){if($('lg_on').checked){lgSeq=0;$('lg_out').textContent='';logPoll();lgTimer=setInterval(logPoll,1500);}
@@ -258,12 +268,12 @@ class TimerWebHandler : public AsyncWebHandler {
   }
 
   void send_net(AsyncWebServerRequest *req) {
-    char buf[420];
+    char buf[440];
     snprintf(buf, sizeof(buf),
       "{\"ok\":true,\"static\":%d,\"ip\":\"%s\",\"gw\":\"%s\",\"sn\":\"%s\","
-      "\"dns\":\"%s\",\"ntp\":\"%s\",\"hostname\":\"%s\"}",
+      "\"dns\":\"%s\",\"ntp\":\"%s\",\"hostname\":\"%s\",\"roaming\":%d}",
       g_netcfg.use_static, g_netcfg.ip, g_netcfg.gw, g_netcfg.sn,
-      g_netcfg.dns, g_netcfg.ntp, g_netcfg.host);
+      g_netcfg.dns, g_netcfg.ntp, g_netcfg.host, g_netcfg.roaming);
     req->send(200, "application/json", buf);
   }
 
@@ -374,7 +384,14 @@ class TimerWebHandler : public AsyncWebHandler {
         netcfg_sanitize_host(g_netcfg.host);
         changed = true;
       }
+      bool roam_changed = false;
+      if (req->hasParam("roaming")) {
+        g_netcfg.roaming = qparam(req, "roaming", 0) ? 1 : 0;
+        changed = true;
+        roam_changed = true;
+      }
       if (changed) { netcfg_save(); netcfg_apply_ntp(); netcfg_apply_hostname(); }
+      if (roam_changed) netcfg_apply_roaming();  // wirkt voll ab naechstem (Re)Connect
       send_net(req);
       return;
     }

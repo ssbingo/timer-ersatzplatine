@@ -23,6 +23,7 @@ esphome:
           esphome::netcfg_load();
           esphome::netcfg_apply_ntp();
           esphome::netcfg_apply_hostname();
+          esphome::netcfg_apply_roaming();
           auto *h = new esphome::TimerWebHandler();
           h->time1 = id(time1);
           h->time2 = id(time2);
@@ -66,6 +67,11 @@ wifi:
   #     (mit einkompiliertem WLAN haengt der Key am Config-Hash -> geht verloren).
   # Werksreset (keine alten Daten): Factory-Image MIT Flash-Erase flashen.
   power_save_mode: none
+  # 802.11k/v (RRM/BTM) fest EINKOMPILIEREN (CONFIG_WPA_11KV_SUPPORT). Das ist
+  # nur die Faehigkeit - das tatsaechliche Ein/Aus schaltet net_config.h zur
+  # Laufzeit (set_btm/set_rrm), gesteuert per Web (Netzwerk-Tab, g_netcfg.roaming).
+  enable_btm: true
+  enable_rrm: true
   ap:
     ssid: "Feeder-Relais Setup"
     password: "feeder1234"

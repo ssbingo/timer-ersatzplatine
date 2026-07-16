@@ -13,6 +13,7 @@
 // ===========================================================================
 #pragma once
 #include "esphome.h"
+#include "esphome/components/wifi/wifi_component.h"
 #include <cstring>
 #include "esp_sntp.h"
 #include "esp_netif.h"
@@ -21,7 +22,7 @@
 namespace esphome {
 
 struct NetCfg {
-  uint8_t version;      // Layout-Version (aktuell 2)
+  uint8_t version;      // Layout-Version (aktuell 3)
   uint8_t use_static;   // 0 = DHCP, 1 = statisch
   char ip[16];
   char gw[16];
@@ -29,6 +30,7 @@ struct NetCfg {
   char dns[16];
   char ntp[48];
   char host[32];        // Hostname (mDNS + DHCP)
+  uint8_t roaming;      // 0 = aus (ESPHome-Scan-Roaming), 1 = 802.11k/v (BTM/RRM)
 };
 
 static NetCfg g_netcfg;
@@ -37,7 +39,7 @@ static bool g_reboot_pending = false;
 
 inline void netcfg_defaults(NetCfg &c) {
   memset(&c, 0, sizeof(c));
-  c.version = 2;
+  c.version = 3;
   c.use_static = 0;
   strncpy(c.ip,  "192.168.1.50",   sizeof(c.ip) - 1);
   strncpy(c.gw,  "192.168.1.1",    sizeof(c.gw) - 1);
@@ -45,11 +47,12 @@ inline void netcfg_defaults(NetCfg &c) {
   strncpy(c.dns, "192.168.1.1",    sizeof(c.dns) - 1);
   strncpy(c.ntp, "de.pool.ntp.org", sizeof(c.ntp) - 1);
   strncpy(c.host, "feeder-relais", sizeof(c.host) - 1);
+  c.roaming = 0;  // Default: kein k/v -> ESPHome-Scan-Roaming wie bisher
 }
 
 inline void netcfg_load() {
   g_netcfg_pref = global_preferences->make_preference<NetCfg>((uint32_t) 0x4E657444);  // 'NetD'
-  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 2)
+  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 3)
     netcfg_defaults(g_netcfg);
 }
 
@@ -116,6 +119,21 @@ inline void netcfg_apply_static() {
   dns.ip.type = ESP_IPADDR_TYPE_V4;
   esp_netif_str_to_ip4(g_netcfg.dns, &dns.ip.u_addr.ip4);
   esp_netif_set_dns_info(nif, ESP_NETIF_DNS_MAIN, &dns);
+}
+
+// 802.11k/v-Roaming (BTM/RRM) zur Laufzeit schalten. Die *Faehigkeit* ist fest
+// einkompiliert (enable_btm/enable_rrm in der YAML -> CONFIG_WPA_11KV_SUPPORT).
+// btm_/rrm_ werden bei jedem (Re)Connect in die STA-Config uebernommen, wirken
+// also voll ab dem naechsten Verbinden/Neustart. post_connect_roaming (ESPHomes
+// eigenes Scan-Roaming) laeuft gegengleich: aus, wenn k/v aktiv ist (dann
+// uebernimmt der Treiber die Roaming-Entscheidung).
+inline void netcfg_apply_roaming() {
+  auto *w = wifi::global_wifi_component;
+  if (w == nullptr) return;
+  bool on = g_netcfg.roaming != 0;
+  w->set_btm(on);
+  w->set_rrm(on);
+  w->set_post_connect_roaming(!on);
 }
 
 }  // namespace esphome
