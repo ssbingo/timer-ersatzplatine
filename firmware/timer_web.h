@@ -365,7 +365,8 @@ class TimerWebHandler : public AsyncWebHandler {
   Component *oled{nullptr};   // fuer Stoerungs-Erkennung (is_failed)
 
   bool canHandle(AsyncWebServerRequest *req) const override {
-    const std::string u = req->url();
+    char urlbuf[AsyncWebServerRequest::URL_BUF_SIZE];
+    const std::string u(req->url_to(urlbuf));
     return u == "/" || u.rfind("/api/", 0) == 0;
   }
   bool isRequestHandlerTrivial() const override { return false; }
@@ -451,7 +452,10 @@ class TimerWebHandler : public AsyncWebHandler {
   }
 
   void handleRequest(AsyncWebServerRequest *req) override {
-    const std::string u = req->url();
+    // url_to() schreibt die (dekodierte) URL ohne Query in einen eigenen Puffer
+    // und liefert eine StringRef darauf (ersetzt das ab 2026.9.0 entfallende url()).
+    char urlbuf[AsyncWebServerRequest::URL_BUF_SIZE];
+    const std::string u(req->url_to(urlbuf));
     if (u == "/") {
       req->send(200, "text/html", TIMER_INDEX_HTML);
       return;
