@@ -361,11 +361,11 @@ display:
       it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%s", st);
       auto t = id(sntp_time).now();
       if (id(remaining) > 0)
-        it.printf(64, 1, id(font_big), TextAlign::TOP_CENTER, "%d s", id(remaining));
+        it.printf(64, -3, id(font_big), TextAlign::TOP_CENTER, "%d s", id(remaining));
       else if (t.is_valid())
-        it.strftime(64, 1, id(font_big), TextAlign::TOP_CENTER, "%H:%M", t);
+        it.strftime(64, -3, id(font_big), TextAlign::TOP_CENTER, "%H:%M", t);
       else
-        it.printf(64, 1, id(font_big), TextAlign::TOP_CENTER, "--:--");
+        it.printf(64, -3, id(font_big), TextAlign::TOP_CENTER, "--:--");
       if (t.is_valid()) {
         static const char *const WD[] = {"", "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"};
         it.printf(0, 31, id(font_small), TextAlign::BASELINE_LEFT, "%s %02d.%02d.%04d",
