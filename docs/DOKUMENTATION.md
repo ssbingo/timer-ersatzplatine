@@ -20,9 +20,11 @@ schaltet eine 230-V-Last für eine einstellbare Zeit ein:
 | T2     | 10 Sekunden  | 1–600 s über WLAN |
 | T3     | 15 Sekunden  | 1–600 s über WLAN |
 
-Ein kleines OLED-Display hinter der Sichtscheibe zeigt im Ruhezustand
-oben den **WLAN-Status** und rechts **AN/AUS**, unten die **Uhrzeit** (NTP);
-sobald ein Timer läuft, steht unten der **Sekunden-Countdown**. Die drei
+Ein kleines OLED-Display hinter der Sichtscheibe zeigt oben den **WLAN-Empfang**
+(links), die große **Uhrzeit** (NTP, Mitte) und den Status **Ruhe** (rechts);
+unten links das **Datum** (z. B. „Do 16.07.2026") und rechts den **freien
+Speicher**. Läuft ein Timer, steht in der Mitte der **Sekunden-Countdown** und
+rechts **Futter**. Die drei
 Tasten (**S1 Down/Manual**, **S2 SET**, **S3 UP**) lösen Timer aus, stoppen
 und blättern durch ein Info-Menü — Details in Kap. 6.5.
 
@@ -425,10 +427,11 @@ Die Tasten sind am Gehäuse beschriftet: **S1 = Down/Manual**, **S2 = SET**,
 
 **OLED-Anzeige (128 × 32):**
 
-- **Oben:** WLAN-Signalbalken (aus RSSI) links, Status **AN/AUS** rechts; im
-  Menü stattdessen der Seitenzähler (z. B. „2/4").
-- **Unten:** im Ruhezustand die **Uhrzeit** groß (HH:MM), bei laufendem Timer
-  der **Countdown** groß (z. B. „10 s").
+- **Oben:** WLAN-Signalbalken (aus RSSI) links, die große **Uhrzeit** (HH:MM)
+  bzw. bei laufendem Timer der **Countdown** (z. B. „10 s") in der Mitte, Status
+  **Ruhe/Futter** rechts; im Menü stattdessen der Seitenzähler (z. B. „2/4").
+- **Unten:** links das **Datum** (z. B. „Do 16.07.2026"), rechts der **freie
+  Speicher** (kB).
 
 Die Zeitbasis kommt per NTP; bis zur ersten Synchronisation zeigt die Uhr
 „--:--". Zeitzone `Europe/Berlin`.
