@@ -124,7 +124,10 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
    <span class=note>Nur bei mehreren Access-Points mit gleicher SSID sinnvoll
    (z.&#8203;B. UniFi/Mesh): Der Router kann das Gerät gezielt auf den stärkeren
    AP umbuchen (802.11v BTM) und nutzt Nachbar-Listen (802.11k RRM). Aus =
-   klassisches ESPHome-Scan-Roaming. Wirkt voll ab dem nächsten Verbinden/Neustart.</span>
+   klassisches ESPHome-Scan-Roaming.</span>
+   <button class=sec style="width:100%;background:#26304a;margin-top:10px" onclick="reconnect()">Jetzt neu verbinden</button>
+   <span class=note>Übernimmt die Roaming-Einstellung sofort. Das WLAN trennt
+   dafür kurz &ndash; die Seite ist ein paar Sekunden nicht erreichbar.</span>
   </div>
  </section>
 
@@ -187,6 +190,7 @@ function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POS
 function saveHost(){api('/api/net?host='+encodeURIComponent($('n_host').value),'POST').then(function(r){toast('Hostname gespeichert');if(r&&r.hostname)$('n_host').value=r.hostname;});}
 function saveRoam(){api('/api/net?roaming='+($('n_roam').checked?1:0),'POST').then(function(r){toast($('n_roam').checked?'Roaming aktiviert':'Roaming aus');});}
 function reboot(){if(confirm('Gerät jetzt neu starten?'))api('/api/reboot','POST').then(function(){toast('Neustart …');});}
+function reconnect(){if(confirm('WLAN jetzt neu verbinden? Die Seite ist kurz offline.'))api('/api/reconnect','POST').then(function(){toast('Verbinde neu … (kurz offline)');});}
 var lgTimer=null,lgSeq=0,LVL={1:'E',2:'W',3:'I',4:'C',5:'D',6:'V'};
 function logToggle(){if($('lg_on').checked){lgSeq=0;$('lg_out').textContent='';logPoll();lgTimer=setInterval(logPoll,1500);}
  else{if(lgTimer)clearInterval(lgTimer);lgTimer=null;}}
@@ -406,6 +410,11 @@ class TimerWebHandler : public AsyncWebHandler {
     }
     if (u == "/api/reboot") {                     // Neustart (verzoegert ueber Interval)
       g_reboot_pending = true;
+      req->send(200, "application/json", "{\"ok\":true}");
+      return;
+    }
+    if (u == "/api/reconnect") {                  // WLAN neu verbinden (verzoegert)
+      g_reconnect_pending = true;                 // uebernimmt u.a. geaendertes Roaming
       req->send(200, "application/json", "{\"ok\":true}");
       return;
     }

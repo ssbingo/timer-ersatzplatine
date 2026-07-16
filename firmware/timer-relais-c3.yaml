@@ -184,6 +184,7 @@ interval:
               id(shelly_trigger).turn_off();
             }
           }
+          if (esphome::g_reconnect_pending) { esphome::g_reconnect_pending = false; esphome::netcfg_wifi_reconnect(); }
           if (esphome::g_reboot_pending) { App.safe_reboot(); }
           // Status-LED: gruen=OK, gelb=Timer laeuft, rot=Stoerung; ~8% Helligkeit.
           {

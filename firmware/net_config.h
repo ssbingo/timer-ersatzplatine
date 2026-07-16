@@ -36,6 +36,7 @@ struct NetCfg {
 static NetCfg g_netcfg;
 static ESPPreferenceObject g_netcfg_pref;
 static bool g_reboot_pending = false;
+static bool g_reconnect_pending = false;
 
 inline void netcfg_defaults(NetCfg &c) {
   memset(&c, 0, sizeof(c));
@@ -134,6 +135,18 @@ inline void netcfg_apply_roaming() {
   w->set_btm(on);
   w->set_rrm(on);
   w->set_post_connect_roaming(!on);
+}
+
+// Sauberes WLAN-Neuverbinden: entspricht ESPHomes wifi.disable + wifi.enable.
+// enable() ruft start() -> start_connecting(), das die STA-Config NEU aufbaut und
+// dabei die aktuellen btm_/rrm_ (Roaming) uebernimmt -> Aenderung sofort aktiv.
+// Wird verzoegert ueber das 1s-Interval aufgerufen, damit die HTTP-Antwort noch
+// rausgeht, bevor die Verbindung kurz abreisst.
+inline void netcfg_wifi_reconnect() {
+  auto *w = wifi::global_wifi_component;
+  if (w == nullptr) return;
+  w->disable();
+  w->enable();
 }
 
 }  // namespace esphome

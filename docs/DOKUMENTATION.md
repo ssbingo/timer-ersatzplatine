@@ -402,6 +402,7 @@ Query-String, Methode GET **oder** POST:
 | `GET /api/net` | Netzwerk-Konfig lesen: `static, ip, gw, sn, dns, ntp, hostname, roaming` |
 | `POST /api/net?static=0\|1&ip=&gw=&sn=&dns=&ntp=&host=&roaming=0\|1` | Netzwerk-Konfig speichern (Felder einzeln, persistent) |
 | `POST /api/wifi?ssid=&pw=` | WLAN-Zugangsdaten setzen (verbindet neu) |
+| `POST /api/reconnect` | WLAN sauber neu verbinden (übernimmt u. a. geändertes Roaming sofort) |
 | `POST /api/reboot` | Gerät neu starten |
 | `GET /api/log?level=N&since=M` | Log-Ringpuffer als JSON (Zeilen mit Level ≤ N, `seq` > M); Level 1=ERROR…5=DEBUG |
 
@@ -427,8 +428,9 @@ schaltet ESPHomes eigenes Scan-Roaming ab (Treiber übernimmt); *Aus* macht es
 umgekehrt (`set_post_connect_roaming(true)`). Sinnvoll nur bei **mehreren
 Access-Points mit gleicher SSID** (UniFi/Mesh) und wenn diese 802.11k/v
 unterstützen. Die Bits gehen erst beim **nächsten (Re)Connect** in die
-STA-Config — voll wirksam also nach dem nächsten Verbinden/Neustart. Default:
-**aus**.
+STA-Config; dafür gibt es in derselben Karte den Knopf **„Jetzt neu verbinden"**
+(`POST /api/reconnect` → `wifi.disable`+`enable`, das WLAN trennt kurz), sonst
+wirkt es beim nächsten Neustart. Default: **aus**.
 
 Beispiel ioBroker (Zeit Taster 1 auf 8 s setzen):
 `POST http://feeder-relais.local/api/config?time1=8`.
