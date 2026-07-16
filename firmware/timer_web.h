@@ -243,9 +243,12 @@ var T={
  st_reset:{de:'Reset-Grund',en:'Reset reason',fr:'Cause du redémarrage'},
  st_relay:{de:'Relais',en:'Relay',fr:'Relais'},
  st_rem:{de:'Restzeit',en:'Remaining',fr:'Temps restant'},
+ st_roam:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)'},
  chan_pfx:{de:'Kanal ',en:'Channel ',fr:'Canal '},
  on:{de:'AN',en:'ON',fr:'MARCHE'},
  off:{de:'AUS',en:'OFF',fr:'ARRÊT'},
+ ein:{de:'EIN',en:'ON',fr:'MARCHE'},
+ aus:{de:'AUS',en:'OFF',fr:'ARRÊT'},
  run:{de:'läuft – Taster',en:'running – button',fr:'actif – bouton'},
  ready:{de:'bereit',en:'ready',fr:'prêt'},
  notconn:{de:'nicht verbunden',en:'not connected',fr:'non connecté'},
@@ -298,7 +301,9 @@ function saveNet(){var q='static='+$('n_static').value+'&ip='+encodeURIComponent
  api('/api/net?'+q,'POST').then(function(r){toast(($('n_static').value=='1')?tr('t_saved_reboot'):tr('t_saved'));});}
 function saveNtp(){api('/api/net?ntp='+encodeURIComponent($('n_ntp').value),'POST').then(function(r){toast(r&&r.ok?tr('t_ntp_saved'):tr('t_error'));});}
 function saveHost(){api('/api/net?host='+encodeURIComponent($('n_host').value),'POST').then(function(r){toast(tr('t_host_saved'));if(r&&r.hostname)$('n_host').value=r.hostname;});}
-function saveRoam(){api('/api/net?roaming='+($('n_roam').checked?1:0),'POST').then(function(r){toast($('n_roam').checked?tr('t_roam_on'):tr('t_roam_off'));});}
+var roamHold=0;
+function saveRoam(){roamHold=Date.now()+4000;  // kurz nicht vom Status ueberschreiben
+ api('/api/net?roaming='+($('n_roam').checked?1:0),'POST').then(function(r){toast($('n_roam').checked?tr('t_roam_on'):tr('t_roam_off'));});}
 function reboot(){if(confirm(tr('c_reboot')))api('/api/reboot','POST').then(function(){toast(tr('t_reboot'));});}
 function reconnect(){if(confirm(tr('c_reconnect')))api('/api/reconnect','POST').then(function(){toast(tr('t_reconnect'));});}
 var lgTimer=null,lgSeq=0,LVL={1:'E',2:'W',3:'I',4:'C',5:'D',6:'V'};
@@ -340,9 +345,11 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  $('stSub').textContent=s.active?(tr('run')+' '+(s.last||'?')):tr('ready');
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
+ var rn=$('n_roam');if(rn&&rn!==document.activeElement&&Date.now()>roamHold)rn.checked=!!s.roaming;
  rows('statbox',[[tr('st_fw'),s.fw],[tr('st_uptime'),up(s.uptime)],[tr('st_heap'),(s.heap/1024).toFixed(1)+' kB'],
   [tr('st_wifi'),twifi(s.wifi)],[tr('st_ssid'),s.ssid||'&ndash;'],
   [tr('st_chansig'),s.chan?(tr('chan_pfx')+s.chan+bars(s.rssi)+s.rssi+' dBm'):'&ndash;'],
+  [tr('st_roam'),s.roaming?tr('ein'):tr('aus')],
   [tr('st_host'),s.host||'&ndash;'],
   [tr('st_ip'),s.ip||'&ndash;'],[tr('st_mac'),s.mac],[tr('st_ap'),s.ap],[tr('st_reset'),treset(s.reset)],
   [tr('st_relay'),s.relay?tr('on'):tr('off')],[tr('st_rem'),s.remaining+' s']]);
@@ -426,12 +433,12 @@ class TimerWebHandler : public AsyncWebHandler {
     if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
     // Stoerung im Ruhezustand: OLED fehlerhaft oder kein WLAN.
     bool fault = (oled != nullptr && oled->is_failed()) || !connected;
-    char buf[840];
+    char buf[860];
     snprintf(buf, sizeof(buf),
       "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,\"fault\":%s,"
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
-      "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\"}",
+      "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\",\"roaming\":%d}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
       fault ? "true" : "false",
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
@@ -447,7 +454,8 @@ class TimerWebHandler : public AsyncWebHandler {
       (unsigned) esp_get_free_heap_size(),
       connected ? "up" : "down",   // sprachneutraler Code -> JS uebersetzt (wifi_*)
       reset_reason(),
-      g_netcfg.lang);
+      g_netcfg.lang,
+      g_netcfg.roaming);
     req->send(200, "application/json", buf);
   }
 

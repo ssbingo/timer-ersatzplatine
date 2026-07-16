@@ -105,7 +105,13 @@ inline void netcfg_apply_hostname() {
   }
 }
 
-inline void netcfg_save() { g_netcfg_pref.save(&g_netcfg); }
+inline void netcfg_save() {
+  g_netcfg_pref.save(&g_netcfg);
+  // ESP32: save() legt nur in die RAM-Warteschlange; erst sync() schreibt ins
+  // Flash (nvs_commit). Sofort synchronisieren, damit die Einstellung auch einen
+  // sofortigen Neustart/Reconnect ueberlebt (sonst "verschwindet" z. B. der Haken).
+  global_preferences->sync();
+}
 
 // Nur den Servernamen aendern - erhaelt den von der ESPHome-sntp-Komponente
 // gesetzten Sync-Callback (der die Uhr aktualisiert). Wirkt beim naechsten Sync.

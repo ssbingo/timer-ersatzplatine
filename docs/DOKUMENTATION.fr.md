@@ -384,7 +384,8 @@ flash, l'ESP démarre son propre **hotspot de configuration** :
   (802.11k/v)** et un bouton **Redémarrage**.
 - **État :** firmware, durée de fonctionnement, mémoire libre, Wi-Fi, SSID avec
   **canal · barre de signal colorée · signal** (dBm ; 1 barre rouge, 2 jaune,
-  3–4 vert), IP/MAC, cause de reset, relais.
+  3–4 vert), **roaming Wi-Fi (802.11k/v) MARCHE/ARRÊT**, IP/MAC, cause de reset,
+  relais.
 - **Service :** **log** en direct (niveau d'affichage ERROR/WARN/INFO/DEBUG au
   choix, activable), **mise à jour du firmware** (téléversement .bin, chap. 6.6) et
   **redémarrage**.
@@ -414,7 +415,7 @@ query-string, méthode GET **ou** POST :
 
 | Endpoint | Effet |
 |----------|-------|
-| `GET /api/status` | JSON avec toutes les valeurs : `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang` (`wifi`/`reset` sont des codes neutres du point de vue de la langue, traduits par le JS web) |
+| `GET /api/status` | JSON avec toutes les valeurs : `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang, roaming` (`wifi`/`reset` sont des codes neutres du point de vue de la langue, traduits par le JS web) |
 | `POST /api/trigger?button=N` | déclencher le bouton N (1–3) (utilise sa durée réglée) |
 | `POST /api/trigger?seconds=N` | commuter ad hoc pendant N secondes |
 | `POST /api/stop` | couper immédiatement |
@@ -451,7 +452,13 @@ prennent en charge 802.11k/v. Les bits n'entrent dans la config STA qu'à la
 **prochaine (re)connexion** ; pour cela, la même carte comporte le bouton
 **« Reconnecter maintenant »** (`POST /api/reconnect` → `wifi.disable`+`enable`, le
 Wi-Fi se coupe brièvement), sinon cela prend effet au prochain redémarrage.
-Par défaut : **arrêt**.
+Par défaut : **arrêt**. La case reflète **en continu l'état réel de l'appareil**
+(depuis `/api/status`) et reste donc visiblement cochée après la reconnexion ; le
+réglage est écrit en flash **immédiatement et durablement** (`netcfg_save()`
+appelle `global_preferences->sync()`, car sur l'ESP32 le `save()` d'ESPHome ne fait
+sinon que le mettre en file d'attente en RAM). L'état actuel figure aussi sous
+forme de ligne **« Roaming Wi-Fi (802.11k/v) : MARCHE/ARRÊT »** sur la page
+**État**.
 
 Exemple ioBroker (régler la durée du bouton 1 sur 8 s) :
 `POST http://feeder-relais.local/api/config?time1=8`.

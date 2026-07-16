@@ -377,8 +377,8 @@ flashing the ESP starts its own **setup hotspot**:
   `feeder-relais`), a switch for **Wi-Fi roaming (802.11k/v)** and a **restart**
   button.
 - **Status:** firmware, uptime, free memory, Wi-Fi, SSID with **channel · colored
-  signal bar · signal** (dBm; 1 bar red, 2 yellow, 3–4 green), IP/MAC, reset
-  reason, relay.
+  signal bar · signal** (dBm; 1 bar red, 2 yellow, 3–4 green), **Wi-Fi roaming
+  (802.11k/v) ON/OFF**, IP/MAC, reset reason, relay.
 - **Service:** live **log** (display level ERROR/WARN/INFO/DEBUG selectable,
   can be enabled), **firmware update** (.bin upload, Ch. 6.6) and **restart**.
 
@@ -406,7 +406,7 @@ method GET **or** POST:
 
 | Endpoint | Effect |
 |----------|---------|
-| `GET /api/status` | JSON with all values: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang` (`wifi`/`reset` are language-neutral codes that the web JS translates) |
+| `GET /api/status` | JSON with all values: `active, remaining, relay, last, times[3], host, ip, ssid, rssi, mac, ap, fw, uptime, heap, wifi, reset, lang, roaming` (`wifi`/`reset` are language-neutral codes that the web JS translates) |
 | `POST /api/trigger?button=N` | trigger button N (1–3) (uses its configured time) |
 | `POST /api/trigger?seconds=N` | switch on ad hoc for N seconds |
 | `POST /api/stop` | switch off immediately |
@@ -442,7 +442,12 @@ with the same SSID** (UniFi/mesh) and when these support 802.11k/v. The bits onl
 go into the STA config at the **next (re)connect**; for that there is the button
 **"Reconnect now"** in the same card (`POST /api/reconnect` →
 `wifi.disable`+`enable`, which briefly disconnects the Wi-Fi), otherwise it takes
-effect at the next restart. Default: **off**.
+effect at the next restart. Default: **off**. The checkbox **continuously mirrors
+the device's real state** (from `/api/status`) and therefore stays visibly ticked
+after reconnecting; the setting is written to flash **immediately and durably**
+(`netcfg_save()` calls `global_preferences->sync()`, since ESPHome's `save()` on
+the ESP32 otherwise only queues it in RAM). The current state is also shown as a
+row **"Wi-Fi roaming (802.11k/v): ON/OFF"** on the **Status** page.
 
 Example ioBroker (set the time for button 1 to 8 s):
 `POST http://feeder-relais.local/api/config?time1=8`.
