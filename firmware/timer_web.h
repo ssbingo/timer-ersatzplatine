@@ -13,6 +13,8 @@
 // ===========================================================================
 #pragma once
 #include "esphome.h"
+#include <new>
+#include <span>
 #include <esp_system.h>
 #include <esp_wifi.h>
 #include "net_config.h"
@@ -21,7 +23,7 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "0.0.14"
+#define FW_VERSION "0.0.15"
 
 namespace esphome {
 
@@ -396,13 +398,17 @@ class TimerWebHandler : public AsyncWebHandler {
   }
 
   void send_net(AsyncWebServerRequest *req) {
-    char buf[460];
-    snprintf(buf, sizeof(buf),
+    // Heap statt Stack (httpd-Task-Stack ist knapp, siehe send_status).
+    const size_t cap = 520;
+    char *buf = new (std::nothrow) char[cap];
+    if (buf == nullptr) { req->send(500, "application/json", "{\"ok\":false}"); return; }
+    snprintf(buf, cap,
       "{\"ok\":true,\"static\":%d,\"ip\":\"%s\",\"gw\":\"%s\",\"sn\":\"%s\","
       "\"dns\":\"%s\",\"ntp\":\"%s\",\"hostname\":\"%s\",\"roaming\":%d,\"lang\":\"%s\"}",
       g_netcfg.use_static, g_netcfg.ip, g_netcfg.gw, g_netcfg.sn,
       g_netcfg.dns, g_netcfg.ntp, g_netcfg.host, g_netcfg.roaming, g_netcfg.lang);
     req->send(200, "application/json", buf);
+    delete[] buf;
   }
 
   void apply_num(number::Number *n, int v) {
@@ -438,8 +444,12 @@ class TimerWebHandler : public AsyncWebHandler {
     if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
     // Stoerung im Ruhezustand: OLED fehlerhaft oder kein WLAN.
     bool fault = (oled != nullptr && oled->is_failed()) || !connected;
-    char buf[896];
-    snprintf(buf, sizeof(buf),
+    // JSON auf dem HEAP bauen, nicht auf dem knappen httpd-Task-Stack
+    // (HTTPD_DEFAULT_CONFIG ~4 KB; hier laeuft zusaetzlich urlbuf[513]).
+    const size_t cap = 960;
+    char *buf = new (std::nothrow) char[cap];
+    if (buf == nullptr) { req->send(500, "application/json", "{\"ok\":false}"); return; }
+    snprintf(buf, cap,
       "{\"ok\":true,\"active\":%s,\"remaining\":%d,\"relay\":%s,\"last\":%d,\"fault\":%s,"
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
@@ -464,13 +474,18 @@ class TimerWebHandler : public AsyncWebHandler {
       g_netcfg.roaming,
       FW_VERSION);
     req->send(200, "application/json", buf);
+    delete[] buf;   // send() kopiert synchron -> danach freigeben
   }
 
   void handleRequest(AsyncWebServerRequest *req) override {
-    // url_to() schreibt die (dekodierte) URL ohne Query in einen eigenen Puffer
-    // und liefert eine StringRef darauf (ersetzt das ab 2026.9.0 entfallende url()).
-    char urlbuf[AsyncWebServerRequest::URL_BUF_SIZE];
-    const std::string u(req->url_to(urlbuf));
+    // URL dekodiert lesen. Puffer auf den HEAP: dieser Frame bleibt waehrend des
+    // gesamten (tiefen) Requests aktiv; auf dem ~4-KB-httpd-Stack fuehrte ein
+    // fester URL_BUF-Puffer zusammen mit send_* zu einem Stack-Overflow (Panik).
+    constexpr size_t UB = AsyncWebServerRequest::URL_BUF_SIZE;
+    char *ub = new (std::nothrow) char[UB];
+    if (ub == nullptr) { req->send(500, "application/json", "{\"ok\":false}"); return; }
+    const std::string u(req->url_to(std::span<char, UB>(ub, UB)));
+    delete[] ub;   // u ist eine Kopie -> Puffer sofort freigeben
     if (u == "/") {
       req->send(200, "text/html", TIMER_INDEX_HTML);
       return;
