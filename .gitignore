@@ -14,12 +14,36 @@ __pycache__/
 .venv/
 venv/
 
-# KiCad-Backups/Autosave
+# KiCad-Backups/Autosave/Locks/Local-State
 *-bak
 *.kicad_sch-bak
 *.kicad_pcb-bak
+*.bak-*
+*-backups/
 _autosave-*
 fp-info-cache
+*.lck
+*.kicad_prl
+
+# KiCad generierte Reports / Autorouter-Austausch (regenerierbar)
+*.rpt
+*.dsn
+*.ses
+*.rules
+
+# KiCad Fertigungsausgaben (vor Bestellung frisch erzeugen; nicht tracken)
+kicad-v2/Timer-Ersatz-Gerber/
+kicad-v2/Timer-Ersatz-Gerber.zip
+kicad-v2/Timer-Ersatzplatine-v2-BOARD.stl
+
+# Editor Local History (VSCode-Erweiterung)
+.history/
+
+# Handbuch-Buildreste (venv ist über .venv/ schon erfasst)
+docs/handbuch/umbrueche.log
+
+# Gehäuse-Vorschaurenders (regenerierbar aus feeder_back.scad)
+box/view_*.png
 
 # OS
 .DS_Store

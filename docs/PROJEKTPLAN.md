@@ -1,108 +1,81 @@
-# Timer-Ersatzplatine — Projektplan
+# Feeder-Relais (Timer-Ersatzplatine) — Projektplan
 
-**Stand:** 2026-07-13 · Aktuelle Phase: **3 — Verifikation**
+**Stand:** 2026-08-12 · Aktuelle Phase: **v2 fertig entwickelt — vor der Fertigung**
 Pflegehinweis: Erledigtes abhaken (`[x]`), neue Erkenntnisse mit Datum
 ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 
+> **Produktstand:** Version 2 (Elektronik auf der Rückseite, Shelly extern) ist
+> die maßgebliche Hardware. Version 1 wurde aus dem Repo entfernt (bleibt in der
+> Git-Historie). Die alten v1-Geometrie-Phasen (DXF-Template, Papier-Anprobe)
+> sind damit historisch — die v2-Geometrie steckt in `kicad-v2/` und `box/`.
+
 ---
 
-## Phase 0 — Analyse & Vermessung ✅ abgeschlossen
+## Phase 0–3 — Analyse, Konzept, v1-Entwurf ✅ abgeschlossen (historisch)
 
-- [x] Originalplatine fotografiert und Funktionsprinzip analysiert
-      (Kondensatornetzteil, DS1302-RTC, 4-Digit-Display, Relais)
-- [x] Bestückungsseiten-Scan 300 dpi → Außenmaße 76,7 × 66,1 (±0,3)
-- [x] Lötseiten-Scan 300 dpi → Taster-Pinbilder, 4 Löcher, Aussparung
-- [x] Gehäusescan → Registrierung über die 4 Rahmenschrauben (±0,4),
-      Rahmenaußenkontur, 6 Dompositionen (±1,5)
-- [x] Höhenmessungen: 19,9 innen / 2 Rahmen / 16,5 über Platine
-- [x] Erkenntnis: alte Aussparung = Freistellung Dom B5
-- [x] Erkenntnis: 4 Befestigungsdome mit Stabilisierungsstegen (fix!)
-
-## Phase 1 — Konzept ✅ abgeschlossen
-
+- [x] Originalgerät vermessen (Kontur, Taster, Dome, Höhenbudget)
 - [x] Architektur: Taster → ESP32-C3 → PhotoMOS → Shelly-SW (Follow-Mode)
-- [x] Timing WLAN-unabhängig, Konfiguration per ESPHome-Webserver
-- [x] Shelly 1PM Mini Gen4 gewählt (29 × 34 × 16, 8 A) — Datenblatt liegt vor
-- [x] Netzteil: TSP-05 (HLK-PM05-Klon, 5 V/3 W) — vorhanden
-- [x] OLED 0,91" 128 × 32, rahmenmontiert, **gesteckt** auf J4
-- [x] Alle Module liegen flach AUF der Platine (unten nur 1,8 mm!)
+- [x] Firmware `timer-relais-c3.yaml` (ESPHome), Web-App + JSON-API, NTP,
+      OLED, Status-LED, Netzwerk-Laufzeitkonfig, Mehrsprachigkeit DE/EN/FR
+- [x] v1-Platine (Shelly on-board) entworfen — durch v2 abgelöst
 
-## Phase 2 — Konstruktions- und Entwurfsvorlagen ✅ abgeschlossen
+## Phase 4 — v2-Layout ✅ abgeschlossen
 
-- [x] Parametrischer DXF-Generator `platine_template.py` (v8)
-- [x] DXF mit Kontur, ⌀10-Durchführungen, Löchern, beschrifteten
-      Stellflächen, Keepouts, J4/OLED-Steckposition
-- [x] KiCad-Schaltplan `timer_ersatzplatine.kicad_sch` (15 Bauteile,
-      Netzlabels, Footprint-Vorbelegung)
-- [x] ESPHome-Firmware `timer-relais-c3.yaml` (Pins synchron zum Plan)
+- [x] v2 aus v1 abgeleitet: Elektronik komplett auf die **Rückseite**,
+      Shelly + Snubber **extern** (J1/X3), Außenmaß **101,6 × 77,5 mm**
+- [x] **4-lagig**: F/B tragen die Signale, In1/In2 = GND-Masseflächen nur im
+      Kleinspannungsbereich; Netzspannung ausschließlich auf F/B
+- [x] Netzklassen aus v1 übernommen (Default 0,2/0,2, 230V 1,0/1,0)
+- [x] **6-mm-Kriechstrecke** als `.kicad_dru` (K1-Barriere ausgenommen)
+- [x] Routing (Freerouting + Handarbeit), GND-Zonen-Outlines mit 6-mm-Rückzug
+- [x] DRC sauber (0 clearance / 0 creepage / 0 unrouted; nur harmlose
+      lib_footprint-Warnungen, weil Wago/G3VM-Libs nicht in der User-Lib-Table)
+- [x] **Board↔Firmware-Audit (2026-08-12):** alle ESP-GPIO abgeglichen
+- [x] **KRITISCHER FIX (2026-08-12):** OLED-SDA lag auf v2 fälschlich auf
+      **GPIO8** (= Onboard-WS2812) → auf **GPIO7** korrigiert (Schaltplan-Pin
+      8→7, Layout, Zonen neu gefüllt; verifiziert per Netzliste + DRC). GPIO8
+      bleibt frei für die Status-LED. Firmware unverändert.
 
-## Phase 3 — Verifikation am Objekt ⏳ IN ARBEIT
+## Phase 5 — Gehäuse ✅ abgeschlossen
 
-**Vor dem Einfrieren der Kontur zwingend abarbeiten:**
+- [x] Rückteil `box/feeder_back.scad` (3D-Druck, 35 mm tief, 6 Schraubdome
+      Raster 45×70, Aufhängelasche mit Schlüsselloch) → `feeder_back_35mm.stl`
+- [x] Platinen-Attrappe `Timer-Ersatzplatine-v2-BOARD.stl` für die Anprobe
 
-- [ ] **Papier-Anprobe:** DXF/PDF 1:1 drucken, ausschneiden, ins Gehäuse
-      legen — Dome, Taster, Fenster müssen treffen (fängt die ±1–1,5 mm ab)
-- [ ] **Stegrichtungen** der 4 Befestigungsdome im Gehäuse ansehen und
-      mit den `RIBS`-Annahmen im Template abgleichen (oben-links/rechts →
-      Oberkante? Mitte-links → linker Rand? Mitte-rechts → Unterkante?)
-- [ ] **Wandstärke** der Gehäuseschale messen (`WALL_T`, Annahme 2,0 mm)
-- [ ] **TSP-05-Pinabstände** messen und gegen KiCad-Footprint
-      `HLK-PMxx` vergleichen (AC-Pitch, DC-Pitch, Lage zur Kante)
-- [ ] **OLED-Modul vermessen:** Linkskante→Pinreihe (Annahme 2,5),
-      Linkskante→Zentrum aktive Fläche (Annahme 23,5)
-- [ ] **Glaseinstand** messen → Stackhöhe J4 festlegen (~13–14 mm),
-      Buchsen-/Stiftleisten-Kombination bestellen
-- [x] **Dom-Positionen neu vermessen** (Silvio 13.07., Messschieber):
-      Pitch 45 mm, Reihenabstand 70 mm, obere Linie 6 mm über Oberkante,
-      linke Spalte 6 mm neben Linkskante → absolut verankert
-      (x −6/39/84, y −6/+64); löst die Scan-Werte (y bis 2,6 mm daneben) ab
-- [x] **Dom-Ausschnitte auf randoffene U-Schlitze umgestellt** (Breite 10,
-      toleranter beim Einsetzen); Kontur bleibt geschlossene
-      Edge.Cuts-Schleife (programmatisch verifiziert)
-- [ ] **Dom-Durchmesser/-höhe** der 6 Gehäuseschrauben prüfen
-      (Schlitzbreite 10 ausreichend? bei der Papier-Anprobe der neuen Kontur)
-- [ ] Ggf. korrigierte Werte in `platine_template.py` eintragen,
-      `python3 platine_template.py` ausführen, Anprobe wiederholen
-- [ ] **Meilenstein: Kontur eingefroren** (Datum eintragen: ________)
+## Phase 6 — Dokumentation ✅ abgeschlossen
 
-## Phase 4 — KiCad-Layout ⬜ offen
+- [x] Handbuch `docs/handbuch/` (HTML→PDF via WeasyPrint, nach asksin-Regelwerk:
+      Deckblatt, klickbares Inhaltsverzeichnis, Fußsteg „↑ Inhaltsverzeichnis",
+      Umbruchregeln, 45 Seiten) — anfängertaugliche Nachbau-Anleitung
+- [x] Technische Referenz `DOKUMENTATION.md` auf v2 (penibel-genaue GPIO- und
+      Bauteil-Tabellen, Board↔Firmware, Netze, Steckverbinder)
+- [x] Projektplan (diese Datei) auf v2
 
-- [ ] Projekt anlegen, Schaltplan übernehmen, ERC (Doku Kap. 7.1)
-- [ ] ESP32-C3-Super-Mini-Footprint anlegen (Doku Kap. 7.3)
-- [ ] Footprints final zuordnen (Doku Kap. 7.2)
-- [ ] DXF importieren, Kontur auf Edge.Cuts, Maßkontrolle T1→T2 = 25,6 mm
-- [ ] 4 × MountingHole 3,2 mm auf Lochkoordinaten
-- [ ] Taster + J4 numerisch exakt platzieren (±0,2!)
-- [ ] Module auf Stellflächen, 230-V-Ecke unten links aufbauen
-- [ ] Netzklasse HV + 6-mm-Regel HV↔LV einrichten (Doku Kap. 7.6)
-- [ ] Routing; O-Pfad ≥ 2 mm (8 A); DRC fehlerfrei
-- [ ] Silkscreen: Stellflächen-Rahmen + Beschriftungen übernehmen
-- [ ] 3D-Kontrolle, 1:1-Plot-Anprobe des fertigen Layouts
+## Phase 7 — Fertigung & Beschaffung ⬜ offen
 
-## Phase 5 — Fertigung & Beschaffung ⬜ offen
+- [ ] **Vor Bestellung:** Schaltplan-Altlast entfernen (Symbole J3–J6, SW4, X4
+      stehen noch im Schaltplan, nicht auf dem PCB)
+- [ ] Testdruck der Platinen-Attrappe im gedruckten Rückteil (Passprobe)
+- [ ] Gerber + Bohrdaten final prüfen, bestellen (**4 Lagen**, 1,6 mm)
+- [ ] BOM-Teile bestellen: PhotoMOS ≥ 400 V, TSP-05, Buchsen-/Stiftleisten,
+      Sicherungshalter, Varistor, Kleinteile, Shelly 1PM Mini Gen4
 
-- [ ] Gerber + Bohrdaten exportieren, Bestellung (2 Lagen, 1,6 mm)
-- [ ] Fehlende BOM-Teile bestellen: PhotoMOS ≥ 400 V, Buchsen-/Stift-
-      leisten in gemessener Stackhöhe, Sicherungshalter, Varistor,
-      Kleinteile (siehe Doku Kap. 3)
-
-## Phase 6 — Aufbau & Test ⬜ offen
+## Phase 8 — Aufbau & Test ⬜ offen
 
 - [ ] Bestückung (flach → hoch), Taster exakt
 - [ ] ESP vorab per USB flashen + WLAN-Test
 - [ ] **Nur-USB-Funktionstest** (Taster, OLED, GPIO6) — ohne Netz!
-- [ ] TSP einlöten, Shelly verkleben + verdrahten (L/N/SW/O)
-- [ ] Sicht- & Durchgangsprüfung, Abstandskontrolle
+- [ ] PS1 einlöten, Shelly an J1 verdrahten (SW/O/L/N), Last an X2, ggf. X3
+- [ ] Sicht- & Durchgangsprüfung, Abstandskontrolle (≥ 6 mm)
 - [ ] Erster Netztest über PRCD/RCD, Gehäuse geschlossen
 - [ ] Shelly einrichten (WLAN, Input Mode „Switch/Follow")
 - [ ] Lasttest, Zeitentest, OTA-Update-Test
 
-## Phase 7 — Integration & Abschluss ⬜ offen
+## Phase 9 — Abschluss ⬜ offen
 
-- [ ] Zeiten final einstellen (`http://feeder-relais.local`)
-- [ ] Optional: Einbindung in ioBroker (esphome-Adapter) / Shelly-Adapter
-- [ ] Fotos des Aufbaus + „as built"-Abweichungen in die Doku
-- [ ] Projektabschluss, Lessons Learned
+- [ ] „as built"-Abweichungen + Fotos in die Doku
+- [ ] EN/FR-Handbuch je Release nachziehen (DE führend)
+- [ ] Release/Tag + Firmware-Images
 
 ---
 
@@ -110,14 +83,12 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 
 | # | Risiko | Auswirkung | Gegenmaßnahme | Status |
 |---|--------|-----------|---------------|--------|
-| 1 | Dom-Absolutlage noch ~±1 mm | Platine sitzt nicht satt über Dome | Positionen direkt vermessen; randoffene U-Schlitze fangen Rest-Streuung entlang der Achse; Papier-Anprobe | Schlitze erledigt, Anprobe offen |
-| 2 | Stegrichtungen falsch angenommen | Modul kollidiert mit Steg | Sichtprüfung + Keepout-Korrektur | offen (Phase 3) |
-| 3 | TSP-05 nicht HLK-pinkompatibel | Footprint falsch | Messschieber-Check vor Layout | offen (Phase 3) |
-| 4 | OLED-Modulmaße streuen | Display sitzt schief im Fenster | Messung am realen Modul; J4 parametrisch | offen (Phase 3) |
-| 5 | Stackhöhe passt nicht exakt | OLED drückt/hängt | Glaseinstand messen; Schaumstoffpad als Toleranzausgleich | offen (Phase 3) |
-| 6 | Dom T3-Führung dicker als ⌀8 | Shelly-Fläche kollidiert | bei Anprobe prüfen; Fläche kann 1–2 mm nach unten | offen (Phase 3) |
-| 7 | Kriechstrecken im Layout | Sicherheit! | 6-mm-DRC-Regel, Review vor Bestellung | Phase 4 |
-| 8 | Shelly-Wärme unter 0,5 mm Deckenluft | Derating | PM-Werte beobachten; Last ≤ 8 A ohnehin | Beobachtung |
+| 1 | Schaltplan-Altlast (J3–J6, SW4, X4) | „Update PCB from Schematic" fügt Phantom-Footprints ein | vor Release aus Schaltplan löschen | offen |
+| 2 | Passprobe Platine ↔ gedrucktes Rückteil | Platine sitzt nicht satt | Attrappe drucken + einlegen vor Bestellung | offen |
+| 3 | TSP-05 Pinabstände vs. Footprint | Netzteil passt nicht | Messschieber-Check; Footprint ist HLK-Klasse | offen |
+| 4 | Kriechstrecken im Layout | Sicherheit! | 6-mm-DRC-Regel aktiv, DRC sauber, Review vor Bestellung | erledigt (Review offen) |
+| 5 | Board↔Firmware-Pinabgleich | Gerät unbrauchbar | vollständiger Audit 2026-08-12; SDA-Fix angewandt + verifiziert | erledigt |
+| 6 | Shelly-Wärme im Gehäuse | Derating | extern + 35 mm tiefes Rückteil; Last ≤ 8 A | Beobachtung |
 
 ## Entscheidungslog (warum ist etwas so?)
 
@@ -126,24 +97,11 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 | 2026-07-13 | Shelly schaltet, eigene Platine steuert nur SW | PM + Fernzugriff erhalten, Timing bleibt WLAN-unabhängig |
 | 2026-07-13 | PhotoMOS ≥ 400 V statt Optokoppler/Relais | SW-Eingang ist netzspannungsbezogen; winzig; galvanische Trennung |
 | 2026-07-13 | 1PM **Mini** Gen4 statt 1PM Gen4 | 42 × 38 des großen passt flächig nicht |
-| 2026-07-13 | Kein Versenken von Modulen | unter der Platine nur 1,8 mm (Dome hängen an der Front) |
-| 2026-07-13 | TSP-05 statt HLK-PM05 | vorhanden, gleiche Klasse; Stellflächen-Rochade ESP↔PSU nötig |
-| 2026-07-13 | OLED gesteckt statt verdrahtet | Montage/Service; J4 von Fensterzentrierung rückwärts konstruiert |
-| 2026-07-13 | GPIO3/4/5/6 + 8/9 | Strapping-Pins gemieden; 8/9 = SDA/SCL wie Modulaufdruck |
-| 2026-07-13 | Dompositionen direkt per Messschieber statt aus Gehäusescan | Scan-y lag bis 2,6 mm daneben; Direktmaße (Pitch 45 / Reihen 70 / 6 mm Kantenabstand) sind genauer und lösen die ±1,5-Registrierung ab |
-| 2026-07-13 | Dom-Ausschnitte randoffen (U-Schlitze) statt ⌀10-Bohrungen | toleranter beim Einsetzen, verzeiht Dom-Streuung entlang der Schlitzachse; äußere Eckradien dafür lokal auf 3,2/2,1 reduziert (spitzere Ecke passt mit mehr Spiel ins Gehäuse) |
-| 2026-07-13 | Eigene Mobil-Web-App (`timer_web.h`) + JSON-API statt ESPHome-Standard-UI | mobile Bedien-/Einstell-/Netzwerk-/Statusseiten auf Port 80; eine `/api/*`-JSON-Schnittstelle bedient Handy und ioBroker gleich; mit `esphome compile` verifiziert |
-| 2026-07-13 | Gerätename Default **`feeder-relais`** + NTP-Uhr, Tasten-Zustandsautomat, OLED-Redesign (Stufe A) | S1 Down/Manual · S2 SET · S3 UP: kurz=Timer, lang UP=Stop, lang SET=Info-Menü (10 s Timeout); OLED oben WLAN+Status, unten Uhr/Countdown. `esphome compile` grün. Netzwerk-Laufzeitkonfig (WLAN/statisch/NTP/Hostname) = Stufe B |
-| 2026-07-13 | Netzwerk-Laufzeitkonfig (Stufe B): Web-Formular + `net_config.h` | WLAN via `save_wifi_sta`, IP DHCP/statisch via ESP-IDF-netif bei `wifi.on_connect`, NTP via `esp_sntp_setservername`, persistent in Prefs, Neustart-Knopf. Hostname zunächst offen (siehe Folgezeile). `esphome compile` grün; Netzwerk-Anwendung braucht Gerätetest |
-| 2026-07-13 | Hostname doch zur Laufzeit umbenennbar | ESPHome-mDNS nutzt ESP-IDF-`mdns.h` → `mdns_hostname_set()` stellt `…​.local` sofort um; DHCP-Name über `esp_netif_set_hostname()` nach Reconnect/Neustart. Persistent, Web-Feld editierbar, DNS-Label-Sanitizer. `esphome compile` grün |
-| 2026-07-15 | Beta-1-Fixes (Gerätetest) | (1) **Kein Webserver im STA-Betrieb**: `web_server_base` wird nur vom AP-Captive-Portal `init()`-siert → in `on_boot` selbst `id(web_base)->init()` aufgerufen (Port-80-Listener). (2) **Schwankende Latenz/„mangelhaft"**: `wifi: power_save_mode: none`. OLED separat: I2C `Found no devices` → Verdrahtung/Adresse prüfen (nicht firmwareseitig). `esphome compile` grün |
-| 2026-07-15 | Kein einkompiliertes WLAN mehr – Provisioning nur per Captive-Portal | (1) kein fremder SSID/PW in der Auslieferung; (2) `has_sta()==false` → gespeicherte Portal-Daten unter **festem** Preference-Key `88491487` → überstehen **OTA** (mit einkompiliertem WLAN hängt der Key am Config-Hash → Verlust bei jedem Build, war der Beta-Bug). Factory = sauber (mit Flash-Erase), OTA behält WLAN. `wifi:` nur noch `ap:` + `captive_portal`. `esphome compile` grün |
-| 2026-07-16 | I2C-SDA GPIO8 → **GPIO7**; Onboard-RGB-LED (GPIO8) als gedimmte Status-LED | GPIO8 trägt die WS2812 des Super Mini; der I2C-Verkehr trieb sie hell/warm. SDA daher auf GPIO7 (Schaltplan-Pin `GPIO8/SDA`→`GPIO7/SDA` inkl. Instanz-Nr., Doku/CLAUDE.md nachgezogen). WS2812 nun `light: esp32_rmt_led_strip`, im 1s-Interval: grün=OK / gelb=Timer / rot=Störung, ~25 %. Board-Übersicht + GPIO-Grafik in Doku Kap. 5.2. `esphome compile` grün |
-| 2026-07-13 | Service-Tab: Live-Log/Debug + Web-OTA + Neustart | `logger: on_message:` → Ringpuffer `log_ring.h`, `GET /api/log` gefiltert nach Stufe (ERROR…DEBUG); Web-Upload via `ota: platform: web_server` (`POST /update`, Port 80) neben Netzwerk-OTA (`platform: esphome`). `esphome compile` grün |
-| 2026-07-16 | WLAN-Roaming 802.11k/v per Web schaltbar | Fähigkeit fest einkompiliert (`wifi: enable_btm/enable_rrm: true` → `CONFIG_WPA_11KV_SUPPORT`, nur so ist der `set_btm/set_rrm`-Codepfad aktiv). Ein/Aus zur Laufzeit über `g_netcfg.roaming` (NetCfg v2→v3, persistent): `netcfg_apply_roaming()` setzt `set_btm/set_rrm` + gegengleich `set_post_connect_roaming` (aus=ESPHome-Scan-Roaming). Web-Checkbox im Netzwerk-Tab, `POST /api/net?roaming=0\|1`. Bits greifen ab nächstem (Re)Connect. Default **aus**. `esphome compile` grün |
-| 2026-07-16 | Knopf „Jetzt neu verbinden" (Netzwerk-Tab) | `POST /api/reconnect` setzt `g_reconnect_pending`; das 1s-Interval ruft dann `netcfg_wifi_reconnect()` = `wifi.disable()`+`enable()` (baut STA-Config neu → Roaming sofort aktiv, ohne Reboot). Verzögerung übers Interval, damit die HTTP-Antwort noch rausgeht (WLAN reißt danach kurz ab). Gleiches Muster wie `g_reboot_pending`. `esphome compile` grün |
-| 2026-07-16 | Roaming-Haken persistent + sichtbar + Status-Zeile | Haken „verschwand" nach Reconnect/Neustart. `roaming` jetzt in `/api/status`, der Haken wird laufend daraus gesetzt (self-healing, 4-s-Hold nach manueller Änderung) und bleibt sichtbar; neue Status-Zeile „WLAN-Roaming (802.11k/v): EIN/AUS". `esphome compile` grün |
-| 2026-07-16 | **Panik-Neustarts behoben** (Preferences aus Webserver-Task) | Ursache: `netcfg_save()` läuft im Webserver-Task; ESPHomes Preferences (`s_pending_save`-Vektor + NVS-Handle) sind **ungelockt** gegen den Main-Task. Der in v0.0.13 ergänzte `global_preferences->sync()` aus dem Handler = Data-Race → Heap-Korruption → `ESP_RST_PANIC`. Fix: `netcfg_save()` setzt nur `g_prefs_save_pending`; das 1s-Interval (Main-Task) ruft `netcfg_flush()` = `save()`+`sync()`. Alle Flash-Schreibzugriffe nun single-threaded. `esphome compile` grün |
-| 2026-07-16 | **Stack-Overflow im httpd-Task behoben** (eigentliche Crash-Ursache) | Serielles Log: `Guru Meditation Error … Stack protection fault … task "httpd"`, ausgelöst sobald die offene Web-App `/api/status` pollt. Der httpd-Task hat nur `HTTPD_DEFAULT_CONFIG`+256 ≈ 4 KB Stack; `send_status` (`buf[896]`) + `handleRequest` (`urlbuf[513]`) + `snprintf` lagen gleichzeitig darauf → Überlauf. Fix: **alle großen Handler-Puffer auf den Heap** (`new(std::nothrow)`/`delete[]`): Status-JSON, `send_net`-JSON, URL-Puffer (`url_to` via `std::span`). Der Preferences-Fix (v0.0.14) war nötig, aber nicht die Absturzursache. `esphome compile` grün. **Regel: keine großen Stack-Puffer in httpd-Handlern.** |
-| 2026-07-16 | Status: geflashte Version ganz oben | `#define FW_VERSION` in `timer_web.h` (bei jedem Release mitziehen), als `ver` in `/api/status`, erste Zeile „Version" auf der Status-Seite. `esphome compile` grün |
-| 2026-07-16 | Mehrsprachigkeit DE/EN/FR (Web + OLED) | Sprache geräteweit in `g_netcfg.lang` (NetCfg v3→v4, `netcfg_lang_idx()`), Auswahl per Dropdown ganz oben im Zeiten-Tab, `POST /api/net?lang=de\|en\|fr`. Web: JS-Wörterbuch `T{key:{de,en,fr}}` + `data-i18n`-Attribute, `tr()`/`applyStatic()`; sprachabhängige Statuswerte (WLAN/Reset) als neutrale Codes aus C++ (`up/down`, `poweron/…`), Übersetzung im Browser. OLED: Sprach-Tabellen für Wochentage/Status(Ruhe/Futter)/Menü, bewusst akzentfrei (Font-Glyphsatz). Logs + Captive-Portal bleiben englisch (ESPHome-Kern, nicht ohne Fork lokalisierbar). Doku: nur `DOKUMENTATION.md` nach EN+FR (DE führend, pro Release), Projektplan bleibt DE. `esphome compile` grün |
+| 2026-07-13 | OLED gesteckt statt verdrahtet | Montage/Service; von Fensterzentrierung rückwärts konstruiert |
+| 2026-07-16 | **I2C-SDA GPIO8 → GPIO7**; Onboard-RGB-LED (GPIO8) als Status-LED | GPIO8 trägt die WS2812 des Super Mini; I2C-Verkehr trieb sie hell/warm. SDA daher auf GPIO7 (Schaltplan-Pin `GPIO8/SDA`→`GPIO7/SDA` inkl. Instanz-Nr.). WS2812 als `light: esp32_rmt_led_strip`: grün=OK/gelb=Timer/rot=Störung |
+| 2026-07-16 | Kein einkompiliertes WLAN – Provisioning nur per Captive-Portal | kein fremder SSID/PW in Auslieferung; Portal-Daten unter festem Prefs-Key → überstehen OTA |
+| 2026-07-16 | Panik-/Stack-Fixes: keine großen Puffer/Prefs-Writes im httpd-Task | Preferences aus Webserver-Task = Data-Race; große Stack-Puffer = httpd-Stack-Overflow → alles single-threaded / auf den Heap |
+| 2026-07-16 | Mehrsprachigkeit DE/EN/FR (Web + OLED) | Sprache geräteweit in `g_netcfg.lang`; Web-Wörterbuch + neutrale Statuscodes; OLED-Sprachtabellen (akzentfrei) |
+| **2026-08-12** | **v2 = v1 mit Elektronik auf der Rückseite, Shelly extern** | Höhenbudget zur Front zu knapp für Module vorne; externer Shelly hält Platine klein und 230-V-Wege kurz; 4-lagig mit GND-Flächen (nur Kleinspannung) für Störfestigkeit; Steckverbinder umbenannt (X1 Netz, X2 Last, X3 Snubber, J1 Shelly, J2 OLED) |
+| **2026-08-12** | **v2-Board: OLED-SDA von GPIO8 auf GPIO7 korrigiert** | Beim Ableiten von v1 war die 2026-07-16-Korrektur verloren gegangen — v2 hatte SDA wieder auf GPIO8 (= WS2812). Ohne Fix: OLED tot + LED/I²C-Konflikt. Headless behoben (Schaltplan Pin 8→7, Layout pad8→pad7, Zonen neu gefüllt), verifiziert (Netzliste `/SDA→U1.7`, DRC sauber). Firmware war stets korrekt (SDA=GPIO7) |
+| **2026-08-12** | **Doku nach asksin-Regelwerk (HTML-Handbuch)** | anfängertaugliches Handbuch `docs/handbuch/` (WeasyPrint-PDF, Inhaltsverzeichnis mit Sprungmarken, Fußsteg zurück zum Inhalt, feste Umbruchregeln); `DOKUMENTATION.md` bleibt technische Quelle der Wahrheit |

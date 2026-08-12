@@ -1,0 +1,5 @@
+(version 1)
+(rule "230V->SELV 6mm (K1-Barriere ausgenommen)"
+   (condition "(A.NetName=='/L_IN' || A.NetName=='/L_F' || A.NetName=='/N' || A.NetName=='/SW_SHELLY' || A.NetName=='/O_LAST') && !(B.NetName=='/L_IN' || B.NetName=='/L_F' || B.NetName=='/N' || B.NetName=='/SW_SHELLY' || B.NetName=='/O_LAST') && B.NetName != '' && B.NetName != 'Net-(K1-Pad1)' && !A.memberOfFootprint('K1') && !B.memberOfFootprint('K1') && !A.intersectsCourtyard('K1') && !B.intersectsCourtyard('K1')")
+   (constraint creepage (min 6mm))
+   (constraint clearance (min 6mm)))
