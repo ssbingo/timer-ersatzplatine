@@ -292,10 +292,14 @@ nötig — Fertigungsdaten liegen bei.
    (Kap. 3.4) nicht aufweichen; nach Änderungen DRC fehlerfrei bekommen und die
    GND-Zonen neu füllen (der 6-mm-Rückzug steckt in der Outline).
 
-> **Schaltplan-Altlast:** Der v2-Schaltplan enthält noch Symbole **J3–J6, SW4,
-> X4** (OLED-Alternativen + entfernter Shelly/Snubber), die nicht auf dem PCB
-> sind. Harmlos für die Fertigung, aber „Update PCB from Schematic“ würde sie
-> einfügen wollen → vor Release aus dem Schaltplan entfernen.
+> **Schaltplan/Board-Stand (2026-08-12):** **SW4** (altes On-Board-Shelly) und
+> **X4** (On-Board-Snubber) wurden aus dem Schaltplan **entfernt**. **J3–J6**
+> bleiben als **zusätzliche OLED-Header-Positionen** (identisch zu J2, gleiche
+> I²C-Netze GND/+3V3/SCL/SDA) und werden noch **aufs PCB platziert** (rechts
+> neben J2) — am besten per *Werkzeuge → Schaltplan mit Platine abgleichen* im
+> GUI, da der Bereich rechts von J2 in der GND-Fläche liegt und die Platzierung
+> Sicht braucht. **Display:** in der Firmware per `rotation: 180°` gedreht (um
+> 180° verdrehte Montage) — **keine Platinenänderung nötig**.
 
 ---
 
