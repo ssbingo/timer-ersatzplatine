@@ -57,7 +57,8 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 - [x] **J3–J6 platziert + geroutet** (Nutzer, GUI) — 4 zusätzliche OLED-Header rechts neben J2
 - [x] **F1 gedreht/versetzt** (Nutzer, GUI)
 - [x] **DRC bereinigt** (2026-08-12): Short /SDA↔/+3V3, Kupfer-Rand (+5V, PMOS), Text-Spiegelungen, L_F südlich um K1 (B.Cu-Unterführung) → **K1-SELV in der GND-Fläche**, DRC ohne echte Fehler (nur Silk-/Lib-Hinweise)
-- [ ] **Vor Bestellung noch offen:** Rand-Aussparungen ggf. Ø +1&nbsp;mm (Nutzer-Wunsch, GUI); GUI-Gegenprüfung + Gerber frisch erzeugen
+- [x] **Rand-Aussparungen Ø10 → Ø11** (2026-08-12): 4 Schlitze symmetrisch; die 2 rechten asymmetrisch (innen/Boden +0,5 mm — außen liegt die Board-Kante an, kein Material); Kontur geschlossen, Maß 101,6 × 77,5 unverändert; +5V/PMOS-Bahnen unterm oberen Mittelschlitz tiefer gelegt; STL-Attrappe neu
+- [ ] **Vor Bestellung noch offen:** GUI-Gegenprüfung (DRC im GUI, K1-Ausnahme), neue Attrappe drucken + Passprobe, Gerber frisch erzeugen
       stehen noch im Schaltplan, nicht auf dem PCB)
 - [ ] Testdruck der Platinen-Attrappe im gedruckten Rückteil (Passprobe)
 - [ ] Gerber + Bohrdaten final prüfen, bestellen (**4 Lagen**, 1,6 mm)
