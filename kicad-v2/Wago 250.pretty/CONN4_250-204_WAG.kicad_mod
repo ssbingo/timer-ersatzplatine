@@ -253,6 +253,6 @@
 	(model "${KIPRJMOD}/Wago 250.3dshapes/250-204.stp"
 		(offset (xyz 12.3 -5 0))
 		(scale (xyz 1 1 1))
-		(rotate (xyz 90 0 90))
+		(rotate (xyz -90 0 90))
 	)
 )
