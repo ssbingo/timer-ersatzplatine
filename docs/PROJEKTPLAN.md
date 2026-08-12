@@ -53,8 +53,11 @@ ergänzen, niemals Messwerte ohne neue Messung ändern (siehe CLAUDE.md).
 
 ## Phase 7 — Fertigung & Beschaffung ⬜ offen
 
-- [x] **SW4/X4 aus Schaltplan entfernt** (2026-08-12); J3–J6 bleiben als OLED-Header-Alternativen und werden noch aufs PCB platziert
-- [ ] **Vor Bestellung:** (ehem. Altlast) — noch offen: J3–J6 platzieren, F1-Drehung (GUI), Aussparungen ggf. +1&nbsp;mm
+- [x] **SW4/X4 aus Schaltplan entfernt** (2026-08-12)
+- [x] **J3–J6 platziert + geroutet** (Nutzer, GUI) — 4 zusätzliche OLED-Header rechts neben J2
+- [x] **F1 gedreht/versetzt** (Nutzer, GUI)
+- [x] **DRC bereinigt** (2026-08-12): Short /SDA↔/+3V3, Kupfer-Rand (+5V, PMOS), Text-Spiegelungen, L_F südlich um K1 (B.Cu-Unterführung) → **K1-SELV in der GND-Fläche**, DRC ohne echte Fehler (nur Silk-/Lib-Hinweise)
+- [ ] **Vor Bestellung noch offen:** Rand-Aussparungen ggf. Ø +1&nbsp;mm (Nutzer-Wunsch, GUI); GUI-Gegenprüfung + Gerber frisch erzeugen
       stehen noch im Schaltplan, nicht auf dem PCB)
 - [ ] Testdruck der Platinen-Attrappe im gedruckten Rückteil (Passprobe)
 - [ ] Gerber + Bohrdaten final prüfen, bestellen (**4 Lagen**, 1,6 mm)

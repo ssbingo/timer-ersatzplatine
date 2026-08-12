@@ -195,6 +195,7 @@ Bewusst gemieden: GPIO2/8/9 als Taster (Strapping/WS2812). SCL bleibt GPIO9
 | X3 Snubber | O_LAST | N | — | — |
 | J1 Shelly | SW_SHELLY | O_LAST | L_F | N |
 | J2 OLED | GND | +3V3 | SCL | SDA |
+| J3–J6 OLED (Reserve, rechts neben J2) | GND | +3V3 | SCL | SDA |
 | K1 PhotoMOS | LED-Anode (→R1) | GND (LED-Kathode) | L_F | SW_SHELLY |
 | PS1 Netzteil | N (AC) | L_F (AC) | +5V | GND |
 
@@ -293,13 +294,14 @@ nötig — Fertigungsdaten liegen bei.
    GND-Zonen neu füllen (der 6-mm-Rückzug steckt in der Outline).
 
 > **Schaltplan/Board-Stand (2026-08-12):** **SW4** (altes On-Board-Shelly) und
-> **X4** (On-Board-Snubber) wurden aus dem Schaltplan **entfernt**. **J3–J6**
-> bleiben als **zusätzliche OLED-Header-Positionen** (identisch zu J2, gleiche
-> I²C-Netze GND/+3V3/SCL/SDA) und werden noch **aufs PCB platziert** (rechts
-> neben J2) — am besten per *Werkzeuge → Schaltplan mit Platine abgleichen* im
-> GUI, da der Bereich rechts von J2 in der GND-Fläche liegt und die Platzierung
-> Sicht braucht. **Display:** in der Firmware per `rotation: 180°` gedreht (um
-> 180° verdrehte Montage) — **keine Platinenänderung nötig**.
+> **X4** (On-Board-Snubber) sind aus Schaltplan **und** Board entfernt.
+> **J3–J6** sind als **zusätzliche OLED-Header** (identisch zu J2:
+> GND/+3V3/SCL/SDA) **rechts neben J2 auf dem PCB platziert und geroutet**.
+> Die L_F-Zuführung von J1.3 läuft südlich um K1 herum (45°-Ast, B.Cu-
+> Unterführung unter /SW_SHELLY, orthogonal in K1.4) — dadurch bleibt sie real
+> ≥ 6 mm von K1.2, und die GND-Fläche schließt **K1s SELV-Seite ein** (K1.2
+> angebunden, K1.1 als Aussparung). **Display:** in der Firmware per
+> `rotation: 180°` gedreht — **keine Platinenänderung nötig**.
 
 ---
 

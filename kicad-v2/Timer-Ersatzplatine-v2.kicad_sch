@@ -4916,7 +4916,6 @@
 		)
 		(uuid "fcb7845e-077a-4bb7-b76d-ee91638abedd")
 	)
-	
 	(symbol
 		(lib_id "timer:SW_Push")
 		(at 37.592 110.236 0)
@@ -4987,7 +4986,7 @@
 			(uuid "317d9d89-5ce4-4965-93fa-b21ec4d8b956")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW2")
 					(unit 1)
@@ -5065,7 +5064,7 @@
 			(uuid "64411036-2179-446b-8af3-d556a0f29177")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW1")
 					(unit 1)
@@ -5153,7 +5152,7 @@
 			(uuid "30678ccb-7dad-4318-b6a1-c4c967008728")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "K1")
 					(unit 1)
@@ -5231,7 +5230,7 @@
 			(uuid "7cbc9a64-1192-40ee-8d07-4e512016053a")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "#PWR01")
 					(unit 1)
@@ -5309,7 +5308,7 @@
 			(uuid "138b0fa1-9e70-458b-b4f4-2d5ff212d594")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "F1")
 					(unit 1)
@@ -5393,7 +5392,7 @@
 			(uuid "d48da34d-ef8e-4240-9a5a-c6e6dc03d6e8")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J3")
 					(unit 1)
@@ -5474,7 +5473,7 @@
 			(uuid "8dc262fd-017e-4773-acc1-0fa63427a6ba")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "C2")
 					(unit 1)
@@ -5558,7 +5557,7 @@
 			(uuid "acb3f4de-4c88-4c68-bc04-c25a8e94945d")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "PS1")
 					(unit 1)
@@ -5714,7 +5713,7 @@
 			(uuid "bfc79130-c7c5-41dc-9ccc-4824c54d9f18")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X3")
 					(unit 1)
@@ -5722,7 +5721,6 @@
 			)
 		)
 	)
-	
 	(symbol
 		(lib_id "250-204:250-204")
 		(at 217.932 98.806 0)
@@ -5805,7 +5803,7 @@
 			(uuid "38bc7011-0c1a-4b33-8599-88cd84697559")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J1")
 					(unit 1)
@@ -5961,7 +5959,7 @@
 			(uuid "7d33d7b8-dc8b-4cd7-b3ce-48740964d78b")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X2")
 					(unit 1)
@@ -6060,7 +6058,7 @@
 			(uuid "edde5bb5-4e1e-4d20-8455-fe864ee101dd")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "U1")
 					(unit 1)
@@ -6138,7 +6136,7 @@
 			(uuid "8b2fe0a2-7535-4033-b46e-762e6009f40c")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW3")
 					(unit 1)
@@ -6222,7 +6220,7 @@
 			(uuid "0a77dbf8-cdbb-4ff3-8e8a-05e307c2bdc7")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J6")
 					(unit 1)
@@ -6300,7 +6298,7 @@
 			(uuid "a42d42ed-ad44-479e-ad0e-14a8a82bf9b1")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "RV1")
 					(unit 1)
@@ -6384,7 +6382,7 @@
 			(uuid "fd3d33d5-e47e-4413-a23a-6cc44661918a")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J4")
 					(unit 1)
@@ -6468,7 +6466,7 @@
 			(uuid "65beeefb-8e89-4d5d-83ef-37b86caa44b1")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J2")
 					(unit 1)
@@ -6549,7 +6547,7 @@
 			(uuid "0704f4d0-9961-4e25-8e10-a8d880a9b337")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "C1")
 					(unit 1)
@@ -6705,7 +6703,7 @@
 			(uuid "685f41e7-3019-4991-8104-5987669f6fa3")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X1")
 					(unit 1)
@@ -6789,7 +6787,7 @@
 			(uuid "30c9dae4-64bf-4995-b834-e443ed82273c")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J5")
 					(unit 1)
@@ -6867,7 +6865,7 @@
 			(uuid "bfe50920-a786-4855-8ca3-b1cd26040e27")
 		)
 		(instances
-			(project "Timer-Ersatzplatine"
+			(project "Timer-Ersatzplatine-v2"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "R1")
 					(unit 1)
