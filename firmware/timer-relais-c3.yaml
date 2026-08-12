@@ -344,6 +344,7 @@ display:
   - platform: ssd1306_i2c
     model: "SSD1306 128x32"
     address: 0x3C
+    rotation: 180°          # Display ist um 180° verdreht montiert -> in Software gedreht
     id: oled
     update_interval: never
     lambda: |-

@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Feeder-Relais — Handbuch</title>
+<style>
+  :root {
+    --petrol: #0e7490; --petrol-dunkel: #155e75; --petrol-hell: #ecfeff;
+    --tinte: #1f2937; --grau: #64748b; --linie: #e2e8f0;
+    --gruen: #15803d; --gruen-hell: #f0fdf4;
+    --amber: #b45309; --amber-hell: #fffbeb;
+    --rot: #b91c1c;   --rot-hell: #fef2f2;
+    --code-bg: #0f172a; --code-fg: #e2e8f0;
+  }
+  * { box-sizing: border-box; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  @page { size: A4; margin: 16mm 15mm 22mm 15mm; }
+
+  h1 { bookmark-level: 1; bookmark-label: content(); }
+  h2 { bookmark-level: 2; bookmark-label: content(); }
+  h3 { bookmark-level: 3; bookmark-label: content(); }
+  .fusssteg, .deckblatt h1 { bookmark-level: none; }
+
+  @page deckblatt { margin: 0 0 3mm 0; }
+  .deckblatt { page: deckblatt; }
+
+  /* Fusssteg auf JEDER Seite. Fest positioniert und per negativem bottom in
+     den unteren Seitenrand geschoben (WeasyPrint kann das, Chromium nicht) —
+     so verdeckt er nie Text. pruefe_fusssteg.py rechnet das bei jedem Bau nach. */
+  .fusssteg {
+    position: fixed;
+    bottom: -14mm;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background: var(--petrol-hell);
+    border: 0.7pt solid var(--petrol);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4mm;
+    padding: 1.1mm 3.5mm 1.3mm;
+    font-size: 7.6pt;
+    color: var(--petrol-dunkel);
+    letter-spacing: 0.01em;
+  }
+  .fusssteg .mitte { font-weight: 700; white-space: nowrap; }
+  .fusssteg a { color: var(--petrol); text-decoration: none; }
+  .fusssteg .links, .fusssteg .rechts { white-space: nowrap; }
+  .fusssteg .rechts { text-align: right; }
+
+  .vorspann, .toc { break-before: page; }
+
+  .deckblatt {
+    position: relative;
+    z-index: 3;
+    min-height: 294mm;
+    max-height: 294mm;
+    overflow: hidden;
+  }
+  html { font-size: 10.6pt; }
+  body { font-family: "DejaVu Sans", sans-serif; color: var(--tinte); line-height: 1.55; margin: 0; }
+  h1, h2, h3 { font-family: "DejaVu Sans", sans-serif; line-height: 1.25; }
+  h1.kapitel { break-before: page; color: var(--petrol-dunkel); font-size: 21pt; margin: 0 0 2mm 0; padding-top: 2mm; }
+  h1.kapitel .knr { display:inline-block; background: var(--petrol); color:#fff; border-radius: 7px;
+        padding: 1px 10px 3px; margin-right: 8px; font-size: 17pt; vertical-align: 2px; }
+  .kapitelband { height: 3.5px; background: linear-gradient(90deg, var(--petrol), #67e8f9); border-radius: 2px; margin-bottom: 6mm; }
+  h2 { color: var(--petrol-dunkel); font-size: 14.5pt; margin: 7mm 0 2.5mm; border-bottom: 1.5px solid var(--linie); padding-bottom: 1.5mm; }
+  h3 { color: var(--tinte); font-size: 12pt; margin: 5mm 0 2mm; }
+  p { margin: 2.2mm 0; }
+  .klein { font-size: 9pt; color: var(--grau); }
+  strong { color: #0f172a; }
+  a { color: var(--petrol); text-decoration: none; }
+  ul, ol { margin: 2.2mm 0; padding-left: 6mm; }
+  li { margin: 1mm 0; }
+
+  /* Boxen */
+  .box { border-radius: 9px; padding: 3.2mm 4mm 3.2mm 4.5mm; margin: 3.5mm 0; break-inside: avoid;
+         border-left: 4.5px solid; }
+  .box .titel { font-weight: bold; display:block; margin-bottom: 1mm; }
+  .hinweis { background: var(--petrol-hell); border-color: var(--petrol); }
+  .hinweis .titel { color: var(--petrol-dunkel); }
+  .tipp { background: var(--gruen-hell); border-color: var(--gruen); }
+  .tipp .titel { color: var(--gruen); }
+  .achtung { background: var(--amber-hell); border-color: #d97706; }
+  .achtung .titel { color: var(--amber); }
+  .gefahr { background: var(--rot-hell); border-color: #dc2626; }
+  .gefahr .titel { color: var(--rot); }
+
+  /* Code */
+  pre { background: var(--code-bg); color: var(--code-fg); border-radius: 9px; padding: 3mm 4mm;
+        font-family: "DejaVu Sans Mono", monospace; font-size: 9.2pt; line-height: 1.5;
+        overflow-x: hidden; white-space: pre-wrap; break-inside: avoid; }
+  pre .c { color: #7dd3fc; }
+  pre .p { color: #86efac; }
+  code { font-family: "DejaVu Sans Mono", monospace; font-size: 0.92em; background: #eef2f7;
+         border-radius: 4px; padding: 0.5px 4px; color: #0f172a; }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  /* Tabellen */
+  table { border-collapse: collapse; width: 100%; margin: 3mm 0; font-size: 9.6pt; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  table.umbruch { break-before: page; }
+  th { background: var(--petrol); color: #fff; text-align: left; padding: 1.8mm 2.5mm; }
+  td { border-bottom: 1px solid var(--linie); padding: 1.6mm 2.5mm; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  table.schmal { width: auto; min-width: 60%; }
+
+  /* Schritte */
+  ol.schritte { counter-reset: s; list-style: none; margin: 3mm 0; padding: 0; }
+  ol.schritte > li { counter-increment: s; position: relative; padding: 0 0 2.5mm 11mm; margin: 0 0 1.5mm; }
+  ol.schritte > li::before { content: counter(s); position: absolute; left: 0; top: 0.4mm;
+      width: 7.2mm; height: 7.2mm; border-radius: 50%; background: var(--petrol); color:#fff;
+      font-weight: bold; text-align: center; line-height: 7.2mm; font-size: 10pt; }
+
+  /* Bilder */
+  figure { margin: 4mm 0; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; max-height: 215mm; border-radius: 8px; }
+  figure.rahmen img { border: 1px solid var(--linie); }
+  figcaption { font-size: 9pt; color: var(--grau); margin-top: 1.5mm; }
+
+  /* Deckblatt */
+  .deckblatt { height: 294mm; border-radius: 0; overflow: hidden; position: relative;
+      background: linear-gradient(150deg, #083344 0%, #0e7490 55%, #155e75 100%); color: #fff; }
+  .deckblatt .inner { padding: 30mm 26mm; }
+  .deckblatt h1 { font-size: 34pt; margin: 4mm 0 2mm; color:#fff; }
+  .deckblatt .unter { font-size: 14pt; color: #a5f3fc; margin-bottom: 10mm; }
+  .deckblatt .badge { display:inline-block; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35);
+      border-radius: 999px; padding: 1mm 5mm; margin: 0 2mm 2mm 0; font-size: 10pt; }
+  .deckblatt img.held { width: 100%; border-radius: 10px; margin-top: 8mm; background:#fff; }
+  .deckblatt .fuss { position: absolute; bottom: 12mm; left: 26mm; right: 26mm;
+      font-size: 10pt; color: #cffafe; }
+  .deckblatt .fuss span { display: inline-block; width: 40%; vertical-align: top; }
+  .deckblatt .fuss span + span { width: 58%; text-align: right; }
+
+  /* Inhaltsverzeichnis + Umbruchregeln */
+  #inhalt { break-before: page; }
+  h2.umbruch, h3.umbruch { break-before: page; }
+  h2, h3 { break-after: avoid; break-inside: avoid; }
+  p, li { orphans: 3; widows: 3; }
+  .toc h1 { color: var(--petrol-dunkel); font-size: 21pt; }
+  .toc ol { list-style: none; padding: 0; margin: 5mm 0; column-count: 1; }
+  .toc ol a { color: inherit; text-decoration: none; display: block; }
+  .toc li { padding: 1.6mm 0; border-bottom: 1px dotted var(--linie); font-size: 11.5pt; }
+  .toc .nr { display:inline-block; width: 9mm; color: var(--petrol); font-weight: bold; }
+
+  .kv { display: inline-block; background: #eef2f7; border-radius: 5px; padding: 0 4px; font-family: "DejaVu Sans Mono", monospace; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<div class="fusssteg">
+  <span class="links">© 2026 S. Sternitzke · CC BY-NC-SA 4.0</span>
+  <span class="mitte"><a href="#inhalt">↑ Inhaltsverzeichnis</a></span>
+  <span class="rechts">Feeder-Relais · Handbuch Ausgabe 1</span>
+</div>
+
+<!-- ==================================================== DECKBLATT -->
+<div class="deckblatt">
+  <div class="inner">
+    <div class="badge">ESP32-C3 · WLAN</div>
+    <div class="badge">230-V-Timer</div>
+    <div class="badge">Shelly 1PM Mini Gen4</div>
+    <div class="badge">Selbstbau · Version 2</div>
+    <h1>Feeder-Relais</h1>
+    <div class="unter">Das Handbuch — von der leeren Platine bis zum fertigen Gerät im Gehäuse</div>
+    <img class="held" src="img/platine-oben.png" alt="Die Feeder-Relais-Platine v2 von oben">
+    <div class="fuss">
+      <span>Ausgabe 1 · August 2026 · deutsch</span>
+      <span>Hardware v2 · ESPHome-Firmware · CC&nbsp;BY-NC-SA&nbsp;4.0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================== ÜBER DIESES HANDBUCH -->
+<div class="vorspann">
+<h1>Über dieses Handbuch</h1>
+<p>Dieses Handbuch richtet sich an <strong>Einsteigerinnen und Einsteiger</strong>.
+Du brauchst keine Elektronik-Ausbildung — aber einen Lötkolben, etwas Geduld und
+die Bereitschaft, ein paar Befehle in ein Terminal zu tippen. Jeder Schritt ist
+vollständig beschrieben: <em>was</em> du tust, <em>warum</em> du es tust, und
+woran du erkennst, dass es geklappt hat. Am Ende hältst du ein Gerät in der Hand,
+das eine 230-V-Last (zum Beispiel einen Futterautomaten) auf Knopfdruck für eine
+einstellbare Zeit einschaltet — bedienbar über drei Tasten, ein kleines Display
+und eine Webseite im Heimnetz.</p>
+
+<div class="gefahr box"><span class="titel">✋ Dieses Gerät führt 230 Volt</span>
+230&nbsp;Volt Netzspannung sind <strong>lebensgefährlich</strong>. Der Aufbau, die
+Prüfung und die Inbetriebnahme des Netzteils gehören in die Hände einer
+<strong>Elektrofachkraft</strong> oder einer unterwiesenen Person. Alle Tests, die
+ohne Fachkraft möglich sind, laufen in diesem Handbuch <strong>ausschließlich über
+USB und ohne jede Netzspannung</strong>. Bitte lies zuerst Kapitel&nbsp;2.</div>
+
+<h3>So liest du dieses Handbuch</h3>
+<div class="hinweis box"><span class="titel">ℹ Hinweis</span>
+Blaue Kästen liefern Hintergrundwissen. Man kann sie überspringen — sie machen
+aber vieles verständlicher.</div>
+<div class="tipp box"><span class="titel">✓ Tipp</span>
+Grüne Kästen sparen Zeit oder Nerven.</div>
+<div class="achtung box"><span class="titel">⚠ Achtung</span>
+Gelbe Kästen markieren Stellen, an denen häufig etwas schiefgeht.</div>
+<div class="gefahr box"><span class="titel">✋ Stopp</span>
+Rote Kästen markieren Handgriffe, die Hardware zerstören oder dich verletzen
+können. Bitte immer lesen.</div>
+
+<p>Befehle für das Terminal sehen so aus — sie werden Zeile für Zeile eingegeben
+und mit <code>Enter</code> abgeschickt. Zeilen, die mit <span class="kv">#</span> beginnen,
+sind Kommentare und werden nicht mit eingetippt:</p>
+<pre><span class="c"># Das ist ein Kommentar — nur zur Erklärung</span>
+esphome run firmware/timer-relais-c3.yaml</pre>
+
+<p>Verweise wie „Kapitel&nbsp;7“ sind im PDF anklickbar. Über den Link
+<strong>„↑ Inhaltsverzeichnis“</strong> am unteren Rand jeder Seite springst du
+jederzeit zurück zur Übersicht.</p>
+</div>
+
+<!-- ==================================================== INHALT -->
+<div class="toc">
+<h1 id="inhalt">Inhalt</h1>
+<ol>
+  <li><a href="#k1"><span class="nr">1</span> Was das Feeder-Relais ist</a></li>
+  <li><a href="#k2"><span class="nr">2</span> Sicherheit — bitte zuerst lesen</a></li>
+  <li><a href="#k3"><span class="nr">3</span> Wie das System funktioniert</a></li>
+  <li><a href="#k4"><span class="nr">4</span> Einkaufsliste: Material und Werkzeug</a></li>
+  <li><a href="#k5"><span class="nr">5</span> Das Gehäuse</a></li>
+  <li><a href="#k6"><span class="nr">6</span> Die Platine verstehen</a></li>
+  <li><a href="#k7"><span class="nr">7</span> Die Platine fertigen lassen</a></li>
+  <li><a href="#k8"><span class="nr">8</span> KiCad Schritt für Schritt (nur bei eigenen Änderungen)</a></li>
+  <li><a href="#k9"><span class="nr">9</span> Die Platine bestücken</a></li>
+  <li><a href="#k10"><span class="nr">10</span> Die Firmware aufspielen</a></li>
+  <li><a href="#k11"><span class="nr">11</span> WLAN einrichten und über den Browser bedienen</a></li>
+  <li><a href="#k12"><span class="nr">12</span> Netzwerk, Sprache und Anzeige</a></li>
+  <li><a href="#k13"><span class="nr">13</span> Den externen Shelly anschließen</a></li>
+  <li><a href="#k14"><span class="nr">14</span> Zusammenbau und Inbetriebnahme</a></li>
+  <li><a href="#k15"><span class="nr">15</span> Firmware-Updates und Wartung</a></li>
+  <li><a href="#k16"><span class="nr">16</span> Fehlersuche</a></li>
+  <li><a href="#k17"><span class="nr">17</span> Anhang: Belegungen, Dateien, Glossar</a></li>
+</ol>
+</div>
+
+<!-- ==================================================== KAPITEL 1 -->
+<h1 class="kapitel" id="k1"><span class="knr">1</span>Was das Feeder-Relais ist</h1>
+<div class="kapitelband"></div>
+
+<p>Das Feeder-Relais ist eine selbstgebaute Steuerplatine, die eine
+230-Volt-Last auf Knopfdruck für eine <strong>einstellbare Zeit</strong>
+einschaltet und danach von allein wieder abschaltet. Der Name stammt aus dem
+ursprünglichen Einsatz: Sie ersetzt die defekte Zeitschaltplatine eines
+Futterautomaten (englisch <em>feeder</em>). Weil sie am Ende nur „einen Schalter
+für eine gewisse Zeit drückt“, taugt sie für jede Last, die man zeitgesteuert
+schalten möchte.</p>
+
+<h2 id="k1-1">1.1 Was das Gerät tut</h2>
+<p>An der Frontseite sitzen <strong>drei Taster</strong>. Ein kurzer Druck
+schaltet die Last für eine hinterlegte Zeit ein:</p>
+
+<table class="schmal">
+<tr><th>Taste</th><th>Beschriftung</th><th>Standardzeit</th><th>einstellbar</th></tr>
+<tr><td>S1</td><td>Down / Manual (T1)</td><td>5 Sekunden</td><td>1–600 s über WLAN</td></tr>
+<tr><td>S2</td><td>SET (T2)</td><td>10 Sekunden</td><td>1–600 s über WLAN</td></tr>
+<tr><td>S3</td><td>UP (T3)</td><td>15 Sekunden</td><td>1–600 s über WLAN</td></tr>
+</table>
+
+<p>Ein kleines <strong>OLED-Display</strong> hinter der Sichtscheibe zeigt oben
+den WLAN-Empfang, die große Uhrzeit (per Internet-Zeitserver gestellt) und den
+Status <em>Ruhe</em>; unten das Datum und den freien Speicher. Läuft ein Timer,
+steht in der Mitte der <strong>Sekunden-Countdown</strong> und rechts
+<em>Futter</em>.</p>
+
+<p>Die Bedienung läuft <strong>ohne App und ohne Cloud</strong> über eine kleine,
+für Handys optimierte Webseite, die der ESP32 selbst bereitstellt (im Browser
+<code>http://feeder-relais.local</code>): Timer auslösen, Zeiten einstellen,
+Netzwerk- und Statuswerte ansehen. Für die Anbindung an eine Hausautomatisierung
+(zum Beispiel ioBroker oder Home Assistant) gibt es zusätzlich eine schlanke
+<strong>JSON-Schnittstelle</strong> (Kapitel&nbsp;11).</p>
+
+<h2 class="umbruch" id="k1-2">1.2 Die Signalkette</h2>
+<p>Vom Tastendruck bis zur geschalteten Last durchläuft das Signal fünf
+Stationen. Jede hat genau eine Aufgabe:</p>
+
+<pre>Taste  ─►  ESP32-C3  ─►  330 Ω  ─►  PhotoMOS  ─►  Shelly 1PM  ─►  Last
+S1–S3      zählt die     begrenzt    schaltet      schaltet und     (Pumpe,
+           Zeit, malt    den LED-    galvanisch     misst die        Futter-
+           das OLED      Strom       getrennt       230-V-Last       motor …)</pre>
+
+<div class="hinweis box"><span class="titel">ℹ Warum so viele Stationen?</span>
+Der ESP32 arbeitet mit ungefährlichen 3,3&nbsp;Volt. Er darf 230&nbsp;Volt
+niemals direkt „berühren“. Der <strong>PhotoMOS</strong> ist die Brücke: Er
+trennt Kleinspannung und Netzspannung durch <em>Licht</em> vollständig
+voneinander (Details in Kapitel&nbsp;3). Der <strong>Shelly</strong> übernimmt
+das eigentliche Schalten der Last und misst dabei sogar die Leistung.</div>
+
+<h2 id="k1-3">1.3 Was die Version 2 anders macht</h2>
+<p>Dieses Handbuch beschreibt die <strong>Version&nbsp;2</strong> der Platine.
+Gegenüber der ersten Version hat sich der Aufbau deutlich vereinfacht:</p>
+<ul>
+  <li>Der <strong>Shelly sitzt außerhalb der Platine</strong> und wird über eine
+  Klemme angeschlossen (Kapitel&nbsp;13). Das hält die Platine klein und die
+  Netzspannung übersichtlich.</li>
+  <li>Die gesamte <strong>Elektronik liegt auf der Rückseite</strong> der
+  Platine. Vorne bleiben nur die drei Taster und der Display-Anschluss —
+  also alles, was durch die Frontplatte bedient bzw. gesehen wird.</li>
+  <li>Die Platine ist <strong>vierlagig</strong> mit durchgehenden
+  Masseflächen. Das macht sie störungsarm und erlaubt eine saubere Trennung
+  zwischen Netzspannung und Kleinspannung (Kapitel&nbsp;6).</li>
+  <li>Das <strong>Gehäuse-Rückteil wird 3D-gedruckt</strong> (Kapitel&nbsp;5) und
+  ist tief genug, um Platine und Shelly aufzunehmen.</li>
+</ul>
+
+<!-- ==================================================== KAPITEL 2 -->
+<h1 class="kapitel" id="k2"><span class="knr">2</span>Sicherheit — bitte zuerst lesen</h1>
+<div class="kapitelband"></div>
+
+<div class="gefahr box"><span class="titel">✋ Lebensgefahr durch 230 Volt</span>
+Netzspannung kann tödlich sein. Wer die 230-V-Seite aufbaut, prüft und in
+Betrieb nimmt, muss die Gefahren kennen und die Regeln der Elektrotechnik
+beherrschen. Im Zweifel: eine <strong>Elektrofachkraft</strong> hinzuziehen. Es
+gibt keine Ausnahme und keine Eile, die das rechtfertigt.</div>
+
+<h2 id="k2-1">2.1 Die Grundregeln</h2>
+<ul>
+  <li>Alle ersten Funktionstests von ESP, Tastern und OLED laufen
+  <strong>ausschließlich über USB</strong> — dabei ist <strong>keinerlei
+  Netzspannung</strong> verbunden.</li>
+  <li>Der erste 230-V-Test erfolgt hinter einem
+  <strong>Fehlerstrom-Schutzschalter (RCD/PRCD, „Personenschutzstecker“)</strong>,
+  das Gehäuse ist geschlossen. Niemals im offenen, unter Spannung stehenden
+  Gerät hantieren.</li>
+  <li>Vor das Netzteil gehören eine <strong>Feinsicherung (1&nbsp;A träge)</strong>
+  und ein <strong>Varistor</strong>. Die kleinen AC/DC-Module bringen beides
+  nicht selbst mit.</li>
+  <li>Auf der Platine gilt zwischen jeder 230-V-Leitung und der Kleinspannung
+  <strong>mindestens 6&nbsp;mm Abstand</strong> (Kriechstrecke). Warum, steht in
+  Abschnitt&nbsp;2.2.</li>
+  <li>Für das PhotoMOS-Relais ist zwingend ein Typ mit <strong>≥ 400&nbsp;V
+  Sperrspannung</strong> zu verwenden (Kapitel&nbsp;3). Ein gewöhnlicher
+  Optokoppler ist hier <strong>nicht</strong> zulässig.</li>
+</ul>
+
+<h2 class="umbruch" id="k2-2">2.2 Warum 6 Millimeter Abstand</h2>
+<p>Zwischen zwei Kupferflächen auf einer Platine kann Strom nicht nur durch die
+Luft überspringen, sondern auch <em>an der Oberfläche entlang</em> kriechen —
+begünstigt durch Staub, Feuchte und Schmutz. Diese „Kriechstrecke“ muss bei
+230&nbsp;Volt groß genug sein. Wir legen sie auf <strong>6&nbsp;mm</strong> fest;
+das ist großzügig und lässt Reserve. Die einzige erlaubte Ausnahme ist das
+Innere des PhotoMOS-Relais selbst — dieses Bauteil <em>ist</em> die zertifizierte
+Trennstelle und darf Netz- und Kleinspannung auf wenigen Millimetern führen
+(Kapitel&nbsp;6).</p>
+
+<div class="achtung box"><span class="titel">⚠ Die 6-mm-Regel ist keine Empfehlung</span>
+Sie ist im Platinenentwurf als feste Prüfregel hinterlegt (Kapitel&nbsp;6 und 8).
+Wer die Platine verändert, darf diese Regel nicht aufweichen — sie ist der Grund,
+warum das Gerät im Alltag sicher bleibt.</div>
+
+<h2 id="k2-3">2.3 Der sichere Weg zur ersten Inbetriebnahme</h2>
+<p>Die Reihenfolge in diesem Handbuch ist bewusst so gewählt, dass du <em>alles
+Gefährliche zuletzt</em> tust und bis dahin gefahrlos üben kannst:</p>
+<ol class="schritte">
+<li>Platine bestücken und den ESP <strong>ohne Netzteil</strong> per USB flashen
+(Kapitel&nbsp;9 und 10).</li>
+<li><strong>Nur-USB-Test:</strong> Taster, OLED und der PhotoMOS-Ausgang werden
+ganz ohne Netzspannung geprüft (Kapitel&nbsp;14).</li>
+<li>Erst wenn alles funktioniert, kommen Netzteil und Shelly dazu — und der erste
+Netztest läuft hinter einem RCD bei geschlossenem Gehäuse (Kapitel&nbsp;14).</li>
+</ol>
+
+<!-- ==================================================== KAPITEL 3 -->
+<h1 class="kapitel" id="k3"><span class="knr">3</span>Wie das System funktioniert</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k3-1">3.1 Die Bauteile und ihre Aufgaben</h2>
+<table>
+<tr><th>Bauteil</th><th>Aufgabe</th></tr>
+<tr><td><strong>ESP32-C3 Super Mini</strong></td><td>Das „Gehirn“. Ein kleiner Mikrocontroller mit WLAN. Er liest die Taster, zählt die Zeit, malt das OLED, stellt die Webseite bereit und steuert den PhotoMOS an. Versorgt mit 5&nbsp;V, arbeitet intern mit 3,3&nbsp;V.</td></tr>
+<tr><td><strong>PhotoMOS-Relais</strong></td><td>Die galvanische Trennstelle zwischen 3,3&nbsp;V und 230&nbsp;V. Details in Abschnitt&nbsp;3.3.</td></tr>
+<tr><td><strong>Vorwiderstand 330&nbsp;Ω</strong></td><td>Begrenzt den Strom durch die interne LED des PhotoMOS, damit sie nicht überlastet wird.</td></tr>
+<tr><td><strong>Netzteil (AC/DC-Modul)</strong></td><td>Macht aus 230&nbsp;V~ die 5&nbsp;V, mit denen der ESP läuft. Ein fertiges, gekapseltes Modul.</td></tr>
+<tr><td><strong>Shelly 1PM Mini Gen4</strong></td><td>Schaltet die eigentliche Last, misst die Leistung und ist zusätzlich per WLAN erreichbar. Sitzt außerhalb der Platine.</td></tr>
+<tr><td><strong>OLED-Display 0,91&quot;</strong></td><td>Zeigt Uhr, Countdown und Status. Wird nur aufgesteckt, nicht verlötet.</td></tr>
+<tr><td><strong>Sicherung + Varistor</strong></td><td>Schützen vor Überstrom und Überspannung auf der Netzseite.</td></tr>
+</table>
+
+<h2 class="umbruch" id="k3-2">3.2 Warum ein Shelly — und warum außerhalb der Platine</h2>
+<p>Der Shelly 1PM Mini Gen4 ist ein fertiges, geprüftes Schaltrelais mit
+Leistungsmessung. Ihn zu verwenden hat drei Vorteile: Das riskante Schalten der
+Last übernimmt ein <strong>zertifiziertes Fertigprodukt</strong>; die Leistung
+wird <strong>gemessen</strong> (man sieht, ob die Last wirklich läuft); und der
+Shelly ist selbst per WLAN erreichbar, falls man ihn zusätzlich einbinden will.</p>
+<p>Unsere Platine „drückt“ für den Shelly nur den Schalter — als echtes
+Hardware-Signal, <strong>ohne WLAN-Abhängigkeit</strong> für die Kernfunktion.
+In Version&nbsp;2 sitzt der Shelly <strong>außerhalb</strong> der Platine und wird
+über eine Klemme verbunden (Kapitel&nbsp;13). Das hält die Platine klein, die
+230-V-Wege kurz und den Aufbau übersichtlich.</p>
+
+<div class="hinweis box"><span class="titel">ℹ „Switch / Follow“</span>
+Der Shelly wird so eingestellt, dass sein Relais <strong>genau so lange</strong>
+an ist, wie unser Signal anliegt (Betriebsart <em>Switch</em> bzw. <em>Follow</em>).
+Das gesamte Timing bleibt damit beim ESP — der Shelly folgt nur.</div>
+
+<h2 id="k3-3">3.3 Was ein PhotoMOS ist und warum genau dieser</h2>
+<p>Ein PhotoMOS ist ein winziges Halbleiter-Relais. Auf der einen Seite sitzt
+eine <strong>LED</strong>, die der ESP mit 3,3&nbsp;V ansteuert. Auf der anderen
+Seite ein <strong>lichtgesteuerter Schalter</strong>, der Netzspannung schalten
+darf. Dazwischen liegt <em>nur Licht</em> — also eine vollständige galvanische
+Trennung zwischen Kleinspannung und 230&nbsp;V.</p>
+<p>Der Schalteingang des Shelly ist netzspannungsbezogen (er erwartet geschaltetes
+L). Deshalb muss der PhotoMOS <strong>≥ 400&nbsp;V Sperrspannung</strong>
+aushalten — zum Beispiel ein <strong>Omron G3VM-601BY</strong> oder ein
+<strong>Panasonic AQY216</strong>.</p>
+
+<div class="gefahr box"><span class="titel">✋ Kein PC817 &amp; Co.</span>
+Ein gewöhnlicher Optokoppler (etwa PC817) ist für die Netzseite <strong>nicht
+zulässig</strong> — er hält die Spannung nicht sicher und ist nicht für die
+Trennung von Netzspannung gebaut. Nur einen für Netzspannung geeigneten PhotoMOS
+mit ≥ 400&nbsp;V verwenden.</div>
+
+<h2 class="umbruch" id="k3-4">3.4 Jedes Bauteil im Detail</h2>
+<p>Hier die genaue Funktion jedes Bauteils — mit den Werten, die auf der
+v2-Platine tatsächlich verbaut sind. Die Kennungen (Referenzbezeichner) stehen so
+auf dem Bestückungsdruck der Platine.</p>
+<table>
+<tr><th>Kennung</th><th>Wert</th><th>Genaue Funktion</th></tr>
+<tr><td><strong>U1</strong></td><td>ESP32-C3 Super Mini</td><td>Der Mikrocontroller mit WLAN. Läuft mit 5&nbsp;V, erzeugt intern über einen Regler 3,3&nbsp;V (auch für das OLED). Trägt eine Onboard-RGB-LED (WS2812) auf GPIO8. Steuert Taster, OLED, PhotoMOS und die Weboberfläche.</td></tr>
+<tr><td><strong>K1</strong></td><td>G3VM-601AY2</td><td>Der PhotoMOS — die galvanische Trennung zwischen 3,3&nbsp;V und 230&nbsp;V. Pins&nbsp;1/2 = interne LED (Pin&nbsp;1 über R1 von GPIO6, Pin&nbsp;2 an GND), Pins&nbsp;3/4 = lichtgesteuerter Schalter (Pin&nbsp;3 = L_F, Pin&nbsp;4 = SW_SHELLY). Sperrspannung ≥&nbsp;400&nbsp;V.</td></tr>
+<tr><td><strong>R1</strong></td><td>330&nbsp;Ω</td><td>Vorwiderstand der K1-LED. Aus ~3,3&nbsp;V minus ~1,2&nbsp;V LED-Flussspannung fließen rund <strong>6&nbsp;mA</strong> — genug zum sicheren Schalten, weit unter dem Grenzwert der LED.</td></tr>
+<tr><td><strong>PS1</strong></td><td>TSP-05 (5&nbsp;V / 3&nbsp;W)</td><td>Das Netzteil: macht aus 230&nbsp;V~ (L_F + N) die 5&nbsp;V/GND für den ESP. 3&nbsp;W = 600&nbsp;mA — genug für die WLAN-Sendespitzen (~350&nbsp;mA) plus OLED.</td></tr>
+<tr><td><strong>C1</strong></td><td>220&nbsp;µF / 10&nbsp;V</td><td>Stützkondensator an +5&nbsp;V: puffert kurze Stromspitzen beim WLAN-Senden und verhindert den Spannungseinbruch, der den ESP sonst neu starten würde.</td></tr>
+<tr><td><strong>C2</strong></td><td>100&nbsp;nF</td><td>Abblockkondensator direkt an +5&nbsp;V/GND: schluckt hochfrequente Störungen nahe am Chip.</td></tr>
+<tr><td><strong>F1</strong></td><td>1&nbsp;A träge</td><td>Feinsicherung (5×20&nbsp;mm) in Reihe: X1&nbsp;(L_IN) → F1 → L_F. Schützt bei Kurzschluss/Überstrom. „Träge“, damit der Einschaltstrom des Netzteils nicht fälschlich auslöst.</td></tr>
+<tr><td><strong>RV1</strong></td><td>S14K275 (Varistor)</td><td>Überspannungsschutz parallel zwischen L_F und N: begrenzt Spannungsspitzen (Schalttransienten, Netzstörungen) und schützt Netzteil und Elektronik.</td></tr>
+<tr><td><strong>J2</strong></td><td>OLED SSD1306 128×32</td><td>Das Display. I²C-Adresse 0x3C, 400&nbsp;kHz. Wird nur aufgesteckt (Belegung GND/VCC/SCL/SDA).</td></tr>
+<tr><td><strong>SW1–3</strong></td><td>Taster 6×6&nbsp;mm</td><td>Die drei Kurzhubtaster T1/T2/T3. Ein Anschluss an GND, der andere an GPIO3/4/5 — der ESP nutzt interne Pull-ups, ein Druck zieht den Pin auf GND.</td></tr>
+</table>
+<p>Und die Anschlussklemmen am Rand der Platine:</p>
+<table class="schmal">
+<tr><th>Kennung</th><th>Anschluss</th><th>Belegung</th></tr>
+<tr><td><strong>X1</strong></td><td>Netzeingang</td><td>1 = N, 2 = L_IN (230&nbsp;V herein)</td></tr>
+<tr><td><strong>X2</strong></td><td>Lastabgang</td><td>1 = O (geschaltet), 2 = N</td></tr>
+<tr><td><strong>X3</strong></td><td>Snubber</td><td>1 = O, 2 = N — für ein optionales RC-Glied bei induktiven Lasten</td></tr>
+<tr><td><strong>J1</strong></td><td>Shelly</td><td>1 = SW, 2 = O, 3 = L, 4 = N (zum externen Shelly, Kapitel&nbsp;13)</td></tr>
+</table>
+
+<!-- ==================================================== KAPITEL 4 -->
+<h1 class="kapitel" id="k4"><span class="knr">4</span>Einkaufsliste: Material und Werkzeug</h1>
+<div class="kapitelband"></div>
+
+<p>Alles, was du für <strong>ein</strong> Feeder-Relais brauchst. Die Platine
+selbst lässt du fertigen (Kapitel&nbsp;7); die Bauteile werden bestellt und
+aufgelötet (Kapitel&nbsp;9).</p>
+
+<h2 id="k4-1">4.1 Bauteile auf der Platine</h2>
+<table>
+<tr><th>Kennung</th><th>Bauteil</th><th>Wert / Typ</th><th>Bemerkung</th></tr>
+<tr><td>U1</td><td>ESP32-C3 Super Mini</td><td>18 × 24 mm, USB-C</td><td>Controller mit WLAN</td></tr>
+<tr><td>K1</td><td>PhotoMOS-Relais</td><td>Omron G3VM-601AY2 (o. -601BY / Panasonic AQY216)</td><td><strong>≥ 400 V!</strong></td></tr>
+<tr><td>PS1</td><td>AC/DC-Netzteilmodul</td><td>5 V / 3 W (HLK-PM05-Klasse)</td><td>Pinabstände nachmessen</td></tr>
+<tr><td>—</td><td>OLED-Display</td><td>0,91&quot; SSD1306, 128 × 32, I²C</td><td>Pins: GND VCC SCL SDA, Adresse 0x3C</td></tr>
+<tr><td>SW1–3</td><td>Kurzhubtaster</td><td>6 × 6 mm, Hub 1,5 mm</td><td>Position ist fix (Frontplatte)</td></tr>
+<tr><td>R1</td><td>Widerstand</td><td>330 Ω</td><td>LED-Vorwiderstand PhotoMOS</td></tr>
+<tr><td>F1</td><td>Feinsicherung + Halter</td><td>1 A träge, 5 × 20 mm</td><td>primärseitig, Pflicht</td></tr>
+<tr><td>RV1</td><td>Varistor</td><td>S14K275</td><td>primärseitig, Pflicht</td></tr>
+<tr><td>C1 / C2</td><td>Kondensatoren</td><td>220 µF/10 V &amp; 100 nF</td><td>5-V-Puffer und Abblockung</td></tr>
+<tr><td>X1</td><td>Netzeingang</td><td>2-polig (L, N)</td><td>Schraubklemme, 230 V herein</td></tr>
+<tr><td>X2</td><td>Lastabgang</td><td>2-polig (O, N)</td><td>zur geschalteten Last</td></tr>
+<tr><td>X3</td><td>Snubber</td><td>2-polig (O, N)</td><td>optionales RC-Glied für induktive Lasten</td></tr>
+<tr><td>J1</td><td>Shelly-Anschluss</td><td>4-polig (SW, O, L, N)</td><td>kurze Litzen zum externen Shelly, Kapitel 13</td></tr>
+<tr><td>J2</td><td>OLED-Buchsenleiste</td><td>1 × 4, RM 2,54</td><td>GND/VCC/SCL/SDA, Display wird aufgesteckt</td></tr>
+</table>
+
+<h2 class="umbruch" id="k4-2">4.2 Baugruppen außerhalb der Platine</h2>
+<ul>
+  <li><strong>Shelly 1PM Mini Gen4</strong> (Typ S4SW-001P8EU), max. 8&nbsp;A / 240&nbsp;V,
+  Maße ca. 29 × 34 × 16&nbsp;mm.</li>
+  <li><strong>Montagematerial:</strong> doppelseitiges VHB-Klebeband oder ein
+  3D-gedruckter Clip, um Shelly und Netzteil im Gehäuse zu fixieren.</li>
+  <li><strong>Kurze Litzen</strong> (z. B. 0,75&nbsp;mm²) für die Verbindung
+  Platine ↔ Shelly und zum Lastabgang.</li>
+</ul>
+
+<h2 id="k4-3">4.3 Werkzeug</h2>
+<ul>
+  <li>Lötkolben (temperaturgeregelt), Lötzinn, Entlötlitze, Flussmittel.</li>
+  <li>Feine Pinzette, Seitenschneider, Abisolierzange.</li>
+  <li>Ein <strong>USB-C-Datenkabel</strong> (Achtung: viele billige Kabel können
+  nur laden!) und ein PC.</li>
+  <li>Multimeter (Durchgangs- und Spannungsprüfung).</li>
+  <li>Ein <strong>3D-Drucker</strong> für das Gehäuse-Rückteil (oder ein
+  Druckdienst).</li>
+  <li>Für den 230-V-Test: ein <strong>RCD/PRCD</strong>.</li>
+</ul>
+
+<!-- ==================================================== KAPITEL 5 -->
+<h1 class="kapitel" id="k5"><span class="knr">5</span>Das Gehäuse</h1>
+<div class="kapitelband"></div>
+
+<p>Das Gehäuse besteht aus zwei Teilen: dem <strong>Vorderteil</strong> (die
+originale Frontplatte mit Sichtfenster und den drei Tast-Stößeln) und dem
+<strong>Rückteil</strong>, das du selbst in 3D druckst. Die Platine wird von
+hinten an sechs Dome geschraubt, das Display sitzt hinter der Sichtscheibe.</p>
+
+<figure class="rahmen">
+  <img src="img/view_iso.png" alt="Das gedruckte Gehäuse-Rückteil von schräg oben">
+  <figcaption>Das 3D-gedruckte Rückteil mit den sechs Schraubdomen und der
+  Aufhängelasche (oben).</figcaption>
+</figure>
+
+<h2 class="umbruch" id="k5-1">5.1 Aufbau aus Vorder- und Rückteil</h2>
+<p>Das <strong>Vorderteil</strong> ist das Originalgehäuse-Oberteil. Es trägt das
+Sichtfenster (dahinter liegt das OLED) und die Stößel, die beim Drücken die drei
+Taster auf der Platine betätigen. Deshalb ist die Position der Taster
+<strong>nicht verhandelbar</strong> — sie müssen exakt unter den Stößeln sitzen
+(Kapitel&nbsp;9).</p>
+
+<figure class="rahmen">
+  <img src="img/Gehauesevorderteil.jpg" alt="Vorderteil des Gehäuses">
+  <figcaption>Das Vorderteil (Original) mit Sichtfenster und den drei
+  Tast-Stößeln.</figcaption>
+</figure>
+
+<p>Das <strong>Rückteil</strong> ist in Version&nbsp;2 bewusst <strong>tiefer</strong>
+als das Original (35&nbsp;mm statt der ursprünglichen 5,7&nbsp;mm), damit Platine
+<em>und</em> der externe Shelly bequem hineinpassen. An der Oberkante sitzt eine
+Aufhängelasche mit Schlüsselloch für die Wandmontage.</p>
+
+<h2 id="k5-2">5.2 Das Rückteil selbst drucken</h2>
+<p>Die Vorlage liegt als OpenSCAD-Datei im Projekt unter
+<code>box/feeder_back.scad</code>. OpenSCAD ist ein kostenloses Programm, das ein
+3D-Modell aus einer Textdatei erzeugt — der Vorteil: alle Maße stehen als
+Variablen ganz oben in der Datei und lassen sich anpassen.</p>
+<ol class="schritte">
+<li><strong>OpenSCAD öffnen</strong> und <code>box/feeder_back.scad</code> laden.</li>
+<li>Mit <span class="kv">F6</span> das Modell berechnen und über
+<em>Datei → Exportieren → STL</em> als druckbare Datei speichern. Eine fertige
+STL liegt bereits bei: <code>box/feeder_back_35mm.stl</code>.</li>
+<li>Die STL in den <strong>Slicer</strong> deines Druckers laden. Empfehlung:
+mit der offenen Seite <strong>nach oben</strong> drucken, 3–4 Wandlinien,
+20–30&nbsp;% Füllung, keine Stützen nötig.</li>
+</ol>
+
+<div class="tipp box"><span class="titel">✓ Erst die Platine als Attrappe drucken</span>
+Im Projekt liegt zusätzlich <code>box/Timer-Ersatzplatine-v2-BOARD.stl</code> —
+ein 1:1-Abbild der Platine (Umriss, Schraublöcher, Schlitze). Drucke es flach und
+lege es ins Rückteil, <strong>bevor</strong> du die echte Platine bestellst. So
+prüfst du gefahrlos, ob alles passt (Kapitel&nbsp;7).</div>
+
+<h2 id="k5-3">5.3 Höhenbudget und Befestigung</h2>
+<p>Die Platine wird von hinten mit sechs Schrauben an die Dome des Rückteils
+geschraubt (Domraster 45&nbsp;mm × 70&nbsp;mm, Schraubloch 3,2&nbsp;mm, Senkung
+für den Schraubenkopf auf der Rückseite). Vier weitere Punkte an der Frontplatte
+zentrieren die Platine zusätzlich.</p>
+<table class="schmal">
+<tr><th>Maß</th><th>Wert</th></tr>
+<tr><td>Außenmaß Rückteil</td><td>109,8 × 90,8 mm</td></tr>
+<tr><td>Tiefe Rückteil (v2)</td><td>35 mm</td></tr>
+<tr><td>Wand- und Bodenstärke</td><td>1,3 mm</td></tr>
+<tr><td>Platinenmaß</td><td>101,6 × 77,5 mm</td></tr>
+<tr><td>Domraster</td><td>45 mm (X) × 70 mm (Y)</td></tr>
+</table>
+<div class="achtung box"><span class="titel">⚠ Nichts darf nach unten (zur Front) ragen</span>
+Zwischen Platine und Frontplatte ist der Platz knapp. Alle hohen Bauteile
+sitzen deshalb auf der <strong>Rückseite</strong> der Platine (Kapitel&nbsp;6).
+Auf der Vorderseite bleiben nur die flachen Taster und der Display-Anschluss.</div>
+
+<!-- ==================================================== KAPITEL 6 -->
+<h1 class="kapitel" id="k6"><span class="knr">6</span>Die Platine verstehen</h1>
+<div class="kapitelband"></div>
+
+<p>Du musst die Platine nicht selbst entwerfen — sie liegt fertig im Projekt unter
+<code>kicad-v2/</code>. Dieses Kapitel erklärt, <em>wie sie aufgebaut ist</em>,
+damit du beim Bestücken und Prüfen weißt, was wohin gehört. Wer selbst etwas
+ändern möchte, findet die KiCad-Anleitung in Kapitel&nbsp;8.</p>
+
+<h2 id="k6-1">6.1 Vorder- und Rückseite</h2>
+<p>In Version&nbsp;2 liegt die <strong>gesamte Elektronik auf der Rückseite</strong>.
+Auf der Vorderseite (zur Frontplatte hin) bleiben nur die drei Taster und die
+OLED-Buchse — alles, was bedient oder gesehen wird.</p>
+
+<figure class="rahmen">
+  <img src="img/platine-unten.png" alt="Bestückungsseite (Rückseite) der Platine">
+  <figcaption>Die Rückseite trägt ESP, Netzteil, PhotoMOS und die
+  230-V-Klemmen. Netzspannung (unten) und Kleinspannung (oben) sind räumlich
+  klar getrennt.</figcaption>
+</figure>
+
+<h2 id="k6-2">6.2 Vier Lagen und die Masseflächen</h2>
+<p>Die Platine hat <strong>vier Kupferlagen</strong>: die beiden Außenlagen
+(Vorder- und Rückseite) tragen die Leiterbahnen, die beiden Innenlagen sind
+<strong>durchgehende Masseflächen</strong> im Kleinspannungsbereich. Solche
+Masseflächen wirken wie eine ruhige Bezugsebene: Sie machen den Aufbau
+störungsarm und die WLAN-Funktion stabil.</p>
+<div class="hinweis box"><span class="titel">ℹ Wichtig für die Sicherheit</span>
+Im <strong>Netzspannungsbereich</strong> gibt es <strong>kein Innenkupfer</strong>.
+Die 230-V-Leitungen verlaufen ausschließlich auf den beiden Außenlagen, und die
+Masseflächen halten überall <strong>mindestens 6&nbsp;mm Abstand</strong> zur
+Netzspannung. So kann nirgendwo im Inneren der Platine eine gefährliche Nähe
+entstehen.</div>
+
+<h2 id="k6-3">6.3 Netzspannung nur außen: die 6-Millimeter-Regel</h2>
+<p>Die fünf Netze <code>L_IN</code>, <code>L_F</code>, <code>N</code>,
+<code>SW_SHELLY</code> und <code>O_LAST</code> führen 230&nbsp;Volt. Sie sind in
+einer eigenen <strong>Netzklasse „230V“</strong> zusammengefasst (breitere
+Leiterbahnen, größere Abstände) und liegen alle unten links, weit weg von der
+Elektronik. Eine im Entwurf hinterlegte Prüfregel verlangt <strong>6&nbsp;mm
+Abstand</strong> zwischen jedem 230-V-Netz und jeder Kleinspannung.</p>
+<p>Die <strong>einzige Ausnahme</strong> ist das PhotoMOS-Relais K1: Sein Gehäuse
+ist die zertifizierte Trennstelle (Pins 1/2 = Kleinspannung, Pins 3/4 =
+Netzspannung). Nur dort dürfen sich beide Welten auf wenigen Millimetern
+begegnen — genau dafür ist das Bauteil gebaut.</p>
+
+<h2 class="umbruch" id="k6-4">6.4 Die Netze und die Pinbelegung</h2>
+<p>Welche Leitung was führt, zeigt die folgende Übersicht:</p>
+<table>
+<tr><th>Netzname</th><th>führt</th><th>verbindet</th></tr>
+<tr><td>L_IN</td><td>230 V (ungesichert)</td><td>Netzeingang X1 → Sicherung F1</td></tr>
+<tr><td>L_F</td><td>230 V (abgesichert)</td><td>F1 → Varistor RV1, Netzteil PS1, PhotoMOS K1.3, Shelly J1.L</td></tr>
+<tr><td>N</td><td>230 V Neutral</td><td>X1 → RV1, PS1, Shelly J1.N, Last X2, Snubber X3</td></tr>
+<tr><td>SW_SHELLY</td><td>230 V geschaltet</td><td>PhotoMOS K1.4 → Shelly J1.SW</td></tr>
+<tr><td>O_LAST</td><td>230 V geschaltet</td><td>Shelly J1.O → Lastabgang X2 + Snubber X3</td></tr>
+<tr><td>+5V</td><td>Kleinspannung</td><td>Netzteil → ESP 5V, C1, C2</td></tr>
+<tr><td>GND</td><td>Kleinspannung</td><td>Masse: ESP, Taster, PhotoMOS, OLED</td></tr>
+<tr><td>+3V3</td><td>Kleinspannung</td><td>ESP-3V3-Ausgang → OLED</td></tr>
+</table>
+
+<p>Der ESP32-C3 nutzt diese Pins:</p>
+<figure class="rahmen">
+  <img src="img/board_belegung.png" alt="GPIO-Belegung des ESP32-C3 Super Mini">
+  <figcaption>Die genutzten Anschlüsse des ESP32-C3 Super Mini.</figcaption>
+</figure>
+<table class="schmal">
+<tr><th>Pin</th><th>Funktion</th></tr>
+<tr><td>5V / G</td><td>Versorgung vom Netzteil</td></tr>
+<tr><td>3V3</td><td>versorgt das OLED</td></tr>
+<tr><td>GPIO3 / 4 / 5</td><td>Taster T1 / T2 / T3</td></tr>
+<tr><td>GPIO6</td><td>PhotoMOS-Treiber (über 330 Ω)</td></tr>
+<tr><td>GPIO7</td><td>I²C-SDA (OLED)</td></tr>
+<tr><td>GPIO8</td><td>Onboard-RGB-LED (Status)</td></tr>
+<tr><td>GPIO9</td><td>I²C-SCL (OLED)</td></tr>
+</table>
+<div class="hinweis box"><span class="titel">ℹ Warum SDA auf GPIO7 statt GPIO8?</span>
+Auf GPIO8 sitzt die kleine <strong>RGB-Status-LED</strong> des ESP-Moduls. Läge
+dort I²C, würde der Datenverkehr die LED unkontrolliert ansteuern. Deshalb liegt
+SDA auf GPIO7. Dieselbe RGB-LED zeigt später die Status-Ampel des Geräts an
+(Kapitel&nbsp;11).</div>
+
+<h2 id="k6-5">6.5 Jeder ESP-Anschluss ganz genau</h2>
+<p>Diese Tabelle ist der <strong>verbindliche Abgleich zwischen Platine und
+Firmware</strong>. Links steht, was die Firmware (<code>timer-relais-c3.yaml</code>)
+mit dem Pin macht — mit ihrer genauen Konfiguration; rechts, wohin die Platine ihn
+führt. Beide Seiten müssen exakt übereinstimmen, sonst funktioniert das Gerät nicht.</p>
+<table>
+<tr><th>ESP-Pin</th><th>Firmware (ID &amp; Konfiguration)</th><th>Platine</th><th>Funktion im Detail</th></tr>
+<tr><td><strong>GPIO3</strong></td><td><code>btn_s1</code> · Eingang, interner Pull-up, invertiert, 30&nbsp;ms Entprellung</td><td>Pad 3 → <code>/BTN1</code> → Taster&nbsp;S1 nach GND</td><td>Taster <strong>S1 (Down/Manual)</strong>. Ruhepegel HIGH; Druck zieht auf GND (LOW) → gilt als „gedrückt“. Kurz = Timer&nbsp;1 auslösen.</td></tr>
+<tr><td><strong>GPIO4</strong></td><td><code>btn_s2</code> · Eingang, Pull-up, invertiert, 30&nbsp;ms</td><td>Pad 4 → <code>/BTN2</code> → Taster&nbsp;S2 nach GND</td><td>Taster <strong>S2 (SET)</strong>. Kurz = Timer&nbsp;2; lang ≥ 3&nbsp;s = Info-Menü.</td></tr>
+<tr><td><strong>GPIO5</strong></td><td><code>btn_s3</code> · Eingang, Pull-up, invertiert, 30&nbsp;ms</td><td>Pad 5 → <code>/BTN3</code> → Taster&nbsp;S3 nach GND</td><td>Taster <strong>S3 (UP)</strong>. Kurz = Timer&nbsp;3; lang ≥ 1,2&nbsp;s = alles stoppen.</td></tr>
+<tr><td><strong>GPIO6</strong></td><td><code>shelly_trigger</code> · GPIO-Ausgang</td><td>Pad 6 → <code>/PMOS_DRV</code> → R1&nbsp;330&nbsp;Ω → K1-LED-Anode</td><td>Steuert den PhotoMOS. <strong>HIGH</strong> = LED an = PhotoMOS leitet = Shelly-SW bekommt L → Last ein. LOW = aus.</td></tr>
+<tr><td><strong>GPIO7</strong></td><td><code>i2c: sda</code> · 400&nbsp;kHz</td><td>Pad 7 → <code>/SDA</code> → OLED&nbsp;J2.4</td><td><strong>I²C-Datenleitung</strong> zum OLED. Liegt bewusst auf GPIO7 (nicht GPIO8).</td></tr>
+<tr><td><strong>GPIO8</strong></td><td><code>status_led</code> · WS2812 (GRB), gedimmt</td><td><strong>modulintern</strong> — kein Netz auf der Platine (Pad 8 frei)</td><td><strong>Onboard-RGB-Status-LED</strong> (Ampel grün/gelb/rot). Sie sitzt fest auf GPIO8 des Moduls; deshalb darf hier <strong>kein</strong> zweites Signal liegen — der Grund, warum SDA auf GPIO7 wanderte.</td></tr>
+<tr><td><strong>GPIO9</strong></td><td><code>i2c: scl</code> · 400&nbsp;kHz</td><td>Pad 9 → <code>/SCL</code> → OLED&nbsp;J2.3</td><td><strong>I²C-Taktleitung</strong> zum OLED (Adresse 0x3C).</td></tr>
+<tr><td><strong>5V / GND</strong></td><td>Versorgung des Moduls</td><td><code>/+5V</code> / <code>GND</code> vom Netzteil</td><td>5&nbsp;V aus dem AC/DC-Modul; GND ist die gemeinsame Masse (auch die Innenlagen).</td></tr>
+<tr><td><strong>3V3</strong></td><td>Ausgang des Onboard-Reglers</td><td><code>/+3V3</code> → OLED-VCC</td><td>Der ESP erzeugt intern 3,3&nbsp;V und versorgt damit das OLED.</td></tr>
+</table>
+<div class="achtung box"><span class="titel">⚠ Genau dieser Abgleich ist entscheidend</span>
+Wird auf der Platine SDA versehentlich auf GPIO8 gelegt (dort sitzt die WS2812),
+bleibt das OLED <strong>schwarz</strong> und das LED-Signal stört die Datenleitung.
+Beim Nachbau deshalb prüfen: OLED-SDA muss an <strong>ESP-Pad 7 (GPIO7)</strong>
+hängen, SCL an <strong>Pad 9 (GPIO9)</strong> — GPIO8 bleibt frei.</div>
+
+<!-- ==================================================== KAPITEL 7 -->
+<h1 class="kapitel" id="k7"><span class="knr">7</span>Die Platine fertigen lassen</h1>
+<div class="kapitelband"></div>
+
+<p>Eine vierlagige Platine baut man nicht zu Hause — man lässt sie bei einem
+Leiterplattenhersteller fertigen. Das ist heute günstig und einfach: Man lädt
+eine Handvoll Dateien hoch und bekommt die fertigen Platinen per Post.</p>
+
+<h2 id="k7-1">7.1 Zuerst ein Test in Kunststoff</h2>
+<div class="tipp box"><span class="titel">✓ Der Anprobe-Trick spart Geld</span>
+Bevor du Platinen bestellst, drucke die beiliegende
+<code>box/Timer-Ersatzplatine-v2-BOARD.stl</code> 1:1 auf dem 3D-Drucker (flach,
+ohne Stützen) und lege sie ins gedruckte Rückteil. Passt der Umriss, fluchten die
+sechs Schlitze mit den Domen, sitzen die Schraublöcher? Diese fünf Minuten
+ersparen dir eine teure Fehlbestellung.</div>
+<p>Alternativ (oder zusätzlich) druckst du den Platinen-Umriss auf Papier im
+Maßstab 1:1 und schneidest ihn aus.</p>
+
+<h2 id="k7-2">7.2 Gerber-Daten erzeugen</h2>
+<p>„Gerber“ ist das Standard-Dateiformat, in dem Hersteller Platinen erwarten —
+je eine Datei pro Lage, plus die Bohrdaten. Die fertigen Gerber liegen bereits im
+Projekt; erzeugen kannst du sie aus KiCad so:</p>
+<ol class="schritte">
+<li>Das Projekt <code>kicad-v2/Timer-Ersatzplatine-v2.kicad_pcb</code> in KiCad
+öffnen.</li>
+<li><em>Datei → Fertigungsdaten → Gerber-Dateien</em> — alle Standardlagen
+auswählen, exportieren.</li>
+<li>Im selben Dialog die <em>Bohrdateien</em> (Excellon) erzeugen.</li>
+<li>Alle erzeugten Dateien in ein ZIP-Archiv packen.</li>
+</ol>
+
+<h2 class="umbruch" id="k7-3">7.3 Bei einem Hersteller bestellen</h2>
+<p>Lade das ZIP bei einem Anbieter wie JLCPCB, PCBWay oder Aisler hoch. Wichtige
+Einstellungen:</p>
+<table class="schmal">
+<tr><th>Einstellung</th><th>Wert</th></tr>
+<tr><td>Lagen</td><td><strong>4</strong></td></tr>
+<tr><td>Materialstärke</td><td>1,6 mm (Standard)</td></tr>
+<tr><td>Oberfläche</td><td>HASL bleifrei oder ENIG</td></tr>
+<tr><td>Kupfer</td><td>1 oz (35 µm)</td></tr>
+<tr><td>Farbe</td><td>egal</td></tr>
+</table>
+<div class="achtung box"><span class="titel">⚠ Vierlagig einstellen</span>
+Wähle wirklich <strong>4 Lagen</strong>. Ein zweilagiger Nachbau hätte keine
+inneren Masseflächen — die WLAN- und Störfestigkeit wäre schlechter, und die
+Prüfregeln des Entwurfs würden nicht mehr passen.</div>
+
+<!-- ==================================================== KAPITEL 8 -->
+<h1 class="kapitel" id="k8"><span class="knr">8</span>KiCad Schritt für Schritt (nur bei eigenen Änderungen)</h1>
+<div class="kapitelband"></div>
+
+<p>Dieses Kapitel brauchst du <strong>nur</strong>, wenn du die Platine selbst
+verändern willst. Zum reinen Nachbauen kannst du es überspringen — die fertigen
+Fertigungsdaten liegen bei. KiCad ist ein kostenloses Programm zum
+Platinen-Entwurf (getestet mit KiCad 8/9/10; Menünamen können minimal abweichen).</p>
+
+<h2 id="k8-1">8.1 Projekt öffnen und Schaltplan prüfen</h2>
+<ol class="schritte">
+<li>KiCad starten und <code>kicad-v2/Timer-Ersatzplatine-v2.kicad_pro</code> öffnen.</li>
+<li>Den <strong>Schaltplan-Editor</strong> starten. Er zeigt, wie alle Bauteile
+verbunden sind.</li>
+<li><em>Werkzeuge → Elektrische Regeln prüfen (ERC)</em> laufen lassen. Hinweise
+zu „nicht angeschlossenen Power-Pins“ sind bekannt und unkritisch.</li>
+</ol>
+
+<h2 id="k8-2">8.2 Footprints und Netzklassen</h2>
+<p>Jedes Bauteil-Symbol ist mit einem <strong>Footprint</strong> verknüpft — dem
+Lötbild auf der Platine. Prüfe unter <em>Werkzeuge → Footprints zuweisen</em>,
+dass zum Beispiel PS1 zum wirklich gekauften Netzteil passt (Pinabstände
+nachmessen!) und der PhotoMOS zur SMD- oder DIP-Bauform.</p>
+<p>Die <strong>Netzklassen</strong> stehen in der Projektdatei und dürfen nicht
+verändert werden: <em>Default</em> (0,2&nbsp;mm Abstand und Bahnbreite) und
+<em>230V</em> (1,0&nbsp;mm Abstand und Bahnbreite) mit den fünf Netzen L_IN, L_F,
+N, SW_SHELLY, O_LAST.</p>
+
+<h2 class="umbruch" id="k8-3">8.3 Die 6-Millimeter-Regel und der DRC</h2>
+<p>Die Kriechstrecken-Regel steht als eigene Datei
+<code>Timer-Ersatzplatine-v2.kicad_dru</code> im Projekt. Sie verlangt zwischen
+230&nbsp;V und Kleinspannung 6&nbsp;mm — mit der bewussten Ausnahme des PhotoMOS
+K1:</p>
+<pre>(version 1)
+(rule "230V-&gt;SELV 6mm (K1-Barriere ausgenommen)"
+   (condition "... 230-V-Netz gegen Nicht-230-V-Netz,
+               K1 ausgenommen ...")
+   (constraint creepage (min 6mm))
+   (constraint clearance (min 6mm)))</pre>
+<p>Nach jeder Änderung den <strong>DRC</strong> (Design Rules Check,
+<em>Prüfen → Design-Regeln prüfen</em>) laufen lassen, bis er fehlerfrei ist.</p>
+<div class="achtung box"><span class="titel">⚠ Masseflächen 6 mm zurückziehen</span>
+Der automatische Füllvorgang der Masseflächen hält nur den Netzklassen-Abstand
+ein, nicht die 6-mm-Regel. Deshalb sind die Masseflächen <strong>geometrisch</strong>
+so geformt, dass sie überall 6&nbsp;mm von der Netzspannung wegbleiben. Wer die
+Flächen neu zeichnet, muss diesen Abstand von Hand wahren.</div>
+
+<h2 class="umbruch" id="k8-4">8.4 Fertigungsdaten</h2>
+<p>Sind DRC und Sichtprüfung (3D-Ansicht mit <span class="kv">Alt+3</span>) in
+Ordnung, exportierst du Gerber- und Bohrdaten wie in Kapitel&nbsp;7 beschrieben.</p>
+
+<!-- ==================================================== KAPITEL 9 -->
+<h1 class="kapitel" id="k9"><span class="knr">9</span>Die Platine bestücken</h1>
+<div class="kapitelband"></div>
+
+<p>„Bestücken“ heißt: die Bauteile auf die Platine löten. Wir gehen von den
+flachen zu den hohen Teilen vor — so liegt die Platine beim Löten immer stabil
+auf.</p>
+
+<h2 id="k9-1">9.1 Reihenfolge und Werkzeug</h2>
+<p>Empfohlene Reihenfolge: <strong>R1 → C2 → PhotoMOS → Taster → OLED-Buchse
+J4 → C1 → Sicherungshalter F1 → Varistor RV1 → Klemmen</strong>. Der ESP kommt
+erst, wenn er geflasht und getestet ist (Kapitel&nbsp;10 und 14).</p>
+
+<h2 id="k9-2">9.2 Die SMD-Bauteile</h2>
+<p>Der PhotoMOS ist (je nach Typ) ein kleines SMD-Bauteil. So lötest du es
+sauber:</p>
+<ol class="schritte">
+<li>Ein Pad dünn verzinnen.</li>
+<li>Das Bauteil mit der Pinzette auflegen und am verzinnten Pad festlöten —
+Lage kontrollieren.</li>
+<li>Die übrigen Pins verlöten. Flussmittel hilft, Brücken vermeidet man mit
+wenig Zinn.</li>
+</ol>
+<div class="hinweis box"><span class="titel">ℹ Orientierung des PhotoMOS</span>
+Pin&nbsp;1 ist markiert (Punkt oder abgeschrägte Ecke). Die Kleinspannungsseite
+(Pins 1/2) zeigt zur Elektronik, die Netzspannungsseite (Pins 3/4) zur 230-V-Ecke.
+Das Lötbild gibt die Richtung vor — nicht raten, am Aufdruck orientieren.</div>
+
+<h2 class="umbruch" id="k9-3">9.3 Die bedrahteten Bauteile und Steckverbinder</h2>
+<ul>
+  <li><strong>Taster SW1–3:</strong> exakt einsetzen — sie müssen später genau
+  unter den Stößeln der Frontplatte sitzen. Bündig auf die Platine drücken, dann
+  löten.</li>
+  <li><strong>OLED-Buchse J4:</strong> die Buchsenleiste (1×4) so einlöten, dass
+  sie senkrecht steht. Das OLED wird später nur <em>aufgesteckt</em>, nicht
+  verlötet.</li>
+  <li><strong>Sicherung, Varistor, Klemmen:</strong> in der 230-V-Ecke, mit
+  Abstand zur Elektronik. Ordentlich verlöten, keine kalten Stellen.</li>
+</ul>
+
+<div class="hinweis box"><span class="titel">ℹ Das OLED wird gesteckt, nicht gelötet</span>
+An das OLED lötest du eine Stiftleiste (nach hinten), die in die Buchse J4 passt.
+Das Display sitzt dann mit dünnem Schaumstoffpad direkt an der Sichtscheibe.
+So bleibt es tauschbar und die Bauhöhe niedrig.</div>
+
+<!-- ==================================================== KAPITEL 10 -->
+<h1 class="kapitel" id="k10"><span class="knr">10</span>Die Firmware aufspielen</h1>
+<div class="kapitelband"></div>
+
+<p>Die „Firmware“ ist das Programm, das auf dem ESP läuft. Beim allerersten Mal
+kommt sie <strong>per USB-Kabel</strong> auf den Chip. Alle späteren Updates
+laufen dann drahtlos (Kapitel&nbsp;15).</p>
+
+<h2 id="k10-1">10.1 Was du brauchst</h2>
+<ul>
+  <li>den <strong>ESP32-C3 Super Mini</strong> (noch nicht eingelötet),</li>
+  <li>ein <strong>USB-C-Datenkabel</strong> — viele billige Kabel können nur
+  laden; damit wird der Chip <strong>nicht erkannt</strong>,</li>
+  <li>einen PC mit <strong>Google Chrome</strong> oder <strong>Microsoft
+  Edge</strong> (Weg B) — oder ESPHome auf dem PC (Weg A).</li>
+</ul>
+
+<figure class="rahmen">
+  <img src="img/flash_verbindung.png" alt="USB-Verbindung PC zum ESP32-C3">
+  <figcaption>ESP32-C3 per USB-C mit dem PC verbinden.</figcaption>
+</figure>
+
+<div class="hinweis box"><span class="titel">ℹ Du musst nichts kompilieren</span>
+Fertige Images liegen im Projekt unter <code>firmware/build/</code>:
+<code>feeder-relais.factory.bin</code> für den Erstflash und
+<code>feeder-relais.ota.bin</code> für spätere Web-Updates. Sie enthalten
+<strong>keine</strong> WLAN-Zugangsdaten — die richtest du nach dem Flashen ein
+(Kapitel&nbsp;11).</div>
+
+<h2 class="umbruch" id="k10-2">10.2 Weg A — mit ESPHome</h2>
+<p>ESPHome ist das Werkzeug, mit dem die Firmware gebaut und aufgespielt wird.
+Eine <code>secrets.yaml</code> ist nicht nötig — es werden keine WLAN-Daten
+einkompiliert.</p>
+<ol class="schritte">
+<li>ESP per USB-C anstecken.</li>
+<li>Im Projektordner ausführen:
+<pre>esphome run firmware/timer-relais-c3.yaml</pre></li>
+<li>ESPHome kompiliert, fragt den seriellen Port ab (Linux z. B.
+<code>/dev/ttyACM0</code>, Windows ein <code>COMx</code>) und flasht.</li>
+<li>Nach dem Neustart öffnet der ESP seinen Setup-Hotspot → weiter mit
+Kapitel&nbsp;11.</li>
+</ol>
+<div class="tipp box"><span class="titel">✓ Linux: „Permission denied“?</span>
+Wenn der Zugriff auf <code>/dev/ttyACM0</code> verweigert wird, deinen Benutzer in
+die Gruppe <code>dialout</code> aufnehmen und neu anmelden:
+<pre>sudo usermod -aG dialout $USER</pre></div>
+
+<h2 class="umbruch" id="k10-3">10.3 Weg B — im Browser</h2>
+<p>Für die fertige <code>feeder-relais.factory.bin</code> ganz ohne Installation:</p>
+<figure class="rahmen">
+  <img src="img/flash_ablauf.png" alt="Ablauf: Flashen über den Browser">
+  <figcaption>Der Flash-Ablauf im Browser über den Web-Flasher.</figcaption>
+</figure>
+<ol class="schritte">
+<li>In Chrome/Edge die Seite
+<code>https://espressif.github.io/esptool-js/</code> öffnen.</li>
+<li>ESP per USB-C-Datenkabel anstecken.</li>
+<li>Baudrate <code>115200</code> lassen, <strong>Connect</strong> klicken und den
+seriellen Port des ESP wählen.</li>
+<li>Bei <strong>Flash Address</strong> <code>0</code> eintragen, mit
+<em>Choose File</em> die <code>feeder-relais.factory.bin</code> wählen, dann
+<strong>Program</strong>. Warten, bis „Hard resetting…“ erscheint.</li>
+<li>Weiter mit Kapitel&nbsp;11.</li>
+</ol>
+
+<h2 class="umbruch" id="k10-4">10.4 Wenn es beim Flashen klemmt</h2>
+<table>
+<tr><th>Symptom</th><th>Ursache / Lösung</th></tr>
+<tr><td>ESP wird gar nicht erkannt</td><td>Ladekabel statt Datenkabel → anderes USB-C-Kabel, anderer Port</td></tr>
+<tr><td>Kein Port im Browser</td><td>Chrome/Edge nutzen; unter Windows ggf. Treiber (CH340/CP210x)</td></tr>
+<tr><td>„Connect“ schlägt fehl</td><td><strong>Boot-Modus</strong>: BOOT halten + RESET tippen + BOOT loslassen, dann erneut verbinden</td></tr>
+<tr><td>Kein <code>…​.local</code> danach</td><td>erst WLAN einrichten (Kapitel 11); mDNS braucht einen Moment</td></tr>
+</table>
+
+<!-- ==================================================== KAPITEL 11 -->
+<h1 class="kapitel" id="k11"><span class="knr">11</span>WLAN einrichten und über den Browser bedienen</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k11-1">11.1 Der Setup-Hotspot</h2>
+<p>Die Firmware bringt <strong>absichtlich keine</strong> WLAN-Zugangsdaten mit.
+Nach dem Flashen öffnet der ESP einen eigenen Hotspot:</p>
+<ol class="schritte">
+<li>Am Handy/PC ins WLAN <strong>„Feeder-Relais Setup“</strong> gehen (Passwort
+<code>feeder1234</code>).</li>
+<li>Es öffnet sich ein Anmeldefenster (sonst <code>http://192.168.4.1</code>
+aufrufen).</li>
+<li>Dein Heim-WLAN auswählen, Passwort eingeben, speichern — der ESP startet neu
+und verbindet sich.</li>
+<li>Ab jetzt erreichbar unter <code>http://feeder-relais.local</code>.</li>
+</ol>
+<div class="hinweis box"><span class="titel">ℹ Einmal einrichten, dann nie wieder</span>
+Die WLAN-Daten liegen unter einem festen Speicher-Schlüssel und
+<strong>überstehen Firmware-Updates</strong>. Für einen Werksreset flasht du das
+Factory-Image mit „Erase all flash“.</div>
+
+<h2 class="umbruch" id="k11-2">11.2 Die Weboberfläche</h2>
+<p><code>http://feeder-relais.local</code> öffnet eine mobile Web-App mit fünf
+Reitern:</p>
+<ul>
+  <li><strong>Start:</strong> drei große Taster (lösen T1/T2/T3 aus),
+  Live-Countdown und <em>Stopp</em>.</li>
+  <li><strong>Zeiten:</strong> oben die Sprachauswahl (Deutsch/English/Français),
+  darunter die drei Timerzeiten (1–600 s), dauerhaft gespeichert.</li>
+  <li><strong>Netzwerk:</strong> WLAN, IP-Modus DHCP/statisch, NTP-Server,
+  Hostname, WLAN-Roaming, Neustart (Kapitel&nbsp;12).</li>
+  <li><strong>Status:</strong> Version, Laufzeit, freier Speicher, WLAN mit
+  Signalbalken, IP/MAC, Reset-Grund, Relaiszustand.</li>
+  <li><strong>Service:</strong> Live-Log, Firmware-Update und Neustart
+  (Kapitel&nbsp;15).</li>
+</ul>
+
+<h2 id="k11-3">11.3 Die Statusampel und die JSON-Schnittstelle</h2>
+<p>In der Kopfzeile steht ein <strong>Statuspunkt</strong>: grün = alles in
+Ordnung, gelb = ein Timer läuft, rot = Störung im Ruhezustand (z. B. OLED nicht
+erreichbar oder kein WLAN). Dieselbe Ampel zeigt am Gerät die gedimmte
+Onboard-RGB-LED.</p>
+<p>Für die Hausautomatisierung bietet der ESP eine <strong>JSON-Schnittstelle</strong>.
+Die wichtigsten Endpunkte:</p>
+<table>
+<tr><th>Aufruf</th><th>Wirkung</th></tr>
+<tr><td><code>GET /api/status</code></td><td>alle Werte als JSON (aktiv, Restzeit, Relais, Zeiten, WLAN …)</td></tr>
+<tr><td><code>POST /api/trigger?button=N</code></td><td>Taster N (1–3) mit seiner Zeit auslösen</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N</code></td><td>ad-hoc für N Sekunden schalten</td></tr>
+<tr><td><code>POST /api/stop</code></td><td>sofort abschalten</td></tr>
+<tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>Zeiten setzen (je 1–600 s)</td></tr>
+</table>
+<div class="hinweis box"><span class="titel">ℹ Beispiel ioBroker</span>
+Zeit von Taster 1 auf 8 Sekunden setzen:
+<code>POST http://feeder-relais.local/api/config?time1=8</code>.</div>
+
+<!-- ==================================================== KAPITEL 12 -->
+<h1 class="kapitel" id="k12"><span class="knr">12</span>Netzwerk, Sprache und Anzeige</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k12-1">12.1 Netzwerkeinstellungen</h2>
+<p>Im Reiter <strong>Netzwerk</strong> stellst du ein:</p>
+<ul>
+  <li><strong>IP-Modus:</strong> DHCP (Standard) oder statisch (mit
+  IP/Gateway/Maske/DNS). Die statische IP wird beim nächsten Verbinden gesetzt
+  und ist nach einem Neustart aktiv.</li>
+  <li><strong>NTP-Server:</strong> der Zeitserver, von dem die Uhr gestellt wird
+  (Standard <code>de.pool.ntp.org</code>).</li>
+  <li><strong>Hostname:</strong> der Name im Netz (Standard
+  <code>feeder-relais</code>). Er wird zur Laufzeit umgestellt — die Adresse
+  <code>…​.local</code> gilt sofort.</li>
+</ul>
+
+<h2 id="k12-2">12.2 WLAN-Roaming</h2>
+<p>Der Schalter <strong>WLAN-Roaming (802.11k/v)</strong> ist nur sinnvoll, wenn
+du mehrere Access-Points mit gleicher SSID hast (Mesh/UniFi) und diese die
+Technik unterstützen. Dann kann das Gerät gezielt auf den stärkeren Access-Point
+umbuchen. Standard: aus. Nach dem Umschalten hilft der Knopf „Jetzt neu
+verbinden“, damit es sofort greift.</p>
+
+<h2 id="k12-3">12.3 Bedienung an den Tasten und OLED</h2>
+<p>Am Gerät sind die Tasten beschriftet: <strong>S1 = Down/Manual</strong>,
+<strong>S2 = SET</strong>, <strong>S3 = UP</strong>.</p>
+<ul>
+  <li><strong>kurz S1 / S2 / S3</strong> → löst Timer 1 / 2 / 3 mit der
+  eingestellten Zeit aus.</li>
+  <li><strong>lang UP (S3) ≥ 1,2 s</strong> → stoppt alle Timer, schaltet aus.</li>
+  <li><strong>lang SET (S2) ≥ 3 s</strong> → öffnet ein Info-Menü (nur Ansicht:
+  WLAN, IP, Zeit, System). S1/S3 blättern, kurz SET schließt.</li>
+</ul>
+<p>Das <strong>OLED (128 × 32)</strong> zeigt oben den WLAN-Balken, die große
+Uhr bzw. den Countdown und den Status (Ruhe/Futter); unten Datum und freien
+Speicher. Wochentag, Status und Menütitel folgen der eingestellten Sprache. Bis
+zur ersten Zeit-Synchronisation steht „--:--“.</p>
+
+<!-- ==================================================== KAPITEL 13 -->
+<h1 class="kapitel" id="k13"><span class="knr">13</span>Den externen Shelly anschließen</h1>
+<div class="kapitelband"></div>
+
+<div class="gefahr box"><span class="titel">✋ Nur spannungsfrei verdrahten</span>
+Der Shelly führt 230&nbsp;Volt. Alle Verdrahtungsarbeiten erfolgen
+<strong>spannungsfrei</strong>, bei gezogenem Netzstecker bzw. abgeschaltetem
+Sicherungsautomaten — und im Zweifel durch eine Elektrofachkraft.</div>
+
+<h2 id="k13-1">13.1 Verdrahtung</h2>
+<p>Der Shelly hat vier Klemmen: <strong>L</strong>, <strong>N</strong>,
+<strong>SW</strong> (Schalteingang) und <strong>O</strong> (Lastausgang). Vier
+kurze Litzen verbinden ihn mit der Platinenklemme <strong>J1</strong>:</p>
+<table class="schmal">
+<tr><th>Platine (J1)</th><th>→ Shelly</th><th>Bedeutung</th></tr>
+<tr><td>J1.3 (L_F)</td><td>L</td><td>Phase (abgesichert)</td></tr>
+<tr><td>J1.4 (N)</td><td>N</td><td>Neutralleiter</td></tr>
+<tr><td>J1.1 (SW_SHELLY)</td><td>SW</td><td>unser geschaltetes Signal (vom PhotoMOS)</td></tr>
+<tr><td>J1.2 (O_LAST)</td><td>O</td><td>geschaltete Last zum Abgang</td></tr>
+</table>
+<p>Der Shelly wird liegend im Gehäuse fixiert (VHB-Klebeband oder Clip). Die
+Litzen kurz und die Schraubklemmen fest — kein Kupfer darf herausschauen.</p>
+
+<h2 class="umbruch" id="k13-2">13.2 Den Shelly einrichten (Input Mode)</h2>
+<p>Nach dem ersten Einschalten richtest du den Shelly einmalig ein (über seine
+eigene App oder Weboberfläche):</p>
+<ol class="schritte">
+<li>Shelly mit dem WLAN verbinden (Anleitung des Shelly).</li>
+<li><strong>Input Mode = Switch (Follow)</strong> einstellen — damit folgt das
+Relais dem SW-Signal exakt.</li>
+<li>Fertig: Ab jetzt bestimmt der ESP über den PhotoMOS, wie lange die Last
+läuft.</li>
+</ol>
+
+<!-- ==================================================== KAPITEL 14 -->
+<h1 class="kapitel" id="k14"><span class="knr">14</span>Zusammenbau und Inbetriebnahme</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k14-1">14.1 Bestücken und den ESP vorbereiten</h2>
+<p>Die Kleinteile sind gelötet (Kapitel&nbsp;9). Jetzt der ESP:</p>
+<ol class="schritte">
+<li>ESP per USB flashen und die WLAN-Verbindung testen (Kapitel&nbsp;10 und 11) —
+das geht am bequemsten, <em>bevor</em> er eingelötet ist.</li>
+<li>ESP auf die Platine löten (Stiftleisten oder direkt).</li>
+</ol>
+
+<h2 id="k14-2">14.2 Der Nur-USB-Test</h2>
+<div class="tipp box"><span class="titel">✓ Alles Wichtige geht ohne Netzspannung</span>
+Versorge den ESP über USB (kein Netz!). Prüfe:
+<ul>
+<li>Ein Tastendruck startet den Countdown auf dem OLED.</li>
+<li>Das aufgesteckte OLED zeigt Uhr/Status an.</li>
+<li>Der PhotoMOS-Ausgang schaltet: mit dem Multimeter am PhotoMOS-Ausgang messen
+(Durchgang, während der Timer läuft).</li>
+</ul>
+Erst wenn das alles stimmt, kommt Netzspannung ins Spiel.</div>
+
+<h2 class="umbruch" id="k14-3">14.3 Der erste Netztest</h2>
+<ol class="schritte">
+<li><strong>Sichtprüfung:</strong> keine Lötbrücken, kein Kurzschluss zwischen
+L/N, überall ≥ 6&nbsp;mm Abstand zwischen 230&nbsp;V und Kleinspannung.</li>
+<li>Netzteil einlöten, Shelly anschließen (Kapitel&nbsp;13), Last anklemmen.</li>
+<li><strong>Gehäuse schließen.</strong></li>
+<li>Über einen <strong>RCD/PRCD</strong> einschalten. Das OLED zeigt Uhr/Status.</li>
+<li>Den Shelly einrichten (Input Mode „Switch“), dann einen Tastertest mit Last.</li>
+<li>Zeiten nach Wunsch über <code>http://feeder-relais.local</code> einstellen.</li>
+</ol>
+<div class="gefahr box"><span class="titel">✋ Niemals offen unter Spannung</span>
+Der Netztest läuft nur bei <strong>geschlossenem Gehäuse</strong>. Zum Ändern
+immer erst spannungsfrei schalten.</div>
+
+<!-- ==================================================== KAPITEL 15 -->
+<h1 class="kapitel" id="k15"><span class="knr">15</span>Firmware-Updates und Wartung</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k15-1">15.1 Drahtlose Updates (OTA)</h2>
+<p>Nach dem ersten USB-Flash sind zwei drahtlose Update-Wege eingerichtet — die
+USB-Buchse darf im eingebauten Zustand ruhig schlecht erreichbar sein:</p>
+<ul>
+  <li><strong>Netzwerk-OTA:</strong> <code>esphome run firmware/timer-relais-c3.yaml</code>
+  aktualisiert über WLAN.</li>
+  <li><strong>Web-Upload:</strong> im Reiter <em>Service</em> die
+  <code>feeder-relais.ota.bin</code> hochladen. Das Gerät startet danach neu.</li>
+</ul>
+<div class="hinweis box"><span class="titel">ℹ WLAN-Daten bleiben erhalten</span>
+Ein Update überschreibt nur das Programm, nicht die gespeicherten Einstellungen.
+WLAN, Zeiten und Netzwerk-Konfiguration überstehen das Update.</div>
+
+<h2 id="k15-2">15.2 Das Service-Log</h2>
+<p>Der Reiter <strong>Service</strong> zeigt bei aktivierter Live-Anzeige die
+letzten Log-Zeilen, gefiltert nach Stufe (ERROR/WARN/INFO/DEBUG). Das hilft bei
+der Fehlersuche, ohne den ESP ans Kabel nehmen zu müssen. Vollständige Logs gibt
+es zusätzlich per <code>esphome logs firmware/timer-relais-c3.yaml</code>.</p>
+
+<!-- ==================================================== KAPITEL 16 -->
+<h1 class="kapitel" id="k16"><span class="knr">16</span>Fehlersuche</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k16-1">16.1 Beim Flashen und Verbinden</h2>
+<table>
+<tr><th>Problem</th><th>Abhilfe</th></tr>
+<tr><td>ESP wird nicht erkannt</td><td>Datenkabel statt Ladekabel; anderen USB-Port probieren</td></tr>
+<tr><td>„Connect“ scheitert</td><td>Boot-Modus erzwingen (BOOT halten, RESET tippen, BOOT loslassen)</td></tr>
+<tr><td><code>feeder-relais.local</code> nicht erreichbar</td><td>WLAN im Setup-Hotspot eingerichtet? mDNS braucht kurz; IP-Adresse direkt probieren (im OLED-Menü)</td></tr>
+<tr><td>Setup-Hotspot fehlt</td><td>Gerät ist schon mit einem WLAN verbunden; sonst Werksreset (Factory-Image mit Flash-Erase)</td></tr>
+</table>
+
+<h2 id="k16-2">16.2 Im Betrieb</h2>
+<table>
+<tr><th>Problem</th><th>Abhilfe</th></tr>
+<tr><td>OLED bleibt dunkel</td><td>Sitzt das Display richtig auf J4? Belegung GND/VCC/SCL/SDA prüfen</td></tr>
+<tr><td>Uhr zeigt „--:--“</td><td>noch keine Zeit vom NTP-Server; WLAN und NTP-Server prüfen</td></tr>
+<tr><td>Statuspunkt rot</td><td>OLED nicht erreichbar oder kein WLAN — Status-Reiter zeigt Details</td></tr>
+<tr><td>Last schaltet nicht</td><td>Shelly auf „Switch/Follow“? Verdrahtung SW/O prüfen; PhotoMOS-Ausgang im Nur-USB-Test messen</td></tr>
+<tr><td>Taste löst nicht aus</td><td>Sitzt der Taster genau unter dem Stößel? Lötstellen prüfen</td></tr>
+</table>
+
+<!-- ==================================================== KAPITEL 17 -->
+<h1 class="kapitel" id="k17"><span class="knr">17</span>Anhang: Belegungen, Dateien, Glossar</h1>
+<div class="kapitelband"></div>
+
+<h2 id="k17-1">17.1 Pinbelegung und Netzliste</h2>
+<table>
+<tr><th>ESP-Pin</th><th>Funktion</th><th>Netz</th></tr>
+<tr><td>5V / G</td><td>Versorgung</td><td>+5V / GND</td></tr>
+<tr><td>3V3</td><td>OLED-Versorgung</td><td>+3V3</td></tr>
+<tr><td>GPIO3 / 4 / 5</td><td>Taster T1 / T2 / T3</td><td>BTN1/2/3</td></tr>
+<tr><td>GPIO6</td><td>PhotoMOS-Treiber (über 330 Ω)</td><td>PMOS_DRV</td></tr>
+<tr><td>GPIO7</td><td>I²C-SDA (OLED)</td><td>SDA</td></tr>
+<tr><td>GPIO8</td><td>Onboard-RGB-Status-LED</td><td>—</td></tr>
+<tr><td>GPIO9</td><td>I²C-SCL (OLED)</td><td>SCL</td></tr>
+</table>
+<p>Die fünf 230-V-Netze (Netzklasse „230V“): <code>L_IN</code>, <code>L_F</code>,
+<code>N</code>, <code>SW_SHELLY</code>, <code>O_LAST</code>.</p>
+
+<h2 id="k17-2">17.2 Dateien des Projekts</h2>
+<table>
+<tr><th>Pfad</th><th>Inhalt</th></tr>
+<tr><td><code>kicad-v2/</code></td><td>die Platine v2 (KiCad: Schaltplan, Layout, Regeln) + Fertigungsdaten</td></tr>
+<tr><td><code>box/feeder_back.scad</code></td><td>Gehäuse-Rückteil (OpenSCAD-Quelle) + fertige STL</td></tr>
+<tr><td><code>box/Timer-Ersatzplatine-v2-BOARD.stl</code></td><td>Platinen-Attrappe für die Anprobe</td></tr>
+<tr><td><code>firmware/timer-relais-c3.yaml</code></td><td>ESPHome-Firmware</td></tr>
+<tr><td><code>firmware/timer_web.h</code></td><td>Web-App + JSON-Schnittstelle</td></tr>
+<tr><td><code>firmware/net_config.h</code></td><td>Netzwerk-Konfiguration (IP, NTP, Hostname, Roaming, Sprache)</td></tr>
+<tr><td><code>firmware/build/*.bin</code></td><td>fertige Flash-Images (factory + ota)</td></tr>
+<tr><td><code>docs/DOKUMENTATION.md</code></td><td>technische Referenz (deutsche Quelle der Wahrheit)</td></tr>
+<tr><td><code>docs/handbuch/</code></td><td>dieses Handbuch (HTML-Quelle + PDF)</td></tr>
+</table>
+
+<h2 id="k17-3">17.3 Glossar</h2>
+<table>
+<tr><th>Begriff</th><th>Bedeutung</th></tr>
+<tr><td>ESP32-C3</td><td>kleiner Mikrocontroller mit WLAN — das „Gehirn“ des Geräts</td></tr>
+<tr><td>PhotoMOS</td><td>Halbleiterrelais, das Kleinspannung und 230 V durch Licht trennt</td></tr>
+<tr><td>Shelly</td><td>fertiges WLAN-Schaltrelais mit Leistungsmessung (extern)</td></tr>
+<tr><td>OLED</td><td>kleines, kontraststarkes Display</td></tr>
+<tr><td>Gerber</td><td>Standard-Dateiformat für die Platinenfertigung</td></tr>
+<tr><td>Footprint</td><td>das Lötbild eines Bauteils auf der Platine</td></tr>
+<tr><td>DRC</td><td>Design Rules Check — die automatische Regelprüfung in KiCad</td></tr>
+<tr><td>Kriechstrecke</td><td>der Weg an der Oberfläche entlang, den Strom „kriechen“ kann</td></tr>
+<tr><td>OTA</td><td>„Over the Air“ — drahtloses Firmware-Update</td></tr>
+<tr><td>NTP</td><td>Internet-Zeitdienst, der die Uhr stellt</td></tr>
+</table>
+
+<h2 id="k17-4">17.4 Lizenz und Dank</h2>
+<p>Dieses Handbuch steht unter <strong>CC BY-NC-SA 4.0</strong>. Der Aufbau folgt
+dem Doku-Regelwerk des Schwesterprojekts <em>AskSin-Analyzer</em>: ein
+Inhaltsverzeichnis mit Sprungmarken, feste Umbruchregeln und der Fußsteg mit dem
+Weg zurück zum Inhalt auf jeder Seite.</p>
+<p>Der Nachbau erfolgt auf eigene Verantwortung. 230&nbsp;Volt sind
+lebensgefährlich — im Zweifel eine Elektrofachkraft hinzuziehen.</p>
+</body>
+</html>
