@@ -3315,13 +3315,13 @@
 		(embedded_fonts no)
 		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
 			(offset
-				(xyz 0 0 0)
+				(xyz 1.75 0 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz 90 0 270)
 			)
 		)
 	)
@@ -4039,13 +4039,13 @@
 		(embedded_fonts no)
 		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
 			(offset
-				(xyz 0 0 0)
+				(xyz 1.75 0 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz 90 0 270)
 			)
 		)
 	)
@@ -5099,13 +5099,13 @@
 		(embedded_fonts no)
 		(model "${KIPRJMOD}/Wago 250.3dshapes/250-204.stp"
 			(offset
-				(xyz 0 0 0)
+				(xyz 12.3 -5 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz 90 0 270)
 			)
 		)
 	)
@@ -6084,13 +6084,13 @@
 		(embedded_fonts no)
 		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
 			(offset
-				(xyz 0 0 0)
+				(xyz 1.75 0 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz 90 0 270)
 			)
 		)
 	)
