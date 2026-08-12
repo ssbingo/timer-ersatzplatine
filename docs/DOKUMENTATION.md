@@ -344,7 +344,9 @@ sitzen auf der Rückseite (Höhenbudget zur Front ist knapp).
 | Pfad | Inhalt | Regenerierbar? |
 |------|--------|----------------|
 | `kicad-v2/*.kicad_pcb/.sch/.pro/.dru` | Platine v2 (Layout, Schaltplan, Projekt, DRC-Regel) | Hand-gepflegt |
-| `kicad-v2/fp-lib-table` | Footprint-Bibliothekstabelle | Hand-gepflegt |
+| `kicad-v2/fp-lib-table` | Footprint-Bibliothekstabelle (projektrelativ, `${KIPRJMOD}`) | Hand-gepflegt |
+| `kicad-v2/Wago 250.pretty` + `.3dshapes` | projektlokale Wago-250-Footprints + STEP-Modelle (250-202: rot 90/0/270, off 1,75/0/0 · 250-204: rot 90/0/270, off 12,3/−5/0) | Quelle |
+| `kicad-v2/G3VM_601AY2.pretty`, `kicad-v2/ESP32-C3-SuperMini.pretty` | projektlokale Footprints (aus dem Board extrahiert); zugehörige STEP-Dateien fehlen noch → bei Beschaffung in `…​.3dshapes/` ablegen | Quelle |
 | `kicad-v2/Timer-Ersatz-Gerber(.zip)` | Fertigungsdaten | ja (aus KiCad) |
 | `box/Timer-Ersatzplatine-v2-BOARD.stl` | Platinen-Attrappe (Anprobe) | ja (kicad-cli) |
 | `box/feeder_back.scad` | Gehäuse-Rückteil (OpenSCAD) | Quelle |
