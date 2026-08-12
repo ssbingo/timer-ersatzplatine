@@ -557,7 +557,7 @@
 		(uuid "c288bbe5-1413-44e6-a966-164ce2fdee62")
 	)
 	(embedded_fonts no)
-	(model "${KICAD10_3DMODEL_DIR}/Homebrew.3dshapes/A-DIP4_THD_OMR.step"
+	(model "${KIPRJMOD}/G3VM_601AY2.3dshapes/A-DIP4_THD_OMR.step"
 		(offset
 			(xyz 0 0 0)
 		)

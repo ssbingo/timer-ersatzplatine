@@ -231,7 +231,7 @@
 		(uuid "30cdcc3f-f009-437c-81b7-692db0117b7d")
 	)
 	(embedded_fonts no)
-	(model "${KICAD10_3DMODEL_DIR}/ESP32-C3-super-mini.3dshapes/ESP32-C3 SuperMini_TH--3DModel-STEP-56544.STEP"
+	(model "${KIPRJMOD}/ESP32-C3-SuperMini.3dshapes/ESP32-C3 SuperMini_TH--3DModel-STEP-56544.STEP"
 		(offset
 			(xyz 0 -1 0)
 		)
