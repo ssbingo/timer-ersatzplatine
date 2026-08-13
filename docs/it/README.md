@@ -1,5 +1,9 @@
 # Feeder-Relais
 
+<p align="center">
+  <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
+</p>
+
 **Centralina timer 230 V da autocostruire — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 esterno**
 
 Il Feeder-Relais è una scheda di controllo autocostruita che accende un carico
@@ -30,14 +34,14 @@ principale è **indipendente dal Wi-Fi**.
 
 ## 🌍 Sprachen · Languages
 
-| Sprache | README | Handbuch (PDF) |
-|--------|--------|----------------|
-| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) |
-| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) |
-| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) |
-| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) |
-| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) |
-| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) |
+| Sprache | README | Handbuch (PDF) | 🌐 Online |
+|--------|--------|----------------|--------|
+| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/) |
+| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/en.html) |
+| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/fr.html) |
+| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/nl.html) |
+| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/es.html) |
+| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/it.html) |
 
 ---
 
@@ -140,7 +144,7 @@ altrimenti il dispositivo non funziona:
 ### Morsetti di collegamento e reti
 
 | Morsetto | Collegamento | Assegnazione |
-|--------|-----------|----------|
+|--------|-----------|------------------|
 | **X1** | Ingresso rete | 1 = N, 2 = L_IN (230 V in ingresso) |
 | **X2** | Uscita carico | 1 = O (commutato), 2 = N |
 | **X3** | Snubber | 1 = O, 2 = N — rete RC opzionale per carichi induttivi |
@@ -155,7 +159,7 @@ Shelly-O→X2/X3).
 ### Componenti principali
 
 | Sigla | Componente | Funzione |
-|---------|---------|----------|
+|---------|---------|------------------|
 | **U1** | ESP32-C3 Super Mini | Microcontrollore con Wi-Fi, 5 V→3,3 V; porta il WS2812 su GPIO8 |
 | **K1** | PhotoMOS G3VM-601AY2 (o -601BY / AQY216) | Isolamento galvanico 3,3 V ↔ 230 V, **≥ 400 V** |
 | **PS1** | Modulo AC/DC TSP-05 (5 V / 3 W) | Alimentatore da L_F + N |
@@ -201,7 +205,7 @@ Le immagini flash già pronte (factory + OTA) si trovano in
 **Sul dispositivo** — tre pulsanti:
 
 | Pulsante | breve | lungo |
-|-------|------|------|
+|-------|------|--------------|
 | **S1** Down/Manual | Avvia Timer 1 | — |
 | **S2** SET | Avvia Timer 2 | ≥ 3 s: menu informazioni (scorrere con S1/S3) |
 | **S3** UP | Avvia Timer 3 | ≥ 1,2 s: arresta tutti i timer |

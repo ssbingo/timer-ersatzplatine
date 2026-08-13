@@ -1,5 +1,9 @@
 # Feeder-Relais
 
+<p align="center">
+  <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
+</p>
+
 **A DIY 230 V timer controller — ESP32-C3 · OLED · PhotoMOS · external Shelly 1PM Mini Gen4**
 
 The Feeder-Relais is a DIY control board that switches on a 230 V load at
@@ -30,14 +34,14 @@ relay**. This makes the core function **independent of Wi-Fi**.
 
 ## 🌍 Sprachen · Languages
 
-| Sprache | README | Handbuch (PDF) |
-|--------|--------|----------------|
-| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) |
-| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) |
-| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) |
-| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) |
-| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) |
-| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) |
+| Sprache | README | Handbuch (PDF) | 🌐 Online |
+|--------|--------|----------------|--------|
+| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/) |
+| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/en.html) |
+| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/fr.html) |
+| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/nl.html) |
+| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/es.html) |
+| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/it.html) |
 
 ---
 
@@ -137,7 +141,7 @@ This mapping must match exactly on both sides, or the device will not work:
 ### Terminal Blocks and Nets
 
 | Terminal | Connection | Pinout |
-|--------|-----------|----------|
+|--------|-----------|------------------|
 | **X1** | Mains input | 1 = N, 2 = L_IN (230 V in) |
 | **X2** | Load output | 1 = O (switched), 2 = N |
 | **X3** | Snubber | 1 = O, 2 = N — optional RC network for inductive loads |
@@ -151,7 +155,7 @@ K1.4→Shelly-SW), and `O_LAST` (switched, Shelly-O→X2/X3).
 ### Key Components
 
 | Reference | Component | Function |
-|---------|---------|----------|
+|---------|---------|------------------|
 | **U1** | ESP32-C3 Super Mini | Microcontroller with Wi-Fi, 5 V→3,3 V; carries the WS2812 on GPIO8 |
 | **K1** | PhotoMOS G3VM-601AY2 (or -601BY / AQY216) | Galvanic isolation 3,3 V ↔ 230 V, **≥ 400 V** |
 | **PS1** | AC/DC module TSP-05 (5 V / 3 W) | Power supply from L_F + N |
@@ -194,7 +198,7 @@ Ready-made flash images (factory + OTA) are located under `firmware/build/`.
 **On the device** — three buttons:
 
 | Button | short press | long press |
-|-------|------|------|
+|-------|------|--------------|
 | **S1** Down/Manual | trigger timer 1 | — |
 | **S2** SET | trigger timer 2 | ≥ 3 s: info menu (scroll with S1/S3) |
 | **S3** UP | trigger timer 3 | ≥ 1,2 s: stop all timers |
