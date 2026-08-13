@@ -14,6 +14,7 @@ esphome:
   includes:
     - net_config.h
     - log_ring.h
+    - help_content.h
     - timer_web.h
   on_boot:
     # Netzwerk-Konfig laden + anwenden, dann Web-App-Handler registrieren.

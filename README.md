@@ -201,9 +201,15 @@ Zeiten einstellen, Netzwerk- und Statuswerte einsehen, Sprache wählen.
 Das Gehäuse besteht aus dem vorhandenen **Vorderteil** (Originalfrontplatte mit
 Sichtfenster und Tast-Stößeln) und einem selbst gedruckten **Rückteil**:
 
-- Quelle `box/feeder_back.scad` (OpenSCAD), fertige `box/feeder_back_35mm.stl`.
-- **35 mm tief** (statt originaler 5,7 mm), damit Platine *und* Shelly hineinpassen.
-- Sechs Schraubdome (Raster 45 × 70 mm), Aufhängelasche mit Schlüsselloch.
+- **Produktionsgehäuse:** `box/feeder_back_Shelly_35mm.stl` — das zu druckende
+  Rückteil **mit integrierten Halterungen für den Shelly und den Snubber**.
+- Basis-/Parametervariante: `box/feeder_back.scad` (OpenSCAD) → `box/feeder_back_35mm.stl`
+  (ohne Shelly-/Snubber-Halter), zum Anpassen der Maße.
+- **35 mm tief** (statt originaler 5,7 mm), damit Platine *und* Shelly hineinpassen;
+  Außenmaß 109,8 × 90,8 mm.
+- Wandaufbau: Dichtkante oben **1,3 mm**, verstärkte Außenwand darunter **2,5 mm**,
+  Boden **2,5 mm**. Sechs Schraubdome (Raster 45 × 70 mm) mit tiefem Senkkanal für
+  die kurzen Originalschrauben; Aufhängelasche mit Schlüsselloch.
 - `box/Timer-Ersatzplatine-v2-BOARD.stl` ist eine **1:1-Attrappe** der Platine —
   flach drucken und einlegen, um die Passung zu prüfen, **bevor** die echte
   Platine bestellt wird.

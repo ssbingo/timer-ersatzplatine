@@ -1,0 +1,172 @@
+<!doctype html><html lang=en><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Feeder-Relais — Manual</title>
+<style>
+:root{--bg:#0f1420;--card:#1a2232;--line:#232d42;--mut:#8595ad;--fg:#eef2f8;--acc:#3b82f6;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg)}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);z-index:5}
+.top a{color:var(--acc);text-decoration:none;font-size:14px}
+.top .sp{flex:1}
+.lang a{color:var(--mut);padding:2px 6px;border-radius:6px}
+.lang a.on{color:var(--fg);background:var(--card)}
+h1{font-size:22px;margin:14px 0 4px}
+h2{font-size:18px;margin:26px 0 8px;padding-top:6px;border-top:1px solid var(--line);color:#cfe0ff}
+h3{font-size:15px;margin:16px 0 4px}
+p,li{margin:7px 0}
+code{background:#0d1424;border:1px solid #2b3855;border-radius:6px;padding:1px 6px;font-family:ui-monospace,monospace;font-size:.92em}
+ol,ul{padding-left:22px}
+a{color:var(--acc)}
+.lead{color:var(--mut)}
+.toc{background:var(--card);border-radius:12px;padding:12px 16px;margin:14px 0}
+.toc ol{margin:4px 0;padding-left:20px}
+.toc a{text-decoration:none}
+.box{border-radius:10px;padding:10px 14px;margin:12px 0;border-left:4px solid}
+.box b{display:block;margin-bottom:2px}
+.hint{background:#0e2536;border-color:var(--acc)}
+.tip{background:#0e2a1c;border-color:var(--ok)}
+.warn{background:#2a2410;border-color:var(--warn)}
+.dang{background:#2a1414;border-color:var(--bad)}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:#cfe0ff}
+figure{margin:12px 0;text-align:center}
+svg{max-width:100%;height:auto}
+.led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
+.totop{font-size:13px;color:var(--mut);text-decoration:none}
+kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
+</style></head><body>
+<div class=wrap>
+
+<div class=top>
+ <a href="/">&larr; To the app</a><span class=sp></span>
+ <span class=lang><a href="/help?lang=de">DE</a> <a class=on href="/help?lang=en">EN</a> <a href="/help?lang=fr">FR</a></span>
+</div>
+
+<h1 id=oben>Feeder-Relais — Manual</h1>
+<p class=lead>Installation, setup, operation and integration with ioBroker. This page is stored <b>on the device</b> and can be read even without an internet connection.</p>
+
+<div class=toc>
+<b>Contents</b>
+<ol>
+<li><a href="#was">What the device does</a></li>
+<li><a href="#flash">Flashing the firmware (initial flash)</a></li>
+<li><a href="#wlan">Setting up WiFi</a></li>
+<li><a href="#geraet">Operating the device</a></li>
+<li><a href="#webapp">Operating via the web app</a></li>
+<li><a href="#netz">Network, time, language, updates</a></li>
+<li><a href="#iobroker">Integration with ioBroker</a></li>
+<li><a href="#fehler">Troubleshooting</a></li>
+<li><a href="#sicher">Safety &amp; detailed manual</a></li>
+</ol>
+</div>
+
+<h2 id=was>1. What the device does</h2>
+<p>The Feeder-Relais switches a 230 V load (e.g. an automatic feeder) on at the press of a button for an <b>adjustable time</b>, then switches it back off by itself. Three buttons trigger three separately adjustable times. The actual switching is handled by an <b>external Shelly 1PM Mini Gen4</b>, which the board drives with galvanic isolation via a PhotoMOS — the core function therefore runs <b>without WiFi</b>.</p>
+<figure><svg viewBox="0 0 620 60" role=img aria-label="Signal chain">
+<style>.b{fill:#1a2232;stroke:#3b82f6}.t{fill:#eef2f8;font:12px sans-serif;text-anchor:middle}.a{stroke:#8595ad;stroke-width:2;marker-end:url(#ah)}</style>
+<defs><marker id=ah markerWidth=8 markerHeight=8 refX=7 refY=3 orient=auto><path d="M0,0 L7,3 L0,6 z" fill="#8595ad"/></marker></defs>
+<g>
+<rect class=b x=4 y=16 width=86 height=28 rx=6/><text class=t x=47 y=34>Button</text>
+<line class=a x1=92 y1=30 x2=118 y2=30/>
+<rect class=b x=120 y=16 width=96 height=28 rx=6/><text class=t x=168 y=34>ESP32-C3</text>
+<line class=a x1=218 y1=30 x2=244 y2=30/>
+<rect class=b x=246 y=16 width=96 height=28 rx=6/><text class=t x=294 y=34>PhotoMOS</text>
+<line class=a x1=344 y1=30 x2=370 y2=30/>
+<rect class=b x=372 y=16 width=110 height=28 rx=6/><text class=t x=427 y=34>Shelly 1PM</text>
+<line class=a x1=484 y1=30 x2=510 y2=30/>
+<rect class=b x=512 y=16 width=100 height=28 rx=6/><text class=t x=562 y=34>230 V load</text>
+</g></svg><figcaption class=lead>The signal chain: the ESP counts the time, the Shelly does the switching.</figcaption></figure>
+
+<h2 id=flash>2. Flashing the firmware (initial flash)</h2>
+<p>The first time, the ESP is programmed via <b>USB and the browser</b> — with no mains voltage involved at all. Ideally <b>before</b> it is soldered in.</p>
+<div class=warn><b>⚠ Requirements</b>A <b>USB-C data cable</b> (not a charge-only cable!) and <b>Google Chrome</b> or <b>Microsoft Edge</b> (Firefox/Safari do not support Web Serial).</div>
+<ol>
+<li>Download the file: <b>feeder-relais-vX.Y.Z.factory.bin</b> from the <a href="https://github.com/ssbingo/timer-ersatzplatine/releases/latest">releases page</a> (the "Assets" section). The <code>factory</code> file is the complete image for the initial flash; the <code>ota</code> file is only for later updates.</li>
+<li>Connect the ESP via USB-C. In <b>Chrome/Edge</b>, open the flashing tool: <code>https://espressif.github.io/esptool-js/</code></li>
+<li>Click <b>Connect</b> and select the ESP's port. Success looks like: "Connected to device: ESP32-C3".</li>
+<li><b>Set Flash Address to <code>0x0000</code></b> (the default value <code>0x1000</code> is wrong!). Choose <code>factory.bin</code> as the file. Leave Flash Mode/Frequency/Size at <code>keep</code>.</li>
+<li>Click <b>Program</b> and wait until "Writing … (100 %)" and "Hard resetting…" appear.</li>
+</ol>
+<div class=hint><b>ℹ Why 0x0000?</b><code>0</code>, <code>0x0</code> and <code>0x0000</code> are the same location — the start of memory. The <code>factory</code> image is complete (bootloader + program) and must begin right at the start. The default value <code>0x1000</code> would shift everything → the ESP will not start.</div>
+<div class=warn><b>⚠ No port / "Failed to connect"?</b>Put the ESP into download mode: hold <kbd>BOOT</kbd> down, briefly press <kbd>RESET</kbd>, release <kbd>BOOT</kbd> — then click "Connect" again. If problems persist, first run <b>Erase Flash</b>, then flash again.</div>
+<div class=tip><b>✓ Power tip</b>Right after flashing, the radio draws brief current spikes. On a weak USB port this can cause the ESP to restart. Use a <b>robust 5 V power supply</b> or a port directly on the PC with a short, thick cable.</div>
+
+<h2 id=wlan>3. Setting up WiFi</h2>
+<p>After the first start, the ESP opens its own WiFi network for setup:</p>
+<ol>
+<li>On your phone, connect to the WiFi network <b>Feeder-Relais Setup</b> (password <code>feeder1234</code>).</li>
+<li>A login page should open (otherwise go to <code>http://192.168.4.1</code>).</li>
+<li>Select your <b>home WiFi</b>, enter the password, and save.</li>
+</ol>
+<p>After that, the device is reachable on your home network at <code>http://feeder-relais.local</code>.</p>
+<div class=hint><b>ℹ It may take a moment</b>The first connection sometimes takes a few seconds to establish — this is normal.</div>
+
+<h2 id=geraet>4. Operating the device</h2>
+<table>
+<tr><th>Button</th><th>short press</th><th>long press</th></tr>
+<tr><td><b>S1</b> Down/Manual</td><td>Trigger timer 1</td><td>—</td></tr>
+<tr><td><b>S2</b> SET</td><td>Trigger timer 2</td><td>≥ 3 s: info menu (scroll with S1/S3)</td></tr>
+<tr><td><b>S3</b> UP</td><td>Trigger timer 3</td><td>≥ 1.2 s: stop all timers</td></tr>
+</table>
+<p>The <b>OLED</b> shows WiFi signal strength at the top, the large clock or countdown, and the status (<b>Idle</b> / <b>Feed</b>); at the bottom, the date and free memory. Weekday, status and menu titles follow the selected language.</p>
+<p><b>Status LED</b> (small LED on the ESP):</p>
+<p><span class=led style="background:#22c55e"></span> green = ready &nbsp;·&nbsp; <span class=led style="background:#f59e0b"></span> yellow = timer running &nbsp;·&nbsp; <span class=led style="background:#ef4444"></span> red = fault</p>
+
+<h2 id=webapp>5. Operating via the web app</h2>
+<p>Open <code>http://feeder-relais.local</code> in your browser. At the bottom, you can switch between the sections:</p>
+<table>
+<tr><th>Section</th><th>Function</th></tr>
+<tr><td><b>Home</b></td><td>Status, trigger timer 1/2/3, stop</td></tr>
+<tr><td><b>Times</b></td><td>set and save the three switching times (1–600 s)</td></tr>
+<tr><td><b>Network</b></td><td>change WiFi, IP (DHCP/static), NTP time server, hostname, roaming</td></tr>
+<tr><td><b>Status</b></td><td>version, uptime, WiFi, IP, MAC, reset reason, relay</td></tr>
+<tr><td><b>Service</b></td><td>log/debug, firmware update (OTA), restart</td></tr>
+</table>
+<p>You change the <b>language</b> (Deutsch/English/Français) at the top of the "Times" section — it applies to both the web app and the OLED.</p>
+
+<h2 id=netz>6. Network, time, language, updates</h2>
+<ul>
+<li><b>Time:</b> The clock is set via an internet time server (NTP); you can change the server in the "Network" section.</li>
+<li><b>IP:</b> The default is DHCP (automatic). A static IP takes effect after a restart.</li>
+<li><b>Updates (OTA):</b> New firmware without a cable — in the <b>Service → Firmware update</b> section, upload the <b>ota.bin</b> of the new version there. The device then restarts.</li>
+</ul>
+
+<h2 id=iobroker>7. Integration with ioBroker</h2>
+<p>The device is the hardware side of an automatic feeder and integrates well with ioBroker:</p>
+<ul>
+<li><b>Shelly adapter:</b> The external Shelly 1PM Mini Gen4 is integrated natively via the ioBroker Shelly adapter — switch state and power measurement are directly visible and controllable there.</li>
+<li><b>The device's JSON API:</b> can be queried and controlled via REST/scripts:
+<table>
+<tr><th>Endpoint</th><th>Purpose</th></tr>
+<tr><td><code>GET /api/status</code></td><td>Status (version, relay, remaining time, WiFi …)</td></tr>
+<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Trigger timer</td></tr>
+<tr><td><code>POST /api/stop</code></td><td>Stop all timers</td></tr>
+<tr><td><code>POST /api/config?...</code></td><td>Set times</td></tr>
+</table></li>
+</ul>
+<p>For scheduling and a ready-made dashboard, there are matching adapters from the same author:</p>
+<ul>
+<li><a href="https://github.com/ssbingo/ioBroker.automatic-feeder">ioBroker.automatic-feeder</a> — scheduling, temperature model, sunrise/sunset, pauses, notifications.</li>
+<li><a href="https://github.com/ssbingo/ioBroker.vis-2-widgets-automatic-feeder">ioBroker.vis-2-widgets-automatic-feeder</a> — ready-made vis-2 dashboard widgets (display + remote control).</li>
+</ul>
+
+<h2 id=fehler>8. Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>Solution</th></tr>
+<tr><td>During flashing, the <b>USB port keeps flapping</b> (connects/disconnects constantly)</td><td>The firmware is starting in a loop → the USB keeps re-registering. Force it into download mode: hold <kbd>BOOT</kbd>, tap <kbd>RESET</kbd>, release <kbd>BOOT</kbd>. Then "Connect", "Erase Flash", flash again.</td></tr>
+<tr><td><b>No WiFi</b> network "Feeder-Relais Setup" visible</td><td>Usually not enough power → restart loop. Connect a <b>robust 5 V power supply</b>, wait ~15 s, search again on your phone (2.4 GHz). Check that <b>factory.bin</b> was flashed at <code>0x0000</code>.</td></tr>
+<tr><td><b>OLED stays black</b></td><td>Is the display plugged in correctly? Check the contacts. (When building your own: SDA must be on ESP pad 7, see the detailed manual.)</td></tr>
+<tr><td><b>Device not reachable</b></td><td>Look up the IP in your router, or connect via IP instead of <code>feeder-relais.local</code>. As a last resort, restart via <b>Service</b>.</td></tr>
+</table>
+
+<h2 id=sicher>9. Safety &amp; detailed manual</h2>
+<div class=dang><b>✋ 230 volts — danger to life</b>Assembly and connection of the mains voltage belong in the hands of a qualified electrician. Never work on the open device while it is live.</div>
+<p>You can find the <b>complete build guide</b> (components, board, soldering, KiCad, case printing) online:</p>
+<p><a href="https://ssbingo.github.io/timer-ersatzplatine/">ssbingo.github.io/timer-ersatzplatine</a> · <a href="https://github.com/ssbingo/timer-ersatzplatine">Project on GitHub</a></p>
+
+<p style="margin-top:26px"><a class=totop href="#oben">↑ to top</a> &nbsp;·&nbsp; <a class=totop href="/">← to the app</a></p>
+<p class=lead style="font-size:12px">© 2026 S. Sternitzke · CC BY-NC-SA 4.0</p>
+
+</div></body></html>
