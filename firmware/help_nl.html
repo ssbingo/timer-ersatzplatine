@@ -1,0 +1,172 @@
+<!doctype html><html lang=nl><head><meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Feeder-Relais — Handleiding</title>
+<style>
+:root{--bg:#0f1420;--card:#1a2232;--line:#232d42;--mut:#8595ad;--fg:#eef2f8;--acc:#3b82f6;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--fg)}
+.wrap{max-width:760px;margin:0 auto;padding:14px 16px 60px}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line);z-index:5}
+.top a{color:var(--acc);text-decoration:none;font-size:14px}
+.top .sp{flex:1}
+.lang a{color:var(--mut);padding:2px 6px;border-radius:6px}
+.lang a.on{color:var(--fg);background:var(--card)}
+h1{font-size:22px;margin:14px 0 4px}
+h2{font-size:18px;margin:26px 0 8px;padding-top:6px;border-top:1px solid var(--line);color:#cfe0ff}
+h3{font-size:15px;margin:16px 0 4px}
+p,li{margin:7px 0}
+code{background:#0d1424;border:1px solid #2b3855;border-radius:6px;padding:1px 6px;font-family:ui-monospace,monospace;font-size:.92em}
+ol,ul{padding-left:22px}
+a{color:var(--acc)}
+.lead{color:var(--mut)}
+.toc{background:var(--card);border-radius:12px;padding:12px 16px;margin:14px 0}
+.toc ol{margin:4px 0;padding-left:20px}
+.toc a{text-decoration:none}
+.box{border-radius:10px;padding:10px 14px;margin:12px 0;border-left:4px solid}
+.box b{display:block;margin-bottom:2px}
+.hint{background:#0e2536;border-color:var(--acc)}
+.tip{background:#0e2a1c;border-color:var(--ok)}
+.warn{background:#2a2410;border-color:var(--warn)}
+.dang{background:#2a1414;border-color:var(--bad)}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{color:#cfe0ff}
+figure{margin:12px 0;text-align:center}
+svg{max-width:100%;height:auto}
+.led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
+.totop{font-size:13px;color:var(--mut);text-decoration:none}
+kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
+</style></head><body>
+<div class=wrap>
+
+<div class=top>
+ <a href="/">&larr; Naar de app</a><span class=sp></span>
+ <span class=lang><a class=on href="/help?lang=de">DE</a> <a href="/help?lang=en">EN</a> <a href="/help?lang=fr">FR</a></span>
+</div>
+
+<h1 id=oben>Feeder-Relais — Handleiding</h1>
+<p class=lead>Installatie, instelling, bediening en koppeling met ioBroker. Deze pagina staat <b>in het apparaat</b> en is ook zonder internet leesbaar.</p>
+
+<div class=toc>
+<b>Inhoud</b>
+<ol>
+<li><a href="#was">Wat het apparaat doet</a></li>
+<li><a href="#flash">Firmware installeren (eerste keer flashen)</a></li>
+<li><a href="#wlan">Wifi instellen</a></li>
+<li><a href="#geraet">Bediening op het apparaat</a></li>
+<li><a href="#webapp">Bediening via de web-app</a></li>
+<li><a href="#netz">Netwerk, tijd, taal, updates</a></li>
+<li><a href="#iobroker">Koppeling met ioBroker</a></li>
+<li><a href="#fehler">Problemen oplossen</a></li>
+<li><a href="#sicher">Veiligheid &amp; uitgebreide handleiding</a></li>
+</ol>
+</div>
+
+<h2 id=was>1. Wat het apparaat doet</h2>
+<p>De Feeder-Relais schakelt een 230 V-belasting (bijv. een voerautomaat) op knopdruk voor een <b>instelbare tijd</b> in en daarna vanzelf weer uit. Drie knoppen activeren drie afzonderlijk instelbare tijden. Het eigenlijke schakelen doet een <b>externe Shelly 1PM Mini Gen4</b>, die de printplaat via een PhotoMOS galvanisch gescheiden aanstuurt — de kernfunctie werkt daardoor <b>zonder wifi</b>.</p>
+<figure><svg viewBox="0 0 620 60" role=img aria-label="Signalkette">
+<style>.b{fill:#1a2232;stroke:#3b82f6}.t{fill:#eef2f8;font:12px sans-serif;text-anchor:middle}.a{stroke:#8595ad;stroke-width:2;marker-end:url(#ah)}</style>
+<defs><marker id=ah markerWidth=8 markerHeight=8 refX=7 refY=3 orient=auto><path d="M0,0 L7,3 L0,6 z" fill="#8595ad"/></marker></defs>
+<g>
+<rect class=b x=4 y=16 width=86 height=28 rx=6/><text class=t x=47 y=34>Knop</text>
+<line class=a x1=92 y1=30 x2=118 y2=30/>
+<rect class=b x=120 y=16 width=96 height=28 rx=6/><text class=t x=168 y=34>ESP32-C3</text>
+<line class=a x1=218 y1=30 x2=244 y2=30/>
+<rect class=b x=246 y=16 width=96 height=28 rx=6/><text class=t x=294 y=34>PhotoMOS</text>
+<line class=a x1=344 y1=30 x2=370 y2=30/>
+<rect class=b x=372 y=16 width=110 height=28 rx=6/><text class=t x=427 y=34>Shelly 1PM</text>
+<line class=a x1=484 y1=30 x2=510 y2=30/>
+<rect class=b x=512 y=16 width=100 height=28 rx=6/><text class=t x=562 y=34>230 V-belasting</text>
+</g></svg><figcaption class=lead>De signaalketen: de ESP telt de tijd, de Shelly schakelt.</figcaption></figure>
+
+<h2 id=flash>2. Firmware installeren (eerste keer flashen)</h2>
+<p>De eerste keer wordt de ESP via <b>USB en de browser</b> beschreven — helemaal zonder netspanning. Het beste <b>voordat</b> hij ingesoldeerd is.</p>
+<div class=warn><b>⚠ Vereisten</b>Een <b>USB-C-datakabel</b> (geen kaal laadkabeltje!) en <b>Google Chrome</b> of <b>Microsoft Edge</b> (Firefox/Safari ondersteunen geen Web Serial).</div>
+<ol>
+<li>Bestand downloaden: <b>feeder-relais-vX.Y.Z.factory.bin</b> van de <a href="https://github.com/ssbingo/timer-ersatzplatine/releases/latest">releasepagina</a> (sectie „Assets"). Het <code>factory</code>-bestand is het complete image voor de eerste keer flashen; het <code>ota</code>-bestand is alleen voor latere updates.</li>
+<li>ESP via USB-C aansluiten. In <b>Chrome/Edge</b> de flashtool openen: <code>https://espressif.github.io/esptool-js/</code></li>
+<li>Op <b>Connect</b> klikken en de ESP-poort kiezen. Succes: „Connected to device: ESP32-C3".</li>
+<li><b>Flash Address op <code>0x0000</code> zetten</b> (de standaardwaarde <code>0x1000</code> is fout!). Als bestand de <code>factory.bin</code> kiezen. Flash Mode/Frequency/Size op <code>keep</code> laten staan.</li>
+<li>Op <b>Program</b> klikken en wachten tot „Writing … (100 %)" en „Hard resetting…" verschijnt.</li>
+</ol>
+<div class=hint><b>ℹ Waarom 0x0000?</b><code>0</code>, <code>0x0</code> en <code>0x0000</code> zijn dezelfde plek — het begin van het geheugen. Het <code>factory</code>-image is compleet (bootloader + programma) en moet helemaal vooraan beginnen. De standaardwaarde <code>0x1000</code> zou alles verschuiven → de ESP start dan niet.</div>
+<div class=warn><b>⚠ Geen poort / „Failed to connect"?</b>De ESP in de download-modus zetten: <kbd>BOOT</kbd> ingedrukt houden, kort op <kbd>RESET</kbd> drukken, <kbd>BOOT</kbd> loslaten — daarna opnieuw op „Connect". Bij aanhoudende problemen eerst <b>Erase Flash</b>, dan opnieuw flashen.</div>
+<div class=tip><b>✓ Stroomtip</b>Direct na het flashen trekt de radio korte stroompieken. Bij een zwakke USB-poort kan de ESP daardoor opnieuw opstarten. Gebruik een <b>krachtige 5 V-voeding</b> of een poort rechtstreeks op de pc met een kort, dik kabeltje.</div>
+
+<h2 id=wlan>3. Wifi instellen</h2>
+<p>Na de eerste start opent de ESP een eigen wifinetwerk voor de instelling:</p>
+<ol>
+<li>Verbind je telefoon met het wifinetwerk <b>Feeder-Relais Setup</b> (wachtwoord <code>feeder1234</code>).</li>
+<li>Er opent zich een aanmeldpagina (anders <code>http://192.168.4.1</code> openen).</li>
+<li>Je <b>eigen wifinetwerk kiezen</b>, wachtwoord invoeren, opslaan.</li>
+</ol>
+<p>Daarna is het apparaat in je thuisnetwerk bereikbaar via <code>http://feeder-relais.local</code>.</p>
+<div class=hint><b>ℹ Het kan even duren</b>De eerste verbinding kan soms een paar seconden duren — dat is normaal.</div>
+
+<h2 id=geraet>4. Bediening op het apparaat</h2>
+<table>
+<tr><th>Knop</th><th>kort</th><th>lang</th></tr>
+<tr><td><b>S1</b> Down/Manual</td><td>Timer 1 starten</td><td>—</td></tr>
+<tr><td><b>S2</b> SET</td><td>Timer 2 starten</td><td>≥ 3 s: infomenu (bladeren met S1/S3)</td></tr>
+<tr><td><b>S3</b> UP</td><td>Timer 3 starten</td><td>≥ 1,2 s: alle timers stoppen</td></tr>
+</table>
+<p>De <b>OLED</b> toont bovenaan de wifi-ontvangst, de grote klok resp. de countdown en de status (<b>Rust</b> / <b>Voer</b>); onderaan de datum en het vrije geheugen. Weekdag, status en menutitels volgen de ingestelde taal.</p>
+<p><b>Statuslampje</b> (kleine LED op de ESP):</p>
+<p><span class=led style="background:#22c55e"></span> groen = klaar &nbsp;·&nbsp; <span class=led style="background:#f59e0b"></span> geel = timer actief &nbsp;·&nbsp; <span class=led style="background:#ef4444"></span> rood = storing</p>
+
+<h2 id=webapp>5. Bediening via de web-app</h2>
+<p>Open in de browser <code>http://feeder-relais.local</code>. Onderaan wissel je tussen de onderdelen:</p>
+<table>
+<tr><th>Onderdeel</th><th>Functie</th></tr>
+<tr><td><b>Start</b></td><td>status, timer 1/2/3 starten, stoppen</td></tr>
+<tr><td><b>Tijden</b></td><td>de drie schakeltijden (1–600 s) instellen en opslaan</td></tr>
+<tr><td><b>Netwerk</b></td><td>wifi wisselen, IP (DHCP/statisch), NTP-tijdserver, hostnaam, roaming</td></tr>
+<tr><td><b>Status</b></td><td>versie, looptijd, wifi, IP, MAC, resetoorzaak, relais</td></tr>
+<tr><td><b>Service</b></td><td>log/debug, firmware-update (OTA), herstart</td></tr>
+</table>
+<p>De <b>taal</b> (Deutsch/English/Français) stel je bovenaan bij het onderdeel „Tijden" in — deze geldt voor web-app en OLED.</p>
+
+<h2 id=netz>6. Netwerk, tijd, taal, updates</h2>
+<ul>
+<li><b>Tijd:</b> De klok wordt via een internet-tijdserver (NTP) gelijkgezet; de server wijzig je bij het onderdeel „Netwerk".</li>
+<li><b>IP:</b> Standaard is DHCP (automatisch). Een vast IP-adres wordt na een herstart actief.</li>
+<li><b>Updates (OTA):</b> Nieuwe firmware zonder kabel — onderdeel <b>Service → Firmware-update</b>, daar de <b>ota.bin</b> van de nieuwe versie uploaden. Het apparaat herstart daarna.</li>
+</ul>
+
+<h2 id=iobroker>7. Koppeling met ioBroker</h2>
+<p>Het apparaat is de hardwarekant van een voerautomaat en past goed in ioBroker:</p>
+<ul>
+<li><b>Shelly-adapter:</b> De externe Shelly 1PM Mini Gen4 wordt via de ioBroker-Shelly-adapter native ingebonden — schakelstatus en vermogensmeting zijn daar direct zichtbaar en te bedienen.</li>
+<li><b>JSON-API van het apparaat:</b> op te vragen en te bedienen via REST/script:
+<table>
+<tr><th>Eindpunt</th><th>Doel</th></tr>
+<tr><td><code>GET /api/status</code></td><td>status (versie, relais, resttijd, wifi …)</td></tr>
+<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>timer starten</td></tr>
+<tr><td><code>POST /api/stop</code></td><td>alle timers stoppen</td></tr>
+<tr><td><code>POST /api/config?...</code></td><td>tijden instellen</td></tr>
+</table></li>
+</ul>
+<p>Voor tijdplanning en een kant-en-klaar dashboard zijn er passende adapters van dezelfde auteur:</p>
+<ul>
+<li><a href="https://github.com/ssbingo/ioBroker.automatic-feeder">ioBroker.automatic-feeder</a> — tijdplanning, temperatuurmodel, zonsopgang/-ondergang, pauzes, meldingen.</li>
+<li><a href="https://github.com/ssbingo/ioBroker.vis-2-widgets-automatic-feeder">ioBroker.vis-2-widgets-automatic-feeder</a> — kant-en-klare vis-2-dashboardwidgets (weergave + afstandsbediening).</li>
+</ul>
+
+<h2 id=fehler>8. Problemen oplossen</h2>
+<table>
+<tr><th>Probleem</th><th>Oplossing</th></tr>
+<tr><td>Tijdens het flashen <b>flikkert de USB-poort</b> (verbindt/verbreekt steeds)</td><td>De firmware start in een lus → de USB meldt zich steeds opnieuw aan. Dwing de download-modus af: <kbd>BOOT</kbd> vasthouden, <kbd>RESET</kbd> tikken, <kbd>BOOT</kbd> los. Dan „Connect", „Erase Flash", opnieuw flashen.</td></tr>
+<tr><td><b>Geen wifi</b> „Feeder-Relais Setup" zichtbaar</td><td>Meestal te weinig stroom → herstartlus. Sluit een <b>krachtige 5 V-voeding</b> aan, wacht ~15 s, zoek opnieuw op de telefoon (2,4 GHz). Controleer of de <b>factory.bin</b> op <code>0x0000</code> geflasht is.</td></tr>
+<tr><td><b>OLED blijft zwart</b></td><td>Display goed opgestoken? Contacten controleren. (Bij zelfbouw: SDA moet op ESP-pad 7 liggen, zie de uitgebreide handleiding.)</td></tr>
+<tr><td><b>Apparaat niet bereikbaar</b></td><td>Zoek het IP-adres in de router op of gebruik het IP-adres in plaats van <code>feeder-relais.local</code>. Zo nodig via <b>Service</b> herstarten.</td></tr>
+</table>
+
+<h2 id=sicher>9. Veiligheid &amp; uitgebreide handleiding</h2>
+<div class=dang><b>✋ 230 volt — levensgevaar</b>Opbouw en aansluiting van de netspanning horen in handen van een elektricien. Werk nooit aan een open, onder spanning staand apparaat.</div>
+<p>De <b>volledige bouwhandleiding</b> (onderdelen, printplaat, solderen, KiCad, behuizing printen) vind je online:</p>
+<p><a href="https://ssbingo.github.io/timer-ersatzplatine/">ssbingo.github.io/timer-ersatzplatine</a> · <a href="https://github.com/ssbingo/timer-ersatzplatine">Project op GitHub</a></p>
+
+<p style="margin-top:26px"><a class=totop href="#oben">↑ naar boven</a> &nbsp;·&nbsp; <a class=totop href="/">← naar de app</a></p>
+<p class=lead style="font-size:12px">© 2026 S. Sternitzke · CC BY-NC-SA 4.0</p>
+
+</div></body></html>
