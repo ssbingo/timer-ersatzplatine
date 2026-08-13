@@ -67,3 +67,4 @@ box/view_*.png
 # OS
 .DS_Store
 Thumbs.db
+docs/handbuch/mk_pages.py
