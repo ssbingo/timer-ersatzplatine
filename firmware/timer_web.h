@@ -24,7 +24,7 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "2.1.0"
+#define FW_VERSION "2.2.0"
 
 namespace esphome {
 
@@ -86,9 +86,12 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
   <div class=card>
    <label data-i18n=lang_label>Sprache</label>
    <select id=langsel onchange="changeLang()">
-    <option value=de>Deutsch</option>
-    <option value=en>English</option>
-    <option value=fr>Fran&ccedil;ais</option>
+    <option value=de>🇩🇪 Deutsch</option>
+    <option value=en>🇬🇧 English</option>
+    <option value=fr>🇫🇷 Français</option>
+    <option value=nl>🇳🇱 Nederlands</option>
+    <option value=es>🇪🇸 Español</option>
+    <option value=it>🇮🇹 Italiano</option>
    </select>
   </div>
   <div class=card>
@@ -195,101 +198,101 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
 var $=function(i){return document.getElementById(i)};
 var LANG='de';
 var T={
- btn:{de:'Taster',en:'Button',fr:'Bouton'},
- stop:{de:'Stopp',en:'Stop',fr:'Arrêt'},
- lang_label:{de:'Sprache',en:'Language',fr:'Langue'},
- cfg_t1:{de:'Zeit Taster 1 (Sekunden)',en:'Time button 1 (seconds)',fr:'Durée bouton 1 (secondes)'},
- cfg_t2:{de:'Zeit Taster 2 (Sekunden)',en:'Time button 2 (seconds)',fr:'Durée bouton 2 (secondes)'},
- cfg_t3:{de:'Zeit Taster 3 (Sekunden)',en:'Time button 3 (seconds)',fr:'Durée bouton 3 (secondes)'},
- save:{de:'Speichern',en:'Save',fr:'Enregistrer'},
- wifi_t:{de:'WLAN',en:'Wi-Fi',fr:'Wi-Fi'},
- cur:{de:'Aktuell verbunden',en:'Currently connected',fr:'Connecté actuellement'},
- wifi_switch:{de:'Auf anderes WLAN wechseln – Netzwerkname (SSID)',en:'Switch to another Wi-Fi – network name (SSID)',fr:'Changer de Wi-Fi – nom du réseau (SSID)'},
- pw:{de:'Passwort',en:'Password',fr:'Mot de passe'},
- wifi_save:{de:'WLAN speichern & verbinden',en:'Save Wi-Fi & connect',fr:'Enregistrer le Wi-Fi et connecter'},
- ipcfg:{de:'IP-Konfiguration',en:'IP configuration',fr:'Configuration IP'},
- mode:{de:'Modus',en:'Mode',fr:'Mode'},
- dhcp:{de:'DHCP (automatisch)',en:'DHCP (automatic)',fr:'DHCP (automatique)'},
- ipstatic:{de:'Statisch',en:'Static',fr:'Statique'},
- ip:{de:'IP-Adresse',en:'IP address',fr:'Adresse IP'},
- sn:{de:'Subnetzmaske',en:'Subnet mask',fr:'Masque de sous-réseau'},
- dns:{de:'DNS-Server',en:'DNS server',fr:'Serveur DNS'},
- ip_save:{de:'IP-Konfig speichern',en:'Save IP config',fr:'Enregistrer la config IP'},
- ntp_t:{de:'NTP-Zeitserver',en:'NTP time server',fr:'Serveur de temps NTP'},
- server:{de:'Server',en:'Server',fr:'Serveur'},
- ntp_save:{de:'NTP speichern',en:'Save NTP',fr:'Enregistrer NTP'},
- host_t:{de:'Hostname',en:'Hostname',fr:'Nom d’hôte'},
- host_l:{de:'Gerätename (a–z, 0–9, „-")',en:'Device name (a–z, 0–9, "-")',fr:'Nom de l’appareil (a–z, 0–9, « - »)'},
- host_save:{de:'Hostname speichern',en:'Save hostname',fr:'Enregistrer le nom d’hôte'},
- host_note:{de:'Der mDNS-Name (….local) wird sofort umgestellt; der DHCP-Name (Router) und eine statische IP nach einem Neustart.',en:'The mDNS name (….local) changes immediately; the DHCP name (router) and a static IP after a restart.',fr:'Le nom mDNS (….local) change aussitôt ; le nom DHCP (routeur) et une IP statique après un redémarrage.'},
- reboot:{de:'Neustart',en:'Restart',fr:'Redémarrer'},
- roam_t:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)'},
- roam_chk:{de:'BTM/RRM aktivieren',en:'Enable BTM/RRM',fr:'Activer BTM/RRM'},
- roam_note:{de:'Nur bei mehreren Access-Points mit gleicher SSID sinnvoll (z. B. UniFi/Mesh): Der Router kann das Gerät gezielt auf den stärkeren AP umbuchen (802.11v BTM) und nutzt Nachbar-Listen (802.11k RRM). Aus = klassisches ESPHome-Scan-Roaming.',en:'Useful only with several access points sharing the same SSID (e.g. UniFi/Mesh): the router can steer the device to the stronger AP (802.11v BTM) and uses neighbor lists (802.11k RRM). Off = classic ESPHome scan roaming.',fr:'Utile seulement avec plusieurs points d’accès de même SSID (p. ex. UniFi/Mesh) : le routeur peut basculer l’appareil vers le point d’accès le plus fort (802.11v BTM) et utilise les listes de voisins (802.11k RRM). Désactivé = itinérance classique par scan d’ESPHome.'},
- recon:{de:'Jetzt neu verbinden',en:'Reconnect now',fr:'Reconnecter maintenant'},
- recon_note:{de:'Übernimmt die Roaming-Einstellung sofort. Das WLAN trennt dafür kurz – die Seite ist ein paar Sekunden nicht erreichbar.',en:'Applies the roaming setting immediately. Wi-Fi briefly disconnects – the page is unreachable for a few seconds.',fr:'Applique aussitôt le réglage d’itinérance. Le Wi-Fi se coupe brièvement – la page est injoignable quelques secondes.'},
- log_t:{de:'Log / Debug',en:'Log / Debug',fr:'Journal / Débogage'},
- log_lvl:{de:'Anzeige-Stufe',en:'Display level',fr:'Niveau d’affichage'},
- log_live:{de:'Live-Anzeige aktivieren',en:'Enable live view',fr:'Activer l’affichage en direct'},
- log_clear:{de:'Anzeige leeren',en:'Clear view',fr:'Effacer l’affichage'},
- ota_t:{de:'Firmware-Update (OTA)',en:'Firmware update (OTA)',fr:'Mise à jour du firmware (OTA)'},
- ota_note:{de:'Kompilierte .bin hochladen (bei ESPHome die firmware.bin aus dem Build). Das Gerät startet danach neu. Alternativ per Netzwerk: esphome run (Port 3232).',en:'Upload a compiled .bin (for ESPHome, the firmware.bin from the build). The device restarts afterwards. Alternatively over the network: esphome run (port 3232).',fr:'Téléverser un .bin compilé (pour ESPHome, le firmware.bin du build). L’appareil redémarre ensuite. Sinon par le réseau : esphome run (port 3232).'},
- ota_btn:{de:'Hochladen & aktualisieren',en:'Upload & update',fr:'Téléverser et mettre à jour'},
- device:{de:'Gerät',en:'Device',fr:'Appareil'},
- manual:{de:'📖 Handbuch',en:'📖 Manual',fr:'📖 Manuel'},
- nav_start:{de:'Start',en:'Start',fr:'Accueil'},
- nav_cfg:{de:'Zeiten',en:'Times',fr:'Durées'},
- nav_net:{de:'Netzwerk',en:'Network',fr:'Réseau'},
- nav_stat:{de:'Status',en:'Status',fr:'État'},
- nav_svc:{de:'Service',en:'Service',fr:'Service'},
- st_ver:{de:'Version',en:'Version',fr:'Version'},
- st_fw:{de:'Firmware',en:'Firmware',fr:'Firmware'},
- st_uptime:{de:'Laufzeit',en:'Uptime',fr:'Durée de service'},
- st_heap:{de:'Freier Speicher',en:'Free memory',fr:'Mémoire libre'},
- st_wifi:{de:'WLAN',en:'Wi-Fi',fr:'Wi-Fi'},
- st_ssid:{de:'SSID',en:'SSID',fr:'SSID'},
- st_chansig:{de:'Kanal / Signal',en:'Channel / signal',fr:'Canal / signal'},
- st_host:{de:'Hostname',en:'Hostname',fr:'Nom d’hôte'},
- st_ip:{de:'IP-Adresse',en:'IP address',fr:'Adresse IP'},
- st_mac:{de:'MAC',en:'MAC',fr:'MAC'},
- st_ap:{de:'Setup-AP',en:'Setup AP',fr:'Point d’accès de config'},
- st_reset:{de:'Reset-Grund',en:'Reset reason',fr:'Cause du redémarrage'},
- st_relay:{de:'Relais',en:'Relay',fr:'Relais'},
- st_rem:{de:'Restzeit',en:'Remaining',fr:'Temps restant'},
- st_roam:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)'},
- chan_pfx:{de:'Kanal ',en:'Channel ',fr:'Canal '},
- on:{de:'AN',en:'ON',fr:'MARCHE'},
- off:{de:'AUS',en:'OFF',fr:'ARRÊT'},
- ein:{de:'EIN',en:'ON',fr:'MARCHE'},
- aus:{de:'AUS',en:'OFF',fr:'ARRÊT'},
- run:{de:'läuft – Taster',en:'running – button',fr:'actif – bouton'},
- ready:{de:'bereit',en:'ready',fr:'prêt'},
- notconn:{de:'nicht verbunden',en:'not connected',fr:'non connecté'},
- wifi_up:{de:'verbunden',en:'connected',fr:'connecté'},
- wifi_down:{de:'getrennt',en:'disconnected',fr:'déconnecté'},
- rst_poweron:{de:'Power-On',en:'Power-on',fr:'Mise sous tension'},
- rst_sw:{de:'Software',en:'Software',fr:'Logiciel'},
- rst_panic:{de:'Panik',en:'Panic',fr:'Panique'},
- rst_wdt:{de:'Watchdog',en:'Watchdog',fr:'Watchdog'},
- rst_brownout:{de:'Unterspannung',en:'Brownout',fr:'Sous-tension'},
- rst_deepsleep:{de:'Deep-Sleep',en:'Deep sleep',fr:'Veille profonde'},
- rst_unknown:{de:'unbekannt',en:'unknown',fr:'inconnu'},
- t_saved:{de:'Gespeichert',en:'Saved',fr:'Enregistré'},
- t_error:{de:'Fehler',en:'Error',fr:'Erreur'},
- t_wifi_saved:{de:'WLAN gespeichert',en:'Wi-Fi saved',fr:'Wi-Fi enregistré'},
- t_saved_reboot:{de:'Gespeichert – Neustart nötig',en:'Saved – restart required',fr:'Enregistré – redémarrage requis'},
- t_ntp_saved:{de:'NTP gespeichert',en:'NTP saved',fr:'NTP enregistré'},
- t_host_saved:{de:'Hostname gespeichert',en:'Hostname saved',fr:'Nom d’hôte enregistré'},
- t_roam_on:{de:'Roaming aktiviert',en:'Roaming enabled',fr:'Itinérance activée'},
- t_roam_off:{de:'Roaming aus',en:'Roaming off',fr:'Itinérance désactivée'},
- t_reboot:{de:'Neustart …',en:'Restarting …',fr:'Redémarrage …'},
- t_reconnect:{de:'Verbinde neu … (kurz offline)',en:'Reconnecting … (briefly offline)',fr:'Reconnexion … (hors ligne un instant)'},
- t_nofile:{de:'Keine Datei gewählt',en:'No file selected',fr:'Aucun fichier sélectionné'},
- t_uploading:{de:'Lade hoch … Gerät nicht trennen.',en:'Uploading … do not disconnect.',fr:'Téléversement … ne pas déconnecter.'},
- t_uploaded:{de:'Übertragen – Gerät startet neu.',en:'Transferred – device restarting.',fr:'Transféré – l’appareil redémarre.'},
- t_upload_disc:{de:'Verbindung getrennt (vermutlich Neustart nach Update).',en:'Connection lost (probably a restart after the update).',fr:'Connexion perdue (probablement un redémarrage après la mise à jour).'},
- c_reboot:{de:'Gerät jetzt neu starten?',en:'Restart the device now?',fr:'Redémarrer l’appareil maintenant ?'},
- c_reconnect:{de:'WLAN jetzt neu verbinden? Die Seite ist kurz offline.',en:'Reconnect Wi-Fi now? The page will be briefly offline.',fr:'Reconnecter le Wi-Fi maintenant ? La page sera hors ligne un instant.'}
+ btn:{de:'Taster',en:'Button',fr:'Bouton',nl:'Knop',es:'Botón',it:'Pulsante'},
+ stop:{de:'Stopp',en:'Stop',fr:'Arrêt',nl:'Stop',es:'Parar',it:'Stop'},
+ lang_label:{de:'Sprache',en:'Language',fr:'Langue',nl:'Taal',es:'Idioma',it:'Lingua'},
+ cfg_t1:{de:'Zeit Taster 1 (Sekunden)',en:'Time button 1 (seconds)',fr:'Durée bouton 1 (secondes)',nl:'Tijd knop 1 (seconden)',es:'Tiempo botón 1 (segundos)',it:'Durata pulsante 1 (secondi)'},
+ cfg_t2:{de:'Zeit Taster 2 (Sekunden)',en:'Time button 2 (seconds)',fr:'Durée bouton 2 (secondes)',nl:'Tijd knop 2 (seconden)',es:'Tiempo botón 2 (segundos)',it:'Durata pulsante 2 (secondi)'},
+ cfg_t3:{de:'Zeit Taster 3 (Sekunden)',en:'Time button 3 (seconds)',fr:'Durée bouton 3 (secondes)',nl:'Tijd knop 3 (seconden)',es:'Tiempo botón 3 (segundos)',it:'Durata pulsante 3 (secondi)'},
+ save:{de:'Speichern',en:'Save',fr:'Enregistrer',nl:'Opslaan',es:'Guardar',it:'Salva'},
+ wifi_t:{de:'WLAN',en:'Wi-Fi',fr:'Wi-Fi',nl:'Wi-Fi',es:'Wi-Fi',it:'Wi-Fi'},
+ cur:{de:'Aktuell verbunden',en:'Currently connected',fr:'Connecté actuellement',nl:'Nu verbonden',es:'Conectado actualmente',it:'Connesso attualmente'},
+ wifi_switch:{de:'Auf anderes WLAN wechseln – Netzwerkname (SSID)',en:'Switch to another Wi-Fi – network name (SSID)',fr:'Changer de Wi-Fi – nom du réseau (SSID)',nl:'Wisselen naar ander Wi-Fi-netwerk – netwerknaam (SSID)',es:'Cambiar a otra Wi-Fi – nombre de red (SSID)',it:'Passa a un’altra rete Wi-Fi – nome rete (SSID)'},
+ pw:{de:'Passwort',en:'Password',fr:'Mot de passe',nl:'Wachtwoord',es:'Contraseña',it:'Password'},
+ wifi_save:{de:'WLAN speichern & verbinden',en:'Save Wi-Fi & connect',fr:'Enregistrer le Wi-Fi et connecter',nl:'Wi-Fi opslaan & verbinden',es:'Guardar Wi-Fi y conectar',it:'Salva Wi-Fi e connetti'},
+ ipcfg:{de:'IP-Konfiguration',en:'IP configuration',fr:'Configuration IP',nl:'IP-configuratie',es:'Configuración IP',it:'Configurazione IP'},
+ mode:{de:'Modus',en:'Mode',fr:'Mode',nl:'Modus',es:'Modo',it:'Modalità'},
+ dhcp:{de:'DHCP (automatisch)',en:'DHCP (automatic)',fr:'DHCP (automatique)',nl:'DHCP (automatisch)',es:'DHCP (automático)',it:'DHCP (automatico)'},
+ ipstatic:{de:'Statisch',en:'Static',fr:'Statique',nl:'Statisch',es:'Estática',it:'Statico'},
+ ip:{de:'IP-Adresse',en:'IP address',fr:'Adresse IP',nl:'IP-adres',es:'Dirección IP',it:'Indirizzo IP'},
+ sn:{de:'Subnetzmaske',en:'Subnet mask',fr:'Masque de sous-réseau',nl:'Subnetmasker',es:'Máscara de subred',it:'Maschera di sottorete'},
+ dns:{de:'DNS-Server',en:'DNS server',fr:'Serveur DNS',nl:'DNS-server',es:'Servidor DNS',it:'Server DNS'},
+ ip_save:{de:'IP-Konfig speichern',en:'Save IP config',fr:'Enregistrer la config IP',nl:'IP-configuratie opslaan',es:'Guardar configuración IP',it:'Salva config IP'},
+ ntp_t:{de:'NTP-Zeitserver',en:'NTP time server',fr:'Serveur de temps NTP',nl:'NTP-tijdserver',es:'Servidor de hora NTP',it:'Server orario NTP'},
+ server:{de:'Server',en:'Server',fr:'Serveur',nl:'Server',es:'Servidor',it:'Server'},
+ ntp_save:{de:'NTP speichern',en:'Save NTP',fr:'Enregistrer NTP',nl:'NTP opslaan',es:'Guardar NTP',it:'Salva NTP'},
+ host_t:{de:'Hostname',en:'Hostname',fr:'Nom d’hôte',nl:'Hostnaam',es:'Nombre de host',it:'Nome host'},
+ host_l:{de:'Gerätename (a–z, 0–9, „-")',en:'Device name (a–z, 0–9, "-")',fr:'Nom de l’appareil (a–z, 0–9, « - »)',nl:'Apparaatnaam (a–z, 0–9, „-")',es:'Nombre del dispositivo (a–z, 0–9, «-»)',it:'Nome dispositivo (a–z, 0–9, «-»)'},
+ host_save:{de:'Hostname speichern',en:'Save hostname',fr:'Enregistrer le nom d’hôte',nl:'Hostnaam opslaan',es:'Guardar nombre de host',it:'Salva nome host'},
+ host_note:{de:'Der mDNS-Name (….local) wird sofort umgestellt; der DHCP-Name (Router) und eine statische IP nach einem Neustart.',en:'The mDNS name (….local) changes immediately; the DHCP name (router) and a static IP after a restart.',fr:'Le nom mDNS (….local) change aussitôt ; le nom DHCP (routeur) et une IP statique après un redémarrage.',nl:'De mDNS-naam (….local) wordt meteen aangepast; de DHCP-naam (router) en een statisch IP-adres na een herstart.',es:'El nombre mDNS (….local) se cambia de inmediato; el nombre DHCP (router) y una IP estática, tras un reinicio.',it:'Il nome mDNS (….local) viene aggiornato subito; il nome DHCP (router) e un IP statico dopo un riavvio.'},
+ reboot:{de:'Neustart',en:'Restart',fr:'Redémarrer',nl:'Herstart',es:'Reiniciar',it:'Riavvio'},
+ roam_t:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)',nl:'Wi-Fi-roaming (802.11k/v)',es:'Itinerancia Wi-Fi (802.11k/v)',it:'Roaming Wi-Fi (802.11k/v)'},
+ roam_chk:{de:'BTM/RRM aktivieren',en:'Enable BTM/RRM',fr:'Activer BTM/RRM',nl:'BTM/RRM inschakelen',es:'Activar BTM/RRM',it:'Attiva BTM/RRM'},
+ roam_note:{de:'Nur bei mehreren Access-Points mit gleicher SSID sinnvoll (z. B. UniFi/Mesh): Der Router kann das Gerät gezielt auf den stärkeren AP umbuchen (802.11v BTM) und nutzt Nachbar-Listen (802.11k RRM). Aus = klassisches ESPHome-Scan-Roaming.',en:'Useful only with several access points sharing the same SSID (e.g. UniFi/Mesh): the router can steer the device to the stronger AP (802.11v BTM) and uses neighbor lists (802.11k RRM). Off = classic ESPHome scan roaming.',fr:'Utile seulement avec plusieurs points d’accès de même SSID (p. ex. UniFi/Mesh) : le routeur peut basculer l’appareil vers le point d’accès le plus fort (802.11v BTM) et utilise les listes de voisins (802.11k RRM). Désactivé = itinérance classique par scan d’ESPHome.',nl:'Alleen zinvol bij meerdere access points met dezelfde SSID (bijv. UniFi/mesh): de router kan het apparaat gericht naar het sterkere AP overzetten (802.11v BTM) en gebruikt buurlijsten (802.11k RRM). Uit = klassiek ESPHome-scanroaming.',es:'Solo tiene sentido con varios puntos de acceso con el mismo SSID (p. ej. UniFi/Mesh): el router puede pasar el dispositivo al AP más fuerte (802.11v BTM) y usa listas de vecinos (802.11k RRM). Desactivado = itinerancia clásica por escaneo de ESPHome.',it:'Utile solo con più access point con lo stesso SSID (ad es. UniFi/Mesh): il router può spostare il dispositivo sull’AP più forte (802.11v BTM) e usa le liste dei vicini (802.11k RRM). Disattivato = roaming classico basato su scansione di ESPHome.'},
+ recon:{de:'Jetzt neu verbinden',en:'Reconnect now',fr:'Reconnecter maintenant',nl:'Nu opnieuw verbinden',es:'Reconectar ahora',it:'Riconnetti ora'},
+ recon_note:{de:'Übernimmt die Roaming-Einstellung sofort. Das WLAN trennt dafür kurz – die Seite ist ein paar Sekunden nicht erreichbar.',en:'Applies the roaming setting immediately. Wi-Fi briefly disconnects – the page is unreachable for a few seconds.',fr:'Applique aussitôt le réglage d’itinérance. Le Wi-Fi se coupe brièvement – la page est injoignable quelques secondes.',nl:'Past de roaminginstelling meteen toe. De Wi-Fi wordt daarvoor kort verbroken – de pagina is een paar seconden niet bereikbaar.',es:'Aplica de inmediato el ajuste de itinerancia. El Wi-Fi se desconecta brevemente – la página no estará disponible durante unos segundos.',it:'Applica subito l’impostazione di roaming. Il Wi-Fi si disconnette brevemente – la pagina non sarà raggiungibile per qualche secondo.'},
+ log_t:{de:'Log / Debug',en:'Log / Debug',fr:'Journal / Débogage',nl:'Log / Debug',es:'Registro / Depuración',it:'Log / Debug'},
+ log_lvl:{de:'Anzeige-Stufe',en:'Display level',fr:'Niveau d’affichage',nl:'Weergaveniveau',es:'Nivel de visualización',it:'Livello di visualizzazione'},
+ log_live:{de:'Live-Anzeige aktivieren',en:'Enable live view',fr:'Activer l’affichage en direct',nl:'Live-weergave inschakelen',es:'Activar vista en directo',it:'Attiva visualizzazione live'},
+ log_clear:{de:'Anzeige leeren',en:'Clear view',fr:'Effacer l’affichage',nl:'Weergave wissen',es:'Borrar vista',it:'Svuota visualizzazione'},
+ ota_t:{de:'Firmware-Update (OTA)',en:'Firmware update (OTA)',fr:'Mise à jour du firmware (OTA)',nl:'Firmware-update (OTA)',es:'Actualización de firmware (OTA)',it:'Aggiornamento firmware (OTA)'},
+ ota_note:{de:'Kompilierte .bin hochladen (bei ESPHome die firmware.bin aus dem Build). Das Gerät startet danach neu. Alternativ per Netzwerk: esphome run (Port 3232).',en:'Upload a compiled .bin (for ESPHome, the firmware.bin from the build). The device restarts afterwards. Alternatively over the network: esphome run (port 3232).',fr:'Téléverser un .bin compilé (pour ESPHome, le firmware.bin du build). L’appareil redémarre ensuite. Sinon par le réseau : esphome run (port 3232).',nl:'Gecompileerde .bin uploaden (bij ESPHome de firmware.bin uit de build). Het apparaat herstart daarna. Ook mogelijk via het netwerk: esphome run (poort 3232).',es:'Sube un .bin compilado (en ESPHome, el firmware.bin del build). El dispositivo se reinicia después. Alternativa por red: esphome run (puerto 3232).',it:'Carica un .bin compilato (per ESPHome il firmware.bin generato dalla build). Il dispositivo si riavvia poi automaticamente. In alternativa via rete: esphome run (porta 3232).'},
+ ota_btn:{de:'Hochladen & aktualisieren',en:'Upload & update',fr:'Téléverser et mettre à jour',nl:'Uploaden & bijwerken',es:'Subir y actualizar',it:'Carica e aggiorna'},
+ device:{de:'Gerät',en:'Device',fr:'Appareil',nl:'Apparaat',es:'Dispositivo',it:'Dispositivo'},
+ manual:{de:'📖 Handbuch',en:'📖 Manual',fr:'📖 Manuel',nl:'📖 Handleiding',es:'📖 Manual',it:'📖 Manuale'},
+ nav_start:{de:'Start',en:'Start',fr:'Accueil',nl:'Start',es:'Inicio',it:'Home'},
+ nav_cfg:{de:'Zeiten',en:'Times',fr:'Durées',nl:'Tijden',es:'Tiempos',it:'Durate'},
+ nav_net:{de:'Netzwerk',en:'Network',fr:'Réseau',nl:'Netwerk',es:'Red',it:'Rete'},
+ nav_stat:{de:'Status',en:'Status',fr:'État',nl:'Status',es:'Estado',it:'Stato'},
+ nav_svc:{de:'Service',en:'Service',fr:'Service',nl:'Service',es:'Servicio',it:'Service'},
+ st_ver:{de:'Version',en:'Version',fr:'Version',nl:'Versie',es:'Versión',it:'Versione'},
+ st_fw:{de:'Firmware',en:'Firmware',fr:'Firmware',nl:'Firmware',es:'Firmware',it:'Firmware'},
+ st_uptime:{de:'Laufzeit',en:'Uptime',fr:'Durée de service',nl:'Looptijd',es:'Tiempo de actividad',it:'Tempo di funzionamento'},
+ st_heap:{de:'Freier Speicher',en:'Free memory',fr:'Mémoire libre',nl:'Vrij geheugen',es:'Memoria libre',it:'Memoria libera'},
+ st_wifi:{de:'WLAN',en:'Wi-Fi',fr:'Wi-Fi',nl:'Wi-Fi',es:'Wi-Fi',it:'Wi-Fi'},
+ st_ssid:{de:'SSID',en:'SSID',fr:'SSID',nl:'SSID',es:'SSID',it:'SSID'},
+ st_chansig:{de:'Kanal / Signal',en:'Channel / signal',fr:'Canal / signal',nl:'Kanaal / signaal',es:'Canal / señal',it:'Canale / segnale'},
+ st_host:{de:'Hostname',en:'Hostname',fr:'Nom d’hôte',nl:'Hostnaam',es:'Nombre de host',it:'Nome host'},
+ st_ip:{de:'IP-Adresse',en:'IP address',fr:'Adresse IP',nl:'IP-adres',es:'Dirección IP',it:'Indirizzo IP'},
+ st_mac:{de:'MAC',en:'MAC',fr:'MAC',nl:'MAC',es:'MAC',it:'MAC'},
+ st_ap:{de:'Setup-AP',en:'Setup AP',fr:'Point d’accès de config',nl:'Setup-AP',es:'AP de configuración',it:'AP di configurazione'},
+ st_reset:{de:'Reset-Grund',en:'Reset reason',fr:'Cause du redémarrage',nl:'Resetoorzaak',es:'Motivo de reinicio',it:'Causa del riavvio'},
+ st_relay:{de:'Relais',en:'Relay',fr:'Relais',nl:'Relais',es:'Relé',it:'Relè'},
+ st_rem:{de:'Restzeit',en:'Remaining',fr:'Temps restant',nl:'Resterende tijd',es:'Tiempo restante',it:'Tempo rimanente'},
+ st_roam:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)',nl:'Wi-Fi-roaming (802.11k/v)',es:'Itinerancia Wi-Fi (802.11k/v)',it:'Roaming Wi-Fi (802.11k/v)'},
+ chan_pfx:{de:'Kanal ',en:'Channel ',fr:'Canal ',nl:'Kanaal ',es:'Canal ',it:'Canale '},
+ on:{de:'AN',en:'ON',fr:'MARCHE',nl:'AAN',es:'ON',it:'ON'},
+ off:{de:'AUS',en:'OFF',fr:'ARRÊT',nl:'UIT',es:'OFF',it:'OFF'},
+ ein:{de:'EIN',en:'ON',fr:'MARCHE',nl:'AAN',es:'ON',it:'ON'},
+ aus:{de:'AUS',en:'OFF',fr:'ARRÊT',nl:'UIT',es:'OFF',it:'OFF'},
+ run:{de:'läuft – Taster',en:'running – button',fr:'actif – bouton',nl:'actief – knop',es:'en marcha – botón',it:'in corso – pulsante'},
+ ready:{de:'bereit',en:'ready',fr:'prêt',nl:'klaar',es:'listo',it:'pronto'},
+ notconn:{de:'nicht verbunden',en:'not connected',fr:'non connecté',nl:'niet verbonden',es:'no conectado',it:'non connesso'},
+ wifi_up:{de:'verbunden',en:'connected',fr:'connecté',nl:'verbonden',es:'conectado',it:'connesso'},
+ wifi_down:{de:'getrennt',en:'disconnected',fr:'déconnecté',nl:'verbroken',es:'desconectado',it:'disconnesso'},
+ rst_poweron:{de:'Power-On',en:'Power-on',fr:'Mise sous tension',nl:'Power-on',es:'Encendido',it:'Accensione'},
+ rst_sw:{de:'Software',en:'Software',fr:'Logiciel',nl:'Software',es:'Software',it:'Software'},
+ rst_panic:{de:'Panik',en:'Panic',fr:'Panique',nl:'Paniek',es:'Pánico',it:'Panico'},
+ rst_wdt:{de:'Watchdog',en:'Watchdog',fr:'Watchdog',nl:'Watchdog',es:'Watchdog',it:'Watchdog'},
+ rst_brownout:{de:'Unterspannung',en:'Brownout',fr:'Sous-tension',nl:'Onderspanning',es:'Caída de tensión',it:'Sottotensione'},
+ rst_deepsleep:{de:'Deep-Sleep',en:'Deep sleep',fr:'Veille profonde',nl:'Deep sleep',es:'Reposo profundo',it:'Sospensione profonda'},
+ rst_unknown:{de:'unbekannt',en:'unknown',fr:'inconnu',nl:'onbekend',es:'desconocido',it:'sconosciuto'},
+ t_saved:{de:'Gespeichert',en:'Saved',fr:'Enregistré',nl:'Opgeslagen',es:'Guardado',it:'Salvato'},
+ t_error:{de:'Fehler',en:'Error',fr:'Erreur',nl:'Fout',es:'Error',it:'Errore'},
+ t_wifi_saved:{de:'WLAN gespeichert',en:'Wi-Fi saved',fr:'Wi-Fi enregistré',nl:'Wi-Fi opgeslagen',es:'Wi-Fi guardado',it:'Wi-Fi salvato'},
+ t_saved_reboot:{de:'Gespeichert – Neustart nötig',en:'Saved – restart required',fr:'Enregistré – redémarrage requis',nl:'Opgeslagen – herstart nodig',es:'Guardado – reinicio necesario',it:'Salvato – riavvio necessario'},
+ t_ntp_saved:{de:'NTP gespeichert',en:'NTP saved',fr:'NTP enregistré',nl:'NTP opgeslagen',es:'NTP guardado',it:'NTP salvato'},
+ t_host_saved:{de:'Hostname gespeichert',en:'Hostname saved',fr:'Nom d’hôte enregistré',nl:'Hostnaam opgeslagen',es:'Nombre de host guardado',it:'Nome host salvato'},
+ t_roam_on:{de:'Roaming aktiviert',en:'Roaming enabled',fr:'Itinérance activée',nl:'Roaming ingeschakeld',es:'Itinerancia activada',it:'Roaming attivato'},
+ t_roam_off:{de:'Roaming aus',en:'Roaming off',fr:'Itinérance désactivée',nl:'Roaming uit',es:'Itinerancia desactivada',it:'Roaming disattivato'},
+ t_reboot:{de:'Neustart …',en:'Restarting …',fr:'Redémarrage …',nl:'Herstart …',es:'Reiniciando …',it:'Riavvio …'},
+ t_reconnect:{de:'Verbinde neu … (kurz offline)',en:'Reconnecting … (briefly offline)',fr:'Reconnexion … (hors ligne un instant)',nl:'Opnieuw verbinden … (kort offline)',es:'Reconectando … (fuera de línea un momento)',it:'Riconnessione … (offline per un istante)'},
+ t_nofile:{de:'Keine Datei gewählt',en:'No file selected',fr:'Aucun fichier sélectionné',nl:'Geen bestand gekozen',es:'No se ha seleccionado ningún archivo',it:'Nessun file selezionato'},
+ t_uploading:{de:'Lade hoch … Gerät nicht trennen.',en:'Uploading … do not disconnect.',fr:'Téléversement … ne pas déconnecter.',nl:'Uploaden … apparaat niet loskoppelen.',es:'Subiendo … no desconectes el dispositivo.',it:'Caricamento … non scollegare il dispositivo.'},
+ t_uploaded:{de:'Übertragen – Gerät startet neu.',en:'Transferred – device restarting.',fr:'Transféré – l’appareil redémarre.',nl:'Overgedragen – apparaat herstart.',es:'Transferido – el dispositivo se está reiniciando.',it:'Trasferito – il dispositivo si riavvia.'},
+ t_upload_disc:{de:'Verbindung getrennt (vermutlich Neustart nach Update).',en:'Connection lost (probably a restart after the update).',fr:'Connexion perdue (probablement un redémarrage après la mise à jour).',nl:'Verbinding verbroken (waarschijnlijk een herstart na de update).',es:'Conexión perdida (probablemente un reinicio tras la actualización).',it:'Connessione persa (probabilmente riavvio dopo l’aggiornamento).'},
+ c_reboot:{de:'Gerät jetzt neu starten?',en:'Restart the device now?',fr:'Redémarrer l’appareil maintenant ?',nl:'Apparaat nu herstarten?',es:'¿Reiniciar el dispositivo ahora?',it:'Riavviare il dispositivo ora?'},
+ c_reconnect:{de:'WLAN jetzt neu verbinden? Die Seite ist kurz offline.',en:'Reconnect Wi-Fi now? The page will be briefly offline.',fr:'Reconnecter le Wi-Fi maintenant ? La page sera hors ligne un instant.',nl:'Wi-Fi nu opnieuw verbinden? De pagina is kort offline.',es:'¿Reconectar el Wi-Fi ahora? La página quedará fuera de línea un momento.',it:'Riconnettere il Wi-Fi ora? La pagina sarà offline per un istante.'}
 };
 function tr(k){var e=T[k];return e?(e[LANG]||e.de):k;}
 function twifi(c){return tr('wifi_'+c);}
@@ -298,7 +301,7 @@ function applyStatic(){document.documentElement.lang=LANG;
  var els=document.querySelectorAll('[data-i18n]');
  for(var i=0;i<els.length;i++)els[i].textContent=tr(els[i].getAttribute('data-i18n'));
  var ls=$('langsel');if(ls)ls.value=LANG;}
-function setLang(l){if(l!='de'&&l!='en'&&l!='fr')l='de';LANG=l;applyStatic();}
+function setLang(l){if(['de','en','fr','nl','es','it'].indexOf(l)<0)l='de';LANG=l;applyStatic();}
 function changeLang(){var l=$('langsel').value;setLang(l);api('/api/net?lang='+l,'POST');refresh();}
 function nav(p){['start','cfg','net','stat','svc'].forEach(function(x){$('p_'+x).classList.toggle('hide',x!=p)});
  var a=document.querySelectorAll('nav a');for(var i=0;i<a.length;i++)a[i].classList.toggle('act',a[i].dataset.p==p);
@@ -497,13 +500,14 @@ class TimerWebHandler : public AsyncWebHandler {
       return;
     }
     if (u == "/help") {                       // eingebettetes Handbuch (offline)
-      int L = esphome::netcfg_lang_idx();      // 0=de,1=en,2=fr (Geraetesprache)
+      int L = esphome::netcfg_lang_idx();      // 0=de,1=en,2=fr,3=nl,4=es,5=it
       if (req->hasParam("lang")) {
         const std::string lv = req->getParam("lang")->value();
-        if (lv == "de") L = 0; else if (lv == "en") L = 1; else if (lv == "fr") L = 2;
+        for (uint8_t i = 0; i < NETCFG_LANG_N; i++)
+          if (lv == NETCFG_LANGS[i]) { L = i; break; }
       }
-      const char *page = (L == 1) ? HELP_EN : (L == 2) ? HELP_FR : HELP_DE;
-      req->send(200, "text/html", page);
+      static const char *const pages[] = {HELP_DE, HELP_EN, HELP_FR, HELP_NL, HELP_ES, HELP_IT};
+      req->send(200, "text/html", pages[L]);
       return;
     }
     if (u == "/api/trigger") {

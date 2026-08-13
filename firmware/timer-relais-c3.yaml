@@ -364,15 +364,15 @@ display:
       }
       if (!conn) it.line(0, 1, 11, 9);
 
-      // Sprache (0=de,1=en,2=fr); OLED-Texte bewusst akzentfrei (Font-Glyphsatz)
+      // Sprache (0=de,1=en,2=fr,3=nl,4=es,5=it); OLED-Texte bewusst akzentfrei
       int L = esphome::netcfg_lang_idx();
       if (id(ui_mode) == 1) {
         // ----- Menue: Info-Seiten (nur Ansicht) -----
-        static const char *const M_WIFI[]  = {"WLAN", "Wi-Fi", "Wi-Fi"};
-        static const char *const M_IP[]    = {"IP-Adresse", "IP address", "Adresse IP"};
-        static const char *const M_TIME[]  = {"Zeit / NTP", "Time / NTP", "Heure / NTP"};
-        static const char *const M_SYS[]   = {"System", "System", "Systeme"};
-        static const char *const M_NOSYNC[]= {"nicht synchron", "not synced", "non synchro"};
+        static const char *const M_WIFI[]  = {"WLAN", "Wi-Fi", "Wi-Fi", "Wi-Fi", "Wi-Fi", "Wi-Fi"};
+        static const char *const M_IP[]    = {"IP-Adresse", "IP address", "Adresse IP", "IP-adres", "Direccion IP", "Indirizzo IP"};
+        static const char *const M_TIME[]  = {"Zeit / NTP", "Time / NTP", "Heure / NTP", "Tijd / NTP", "Hora / NTP", "Ora / NTP"};
+        static const char *const M_SYS[]   = {"System", "System", "Systeme", "Systeem", "Sistema", "Sistema"};
+        static const char *const M_NOSYNC[]= {"nicht synchron", "not synced", "non synchro", "niet gesync.", "sin sincron.", "non sincron."};
         int pg = id(menu_page);
         it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%d/4", pg + 1);
         if (pg == 0) {
@@ -403,8 +403,8 @@ display:
 
       // ----- Normalzustand (kompakt): oben Uhr/Countdown (Mitte) + Status (rechts);
       //        unten Datum (links) + freier Speicher (rechts) -----
-      static const char *const ST_FEED[] = {"Futter", "Feed", "Repas"};
-      static const char *const ST_IDLE[] = {"Ruhe", "Idle", "Repos"};
+      static const char *const ST_FEED[] = {"Futter", "Feed", "Repas", "Voer", "Comida", "Cibo"};
+      static const char *const ST_IDLE[] = {"Ruhe", "Idle", "Repos", "Rust", "Reposo", "Riposo"};
       const char *st = (id(remaining) > 0 || id(shelly_trigger).state) ? ST_FEED[L] : ST_IDLE[L];
       it.printf(128, 0, id(font_small), TextAlign::TOP_RIGHT, "%s", st);
       auto t = id(sntp_time).now();
@@ -419,7 +419,10 @@ display:
         static const char *const WD_DE[] = {"", "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"};
         static const char *const WD_EN[] = {"", "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"};
         static const char *const WD_FR[] = {"", "Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"};
-        static const char *const *const WD_ALL[] = {WD_DE, WD_EN, WD_FR};
+        static const char *const WD_NL[] = {"", "Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"};
+        static const char *const WD_ES[] = {"", "Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"};
+        static const char *const WD_IT[] = {"", "Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"};
+        static const char *const *const WD_ALL[] = {WD_DE, WD_EN, WD_FR, WD_NL, WD_ES, WD_IT};
         const char *const *WD = WD_ALL[L];
         it.printf(0, 31, id(font_small), TextAlign::BASELINE_LEFT, "%s %02d.%02d.%04d",
                   WD[t.day_of_week], (int) t.day_of_month, (int) t.month, (int) t.year);

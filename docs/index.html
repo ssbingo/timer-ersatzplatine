@@ -155,9 +155,14 @@
   .kapitel, .umbruch, table.umbruch, .vorspann, .toc, #inhalt { break-before: auto !important; }
   body { padding-bottom: 24px; }
 }
+.langbar { position: sticky; top: 0; z-index: 100; background: #0e7490;
+  padding: 7px 10px; text-align: center; font: 14px system-ui, sans-serif; }
+.langbar a { color: #cffafe; text-decoration: none; margin: 0 7px; }
+.langbar a.on { color: #fff; font-weight: 700; text-decoration: underline; }
 </style>
 </head>
 <body>
+<div class=langbar><a class=on href="index.html">🇩🇪 DE</a> <a href="en.html">🇬🇧 EN</a> <a href="fr.html">🇫🇷 FR</a> <a href="nl.html">🇳🇱 NL</a> <a href="es.html">🇪🇸 ES</a> <a href="it.html">🇮🇹 IT</a></div>
 <div class="fusssteg">
   <span class="links">© 2026 S. Sternitzke · CC BY-NC-SA 4.0</span>
   <span class="mitte"><a href="#inhalt">↑ Inhaltsverzeichnis</a></span>

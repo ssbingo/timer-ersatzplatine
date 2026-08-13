@@ -68,3 +68,6 @@ box/view_*.png
 .DS_Store
 Thumbs.db
 docs/handbuch/mk_pages.py
+
+# Dictionary-Uebersetzungs-Inputs (in timer_web.h gemergt, nicht mehr noetig)
+firmware/dict_*.json

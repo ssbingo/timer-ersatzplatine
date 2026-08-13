@@ -1,5 +1,9 @@
 # Feeder-Relais
 
+<p align="center">
+  <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
+</p>
+
 **Control de temporizador de 230 V para autoconstrucción — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 externo**
 
 El Feeder-Relais es una placa de control autoconstruida que enciende una carga
@@ -31,14 +35,14 @@ aislamiento galvánico**. Gracias a ello, la función principal es
 
 ## 🌍 Sprachen · Languages
 
-| Sprache | README | Handbuch (PDF) |
-|--------|--------|----------------|
-| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) |
-| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) |
-| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) |
-| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) |
-| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) |
-| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) |
+| Sprache | README | Handbuch (PDF) | 🌐 Online |
+|--------|--------|----------------|--------|
+| 🇩🇪 **Deutsch** (Original) | [README.md](README.md) | [docs/handbuch/Feeder-Relais-Handbuch.pdf](docs/handbuch/Feeder-Relais-Handbuch.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/) |
+| 🇬🇧 English | [docs/en/README.md](docs/en/README.md) | [docs/en/Feeder-Relais-Manual.pdf](docs/en/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/en.html) |
+| 🇫🇷 Français | [docs/fr/README.md](docs/fr/README.md) | [docs/fr/Feeder-Relais-Manuel.pdf](docs/fr/Feeder-Relais-Manuel.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/fr.html) |
+| 🇳🇱 Nederlands | [docs/nl/README.md](docs/nl/README.md) | [docs/nl/Feeder-Relais-Handleiding.pdf](docs/nl/Feeder-Relais-Handleiding.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/nl.html) |
+| 🇪🇸 Español | [docs/es/README.md](docs/es/README.md) | [docs/es/Feeder-Relais-Manual.pdf](docs/es/Feeder-Relais-Manual.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/es.html) |
+| 🇮🇹 Italiano | [docs/it/README.md](docs/it/README.md) | [docs/it/Feeder-Relais-Manuale.pdf](docs/it/Feeder-Relais-Manuale.pdf) | [Online](https://ssbingo.github.io/timer-ersatzplatine/it.html) |
 
 ---
 
@@ -142,7 +146,7 @@ el dispositivo no funcionará:
 ### Bornes de conexión y redes
 
 | Borne | Conexión | Asignación |
-|--------|-----------|----------|
+|--------|-----------|------------------|
 | **X1** | Entrada de red | 1 = N, 2 = L_IN (230 V entrante) |
 | **X2** | Salida de carga | 1 = O (conmutado), 2 = N |
 | **X3** | Snubber | 1 = O, 2 = N — red RC opcional para cargas inductivas |
@@ -157,7 +161,7 @@ Shelly-O→X2/X3).
 ### Componentes principales
 
 | Referencia | Componente | Función |
-|---------|---------|----------|
+|---------|---------|------------------|
 | **U1** | ESP32-C3 Super Mini | Microcontrolador con WiFi, 5 V→3,3 V; incorpora el WS2812 en GPIO8 |
 | **K1** | PhotoMOS G3VM-601AY2 (o -601BY / AQY216) | Aislamiento galvánico 3,3 V ↔ 230 V, **≥ 400 V** |
 | **PS1** | Módulo AC/DC TSP-05 (5 V / 3 W) | Fuente de alimentación a partir de L_F + N |
@@ -203,7 +207,7 @@ Las imágenes de flasheo ya preparadas (factory + OTA) se encuentran en
 **En el dispositivo** — tres pulsadores:
 
 | Botón | corta | larga |
-|-------|------|------|
+|-------|------|--------------|
 | **S1** Down/Manual | Activa el temporizador 1 | — |
 | **S2** SET | Activa el temporizador 2 | ≥ 3 s: menú de información (navegar con S1/S3) |
 | **S3** UP | Activa el temporizador 3 | ≥ 1,2 s: detiene todos los temporizadores |

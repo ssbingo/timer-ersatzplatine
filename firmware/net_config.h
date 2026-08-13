@@ -60,15 +60,20 @@ inline void netcfg_load() {
     netcfg_defaults(g_netcfg);
 }
 
-// Nur "de"/"en"/"fr" zulassen, sonst auf "de". Liefert den Index 0/1/2.
+// Erlaubte UI-/OLED-Sprachen in FESTER Reihenfolge; der Index ist zugleich die
+// Spalte in allen Sprach-Tabellen (Web-Dictionary, OLED). Reihenfolge NICHT
+// aendern. Unbekannt -> Index 0 (Deutsch).
+static const char *const NETCFG_LANGS[] = {"de", "en", "fr", "nl", "es", "it"};
+static const uint8_t NETCFG_LANG_N = 6;
 inline uint8_t netcfg_lang_idx() {
-  if (strcmp(g_netcfg.lang, "en") == 0) return 1;
-  if (strcmp(g_netcfg.lang, "fr") == 0) return 2;
+  for (uint8_t i = 1; i < NETCFG_LANG_N; i++)
+    if (strcmp(g_netcfg.lang, NETCFG_LANGS[i]) == 0) return i;
   return 0;
 }
 inline void netcfg_sanitize_lang() {
-  if (strcmp(g_netcfg.lang, "en") != 0 && strcmp(g_netcfg.lang, "fr") != 0)
-    strncpy(g_netcfg.lang, "de", sizeof(g_netcfg.lang) - 1);
+  for (uint8_t i = 0; i < NETCFG_LANG_N; i++)
+    if (strcmp(g_netcfg.lang, NETCFG_LANGS[i]) == 0) return;
+  strncpy(g_netcfg.lang, "de", sizeof(g_netcfg.lang) - 1);
 }
 
 // Auf ein gueltiges DNS-Label reduzieren (a-z 0-9 '-'), Rand-'-' entfernen.
