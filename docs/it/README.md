@@ -4,6 +4,8 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
+> **Origine:** Questo progetto è la conversione di un **SuperFish Fish Feeder** (mangiatoia automatica di [aquadistri.com](https://www.aquadistri.com)) — sostituisce la scheda timer originale difettosa. **Il retro del contenitore e la scheda seguono le dimensioni del controller originale**, così entrambi entrano esattamente nell’alloggiamento esistente.
+
 **Centralina timer 230 V da autocostruire — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 esterno**
 
 Il Feeder-Relais è una scheda di controllo autocostruita che accende un carico

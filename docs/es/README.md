@@ -4,6 +4,8 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
+> **Origen:** Este proyecto es una conversión de un **SuperFish Fish Feeder** (comedero automático de [aquadistri.com](https://www.aquadistri.com)) — sustituye la placa de temporizador original defectuosa. **La parte trasera de la carcasa y la placa siguen las dimensiones del controlador original**, de modo que ambas encajan exactamente en la carcasa existente.
+
 **Control de temporizador de 230 V para autoconstrucción — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 externo**
 
 El Feeder-Relais es una placa de control autoconstruida que enciende una carga
