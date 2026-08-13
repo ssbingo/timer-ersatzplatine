@@ -4,6 +4,8 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
+> **Origine :** Ce projet transforme un **SuperFish Fish Feeder** (distributeur automatique de [aquadistri.com](https://www.aquadistri.com)) — il remplace la carte de minuterie d’origine défectueuse. **Le fond du boîtier et la carte reprennent les dimensions de la commande d’origine**, afin que les deux s’insèrent exactement dans le boîtier existant.
+
 **Commande de minuterie 230 V à construire soi-même — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 externe**
 
 Le Feeder-Relais est une carte de commande faite maison qui met sous tension
