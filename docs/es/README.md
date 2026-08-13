@@ -4,7 +4,7 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
-> **Origen:** Este proyecto es una conversión de un **SuperFish / Koi-Pro Fish Feeder** (comedero automático de Aquadistri — [gama de productos](https://aquadistri.com/de/brands/koi-pro/einrichtung-zubehoer/zubehoer/) · [manual original (PDF)](https://c6f4t2c9.delivery.rocketcdn.me/wp-content/uploads/2023/01/Manual-Koi-ProFishFeeder.pdf)) — sustituye la placa de temporizador original defectuosa. **La parte trasera de la carcasa y la placa siguen las dimensiones del controlador original**, de modo que ambas encajan exactamente en la carcasa existente.
+> **Origen:** Este proyecto es una conversión de un **SuperFish / Koi-Pro Fish Feeder** (comedero automático de Aquadistri — [gama de productos](https://aquadistri.com/de/brands/koi-pro/einrichtung-zubehoer/zubehoer/) · [manual original (PDF)](../Koi-Pro-FishFeeder-Original-Manual.pdf)) — sustituye la placa de temporizador original defectuosa. **La parte trasera de la carcasa y la placa siguen las dimensiones del controlador original**, de modo que ambas encajan exactamente en la carcasa existente.
 
 **Control de temporizador de 230 V para autoconstrucción — ESP32-C3 · OLED · PhotoMOS · Shelly 1PM Mini Gen4 externo**
 
