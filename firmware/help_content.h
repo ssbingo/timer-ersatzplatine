@@ -41,12 +41,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; Zur App</a><span class=sp></span>
- <span class=lang><a class=on href="/help?lang=de">🇩🇪 DE</a> <a href="/help?lang=en">🇬🇧 EN</a> <a href="/help?lang=fr">🇫🇷 FR</a> <a href="/help?lang=nl">🇳🇱 NL</a> <a href="/help?lang=es">🇪🇸 ES</a> <a href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a class=on href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Handbuch</h1>
@@ -216,12 +216,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; To the app</a><span class=sp></span>
- <span class=lang><a href="/help?lang=de">🇩🇪 DE</a> <a class=on href="/help?lang=en">🇬🇧 EN</a> <a href="/help?lang=fr">🇫🇷 FR</a> <a href="/help?lang=nl">🇳🇱 NL</a> <a href="/help?lang=es">🇪🇸 ES</a> <a href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a class=on href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Manual</h1>
@@ -391,12 +391,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; Vers l'appli</a><span class=sp></span>
- <span class=lang><a href="/help?lang=de">🇩🇪 DE</a> <a href="/help?lang=en">🇬🇧 EN</a> <a class=on href="/help?lang=fr">🇫🇷 FR</a> <a href="/help?lang=nl">🇳🇱 NL</a> <a href="/help?lang=es">🇪🇸 ES</a> <a href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a class=on href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Manuel</h1>
@@ -566,12 +566,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; Naar de app</a><span class=sp></span>
- <span class=lang><a href="/help?lang=de">🇩🇪 DE</a> <a href="/help?lang=en">🇬🇧 EN</a> <a href="/help?lang=fr">🇫🇷 FR</a> <a class=on href="/help?lang=nl">🇳🇱 NL</a> <a href="/help?lang=es">🇪🇸 ES</a> <a href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a class=on href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Handleiding</h1>
@@ -741,12 +741,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; A la app</a><span class=sp></span>
- <span class=lang><a href="/help?lang=de">🇩🇪 DE</a> <a href="/help?lang=en">🇬🇧 EN</a> <a href="/help?lang=fr">🇫🇷 FR</a> <a href="/help?lang=nl">🇳🇱 NL</a> <a class=on href="/help?lang=es">🇪🇸 ES</a> <a href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a class=on href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Manual</h1>
@@ -916,12 +916,12 @@ svg{max-width:100%;height:auto}
 .led{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin-right:6px}
 .totop{font-size:13px;color:var(--mut);text-decoration:none}
 kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;font-family:ui-monospace,monospace;font-size:.9em}
-</style></head><body>
+</style><link rel=icon type="image/svg+xml" href="/favicon.svg"><style>.fl{height:.82em;width:auto;border-radius:2px;vertical-align:-.1em;margin-right:.34em;box-shadow:0 0 0 .5px rgba(0,0,0,.28);display:inline-block}</style></head><body>
 <div class=wrap>
 
 <div class=top>
  <a href="/">&larr; All'app</a><span class=sp></span>
- <span class=lang><a href="/help?lang=de">🇩🇪 DE</a> <a href="/help?lang=en">🇬🇧 EN</a> <a href="/help?lang=fr">🇫🇷 FR</a> <a href="/help?lang=nl">🇳🇱 NL</a> <a href="/help?lang=es">🇪🇸 ES</a> <a class=on href="/help?lang=it">🇮🇹 IT</a></span>
+ <span class=lang><a href="/help?lang=de"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="/help?lang=en"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="/help?lang=fr"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="/help?lang=nl"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a href="/help?lang=es"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a class=on href="/help?lang=it"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></span>
 </div>
 
 <h1 id=oben>Feeder-Relais — Manuale</h1>
