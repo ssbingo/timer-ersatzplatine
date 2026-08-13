@@ -19,11 +19,12 @@
 #include <esp_wifi.h>
 #include "net_config.h"
 #include "log_ring.h"
+#include "help_content.h"   // HELP_DE/HELP_EN/HELP_FR (eingebettetes Handbuch)
 #include "esphome/components/wifi/wifi_component.h"
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "2.0.1"
+#define FW_VERSION "2.1.0"
 
 namespace esphome {
 
@@ -178,7 +179,7 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
    <button class=stop style="background:#b45309;margin-top:4px" onclick="reboot()" data-i18n=reboot>Neustart</button>
   </div>
  </section>
- <footer class=foot><a id=manlink href="https://github.com/ssbingo/timer-ersatzplatine/blob/v2.0.1/docs/handbuch/Feeder-Relais-Handbuch.pdf" target=_blank rel=noopener><span data-i18n=manual>Handbuch (PDF)</span> &#8599;</a></footer>
+ <footer class=foot><a href="/help"><span data-i18n=manual>Handbuch</span></a></footer>
 </div>
 
 <nav>
@@ -235,7 +236,7 @@ var T={
  ota_note:{de:'Kompilierte .bin hochladen (bei ESPHome die firmware.bin aus dem Build). Das Gerät startet danach neu. Alternativ per Netzwerk: esphome run (Port 3232).',en:'Upload a compiled .bin (for ESPHome, the firmware.bin from the build). The device restarts afterwards. Alternatively over the network: esphome run (port 3232).',fr:'Téléverser un .bin compilé (pour ESPHome, le firmware.bin du build). L’appareil redémarre ensuite. Sinon par le réseau : esphome run (port 3232).'},
  ota_btn:{de:'Hochladen & aktualisieren',en:'Upload & update',fr:'Téléverser et mettre à jour'},
  device:{de:'Gerät',en:'Device',fr:'Appareil'},
- manual:{de:'Handbuch (PDF)',en:'Manual (PDF)',fr:'Manuel (PDF)'},
+ manual:{de:'📖 Handbuch',en:'📖 Manual',fr:'📖 Manuel'},
  nav_start:{de:'Start',en:'Start',fr:'Accueil'},
  nav_cfg:{de:'Zeiten',en:'Times',fr:'Durées'},
  nav_net:{de:'Netzwerk',en:'Network',fr:'Réseau'},
@@ -290,18 +291,12 @@ var T={
  c_reboot:{de:'Gerät jetzt neu starten?',en:'Restart the device now?',fr:'Redémarrer l’appareil maintenant ?'},
  c_reconnect:{de:'WLAN jetzt neu verbinden? Die Seite ist kurz offline.',en:'Reconnect Wi-Fi now? The page will be briefly offline.',fr:'Reconnecter le Wi-Fi maintenant ? La page sera hors ligne un instant.'}
 };
-// Handbuch-PDF je Sprache (GitHub, Release-Tag = passt exakt zu dieser Firmware).
-var MAN={
- de:'https://github.com/ssbingo/timer-ersatzplatine/blob/v2.0.1/docs/handbuch/Feeder-Relais-Handbuch.pdf',
- en:'https://github.com/ssbingo/timer-ersatzplatine/blob/v2.0.1/docs/en/Feeder-Relais-Manual.pdf',
- fr:'https://github.com/ssbingo/timer-ersatzplatine/blob/v2.0.1/docs/fr/Feeder-Relais-Manuel.pdf'};
 function tr(k){var e=T[k];return e?(e[LANG]||e.de):k;}
 function twifi(c){return tr('wifi_'+c);}
 function treset(c){return tr('rst_'+c);}
 function applyStatic(){document.documentElement.lang=LANG;
  var els=document.querySelectorAll('[data-i18n]');
  for(var i=0;i<els.length;i++)els[i].textContent=tr(els[i].getAttribute('data-i18n'));
- var ml=$('manlink');if(ml)ml.href=MAN[LANG]||MAN.de;
  var ls=$('langsel');if(ls)ls.value=LANG;}
 function setLang(l){if(l!='de'&&l!='en'&&l!='fr')l='de';LANG=l;applyStatic();}
 function changeLang(){var l=$('langsel').value;setLang(l);api('/api/net?lang='+l,'POST');refresh();}
@@ -392,7 +387,7 @@ class TimerWebHandler : public AsyncWebHandler {
   bool canHandle(AsyncWebServerRequest *req) const override {
     char urlbuf[AsyncWebServerRequest::URL_BUF_SIZE];
     const std::string u(req->url_to(urlbuf));
-    return u == "/" || u.rfind("/api/", 0) == 0;
+    return u == "/" || u == "/help" || u.rfind("/api/", 0) == 0;
   }
   bool isRequestHandlerTrivial() const override { return false; }
 
@@ -499,6 +494,16 @@ class TimerWebHandler : public AsyncWebHandler {
     delete[] ub;   // u ist eine Kopie -> Puffer sofort freigeben
     if (u == "/") {
       req->send(200, "text/html", TIMER_INDEX_HTML);
+      return;
+    }
+    if (u == "/help") {                       // eingebettetes Handbuch (offline)
+      int L = esphome::netcfg_lang_idx();      // 0=de,1=en,2=fr (Geraetesprache)
+      if (req->hasParam("lang")) {
+        const std::string lv = req->getParam("lang")->value();
+        if (lv == "de") L = 0; else if (lv == "en") L = 1; else if (lv == "fr") L = 2;
+      }
+      const char *page = (L == 1) ? HELP_EN : (L == 2) ? HELP_FR : HELP_DE;
+      req->send(200, "text/html", page);
       return;
     }
     if (u == "/api/trigger") {
