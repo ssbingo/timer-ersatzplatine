@@ -4,7 +4,7 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
-> **Herkomst:** Dit project is een ombouw van een **SuperFish Fish Feeder** (voederautomaat van [aquadistri.com](https://www.aquadistri.com)) — het vervangt de defecte originele timerprint. **De achterkant van de behuizing en de print volgen de afmetingen van de originele besturing**, zodat beide precies in de bestaande behuizing passen.
+> **Herkomst:** Dit project is een ombouw van een **SuperFish / Koi-Pro Fish Feeder** (voederautomaat van Aquadistri — [productlijn](https://aquadistri.com/de/brands/koi-pro/einrichtung-zubehoer/zubehoer/) · [originele handleiding (PDF)](https://c6f4t2c9.delivery.rocketcdn.me/wp-content/uploads/2023/01/Manual-Koi-ProFishFeeder.pdf)) — het vervangt de defecte originele timerprint. **De achterkant van de behuizing en de print volgen de afmetingen van de originele besturing**, zodat beide precies in de bestaande behuizing passen.
 
 **230V-timerbesturing om zelf te bouwen — ESP32-C3 · OLED · PhotoMOS · externe Shelly 1PM Mini Gen4**
 

@@ -4,7 +4,7 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
-> **Origin:** This project is a conversion of a **SuperFish Fish Feeder** (an automatic feeder by [aquadistri.com](https://www.aquadistri.com)) — it replaces the defective original timer board. **The case back and the PCB follow the dimensions of the original controller**, so both fit exactly into the existing housing.
+> **Origin:** This project is a conversion of a **SuperFish / Koi-Pro Fish Feeder** (an automatic feeder by Aquadistri — [product range](https://aquadistri.com/de/brands/koi-pro/einrichtung-zubehoer/zubehoer/) · [original manual (PDF)](https://c6f4t2c9.delivery.rocketcdn.me/wp-content/uploads/2023/01/Manual-Koi-ProFishFeeder.pdf)) — it replaces the defective original timer board. **The case back and the PCB follow the dimensions of the original controller**, so both fit exactly into the existing housing.
 
 **A DIY 230 V timer controller — ESP32-C3 · OLED · PhotoMOS · external Shelly 1PM Mini Gen4**
 

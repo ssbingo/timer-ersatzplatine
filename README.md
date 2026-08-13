@@ -4,7 +4,7 @@
   <a href="https://www.buymeacoffee.com/ssbingo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=ssbingo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
 </p>
 
-> **Herkunft:** Dieses Projekt ist der Umbau eines **SuperFish Fish Feeder** (Futterautomat von [aquadistri.com](https://www.aquadistri.com)) — die defekte originale Zeitschaltplatine wird ersetzt. **Gehäuse-Rückteil und Platine orientieren sich an den Maßen der Originalsteuerung**, damit beides exakt in das vorhandene Gehäuse passt.
+> **Herkunft:** Dieses Projekt ist der Umbau eines **SuperFish / Koi-Pro Fish Feeder** (Futterautomat von Aquadistri — [Produktreihe](https://aquadistri.com/de/brands/koi-pro/einrichtung-zubehoer/zubehoer/) · [Original-Handbuch (PDF)](https://c6f4t2c9.delivery.rocketcdn.me/wp-content/uploads/2023/01/Manual-Koi-ProFishFeeder.pdf)) — die defekte originale Zeitschaltplatine wird ersetzt. **Gehäuse-Rückteil und Platine orientieren sich an den Maßen der Originalsteuerung**, damit beides exakt in das vorhandene Gehäuse passt.
 
 **230-V-Timer-Steuerung zum Selbstbau — ESP32-C3 · OLED · PhotoMOS · externer Shelly 1PM Mini Gen4**
 
