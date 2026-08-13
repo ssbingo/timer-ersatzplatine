@@ -3313,6 +3313,17 @@
 			(uuid "6c90a023-7c57-425e-a765-6e4bd5fda88c")
 		)
 		(embedded_fonts no)
+		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
+			(offset
+				(xyz 1.75 0 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 90)
+			)
+		)
 	)
 	(footprint "Fuse:Fuseholder_TR5_Littelfuse_No560_No460"
 		(layer "B.Cu")
@@ -4026,6 +4037,17 @@
 			(uuid "7a4437d9-f2d0-4d43-ba88-39556d7f80a2")
 		)
 		(embedded_fonts no)
+		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
+			(offset
+				(xyz 1.75 0 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 90)
+			)
+		)
 	)
 	(footprint "G3VM_601AY2:A-DIP4_THD_OMR"
 		(layer "B.Cu")
@@ -4613,7 +4635,7 @@
 			(uuid "c288bbe5-1413-44e6-a966-164ce2fdee62")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/Homebrew.3dshapes/A-DIP4_THD_OMR.step"
+		(model "${KIPRJMOD}/G3VM_601AY2.3dshapes/A-DIP4_THD_OMR.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -5075,6 +5097,17 @@
 			(uuid "cd0bda47-9226-42d1-8f6e-dc9510e93c9e")
 		)
 		(embedded_fonts no)
+		(model "${KIPRJMOD}/Wago 250.3dshapes/250-204.stp"
+			(offset
+				(xyz 12.3 -5 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 90)
+			)
+		)
 	)
 	(footprint "Converter_ACDC:Converter_ACDC_Hi-Link_HLK-PMxx"
 		(layer "B.Cu")
@@ -6049,6 +6082,17 @@
 			(uuid "34bfbd8b-0651-417f-96b8-0c3b5f7f022a")
 		)
 		(embedded_fonts no)
+		(model "${KIPRJMOD}/Wago 250.3dshapes/250-202.stp"
+			(offset
+				(xyz 1.75 0 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 90)
+			)
+		)
 	)
 	(footprint "Capacitor_THT:C_Radial_D6.3mm_H11.0mm_P2.50mm"
 		(layer "B.Cu")
@@ -6462,7 +6506,7 @@
 			(uuid "30cdcc3f-f009-437c-81b7-692db0117b7d")
 		)
 		(embedded_fonts no)
-		(model "${KICAD10_3DMODEL_DIR}/ESP32-C3-super-mini.3dshapes/ESP32-C3 SuperMini_TH--3DModel-STEP-56544.STEP"
+		(model "${KIPRJMOD}/ESP32-C3-SuperMini.3dshapes/ESP32-C3 SuperMini_TH--3DModel-STEP-56544.STEP"
 			(offset
 				(xyz 0 -1 0)
 			)

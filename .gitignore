@@ -39,8 +39,27 @@ kicad-v2/Timer-Ersatzplatine-v2-BOARD.stl
 # Editor Local History (VSCode-Erweiterung)
 .history/
 
-# Handbuch-Buildreste (venv ist über .venv/ schon erfasst)
+# --- Repo-Policy: im Repo verbleiben als Doku nur die fertigen README.md's
+#     und die Handbuch-PDFs. Alle Hilfsdateien zur Erstellung bleiben lokal. ---
+
+# Technische Arbeitsdokumente (bleiben lokal, weiter pflegen):
+docs/DOKUMENTATION.md
+docs/DOKUMENTATION.pdf
+docs/PROJEKTPLAN.md
+docs/PROJEKTPLAN.pdf
+
+# Handbuch-Bauwerkzeug (bleibt lokal); die fertigen Handbuch-PDFs bleiben getrackt:
+docs/handbuch/*.html
+docs/handbuch/build.sh
+docs/handbuch/direktziele.py
+docs/handbuch/pruefe_*.py
+docs/handbuch/umbrueche.py
 docs/handbuch/umbrueche.log
+docs/handbuch/img/
+docs/img/
+
+# Markdown→PDF-Werkzeug für die lokalen Arbeitsdokumente:
+tools/
 
 # Gehäuse-Vorschaurenders (regenerierbar aus feeder_back.scad)
 box/view_*.png

@@ -3,12 +3,20 @@
 Dieses Repository enthält das **Feeder-Relais** (Board-/Repo-Name
 „Timer-Ersatzplatine"): eine 230-V-Timer-/Schaltplatine mit ESP32-C3, OLED,
 PhotoMOS und **externem** Shelly 1PM Mini Gen4. Maßgeblich ist **Version 2**
-(Elektronik auf der Rückseite, Shelly extern). Vollständiger Kontext:
-`docs/DOKUMENTATION.md` (technische Quelle der Wahrheit) und das
-anfängertaugliche **Handbuch** `docs/handbuch/`. Aufgaben/Status:
-`docs/PROJEKTPLAN.md`.
-**Doku ist bei jeder Änderung mitzupflegen** (Changelog in der Doku Kap. 11,
-Checkboxen/Entscheidungslog im Projektplan).
+(Elektronik auf der Rückseite, Shelly extern).
+
+**Repo-Policy (Nutzervorgabe 2026-08-13):** Im Repo verbleiben als Doku **nur die
+fertigen `README.md`s und die Handbuch-PDFs**. `docs/DOKUMENTATION.md` (technische
+Quelle der Wahrheit) und `docs/PROJEKTPLAN.md` sind **lokale Arbeitsdokumente**
+(nicht mehr eingecheckt, per `.gitignore` ausgenommen) — weiter pflegen, aber
+nicht committen. Ebenso lokal: das gesamte Handbuch-Bauwerkzeug
+(`docs/handbuch/handbuch*.html`, `build.sh`, `direktziele.py`, `pruefe_*.py`,
+`umbrueche.py`, `img/`) und `tools/md2pdf.py`. **Vollständiger Kontext** steht
+weiterhin lokal in `docs/DOKUMENTATION.md` + `docs/PROJEKTPLAN.md`; diese bei
+jeder Änderung mitpflegen (Changelog Doku Kap. 11, Entscheidungslog Projektplan).
+
+**Lizenz:** Das Projekt steht unter **CC BY-NC-SA 4.0** (`LICENSE`); der
+Lizenzabschnitt steht am Ende jeder `README.md`.
 
 ## Grundregeln
 
@@ -45,28 +53,35 @@ Checkboxen/Entscheidungslog im Projektplan).
    praktisch nichts — deshalb liegt in v2 die gesamte Elektronik auf der
    **Rückseite**; vorne nur Taster (SW1–3) und OLED-Buchse (J2).
 
-6. **PDF-Pflicht (zwingend):** Bei JEDER Doku-Änderung neu erzeugen und
-   mitliefern:
+6. **Handbuch-PDFs (committet) bei Handbuch-Änderungen neu erzeugen:**
    ```bash
-   # technische Referenz + Projektplan (Markdown → PDF)
-   pip install markdown weasyprint
-   python3 tools/md2pdf.py docs/DOKUMENTATION.md docs/PROJEKTPLAN.md
-   # Handbuch (HTML → PDF, eigene venv; prüft Nummerierung + Fußsteg)
+   # Deutsch (Standard)
    docs/handbuch/build.sh
+   # eine Übersetzung: build.sh <quelle.html> <ziel.pdf> <Fußsteg-Wort>
+   docs/handbuch/build.sh handbuch.en.html ../en/Feeder-Relais-Manual.pdf Contents
    ```
-   Ein Commit ohne aktuelle PDFs ist unvollständig.
-   **Sprachpolitik:** Die **deutsche** `DOKUMENTATION.md` und das deutsche
-   Handbuch sind die **Quelle der Wahrheit**. Übersetzungen
-   `DOKUMENTATION.en.md`/`.fr.md` werden **je Release** nachgezogen (DE führend).
-   `PROJEKTPLAN.md` bleibt nur Deutsch.
+   `build.sh` prüft Nummerierung + Fußsteg, baut mit **WeasyPrint** und macht die
+   Sprungmarken via `direktziele.py` **klickbar in jedem Viewer** (benannte →
+   direkte Ziele). Lokal (nicht committet) bleiben `DOKUMENTATION.md`/
+   `PROJEKTPLAN.md`; deren PDFs via `python3 tools/md2pdf.py …` nur für den
+   Eigengebrauch.
+   **Sprachpolitik:** Das **deutsche** `README.md` (Root) und das deutsche
+   Handbuch sind die **Quelle der Wahrheit**. Übersetzungen von **README + Handbuch**
+   liegen unter `docs/<sprache>/` für **EN/FR/NL/ES/IT** und werden **je Release**
+   nachgezogen (DE führend). Im Repo landen nur die fertigen `README.md`s +
+   Handbuch-PDFs; die `handbuch.<sprache>.html`-Quellen bleiben lokal.
 
 7. **Doku-Regelwerk (aus ioBroker.asksinanalyzer übernommen):** Das Handbuch
    `docs/handbuch/handbuch.html` wird mit **WeasyPrint** gebaut (nicht Chromium)
    und muss: ein **Inhaltsverzeichnis mit Sprungmarken** am Anfang, auf **jeder
    Seite** einen **Fußsteg mit „↑ Inhaltsverzeichnis"** und feste **Umbruchregeln**
    tragen. Durchgesetzt von `pruefe_nummerierung.py`, `pruefe_fusssteg.py`,
-   `umbrueche.py`. Jedes `h2` trägt eine fortlaufende Nummer `N.M` mit passender
-   `id="kN-M"`. Ziel: **jeder Anfänger kann das Projekt vollständig nachbauen.**
+   `umbrueche.py`; `direktziele.py` macht die Sprungmarken universell klickbar.
+   Diese Skripte sind **sprachparametriert** (Pfad/Fußsteg-Wort als Argument), so
+   dass `build.sh` jede Übersetzung prüft. Jedes `h2` trägt eine fortlaufende
+   Nummer `N.M` mit passender `id="kN-M"`; **Übersetzungen halten Struktur, IDs
+   und Nummern byte-identisch** — nur der sichtbare Text wird übersetzt.
+   Ziel: **jeder Anfänger kann das Projekt vollständig nachbauen.**
 
    Gehäuse-Beschriftung der Taster: **S1 = Down/Manual (T1), S2 = SET (T2),
    S3 = UP (T3)**. Gerätename/Default-Hostname **`feeder-relais`**.
@@ -85,12 +100,15 @@ Checkboxen/Entscheidungslog im Projektplan).
 | `firmware/net_config.h` | Persistente Netzwerk-Konfig (IP DHCP/statisch, NTP, Hostname, 802.11k/v, Sprache) |
 | `firmware/log_ring.h` | Log-/Debug-Ringpuffer + Web-OTA |
 | `firmware/build/*.bin` | Flash-Images (factory + ota) — bewusst getrackt |
-| `docs/DOKUMENTATION.md` | technische Referenz (deutsche **Quelle der Wahrheit**) |
-| `docs/handbuch/` | Handbuch (HTML-Quelle + PDF via WeasyPrint, `build.sh` + Prüfskripte) |
-| `docs/DOKUMENTATION.en.md`/`.fr.md` | Übersetzungen (je Release, DE führend) |
-| `docs/PROJEKTPLAN.md` | Phasen, Risiken, Entscheidungslog (nur Deutsch) |
-| `docs/*.pdf` | generierte PDFs (Pflichtabgabe, nie von Hand editieren) |
-| `tools/md2pdf.py` | Markdown → PDF für Doku/Projektplan |
+| `README.md` | **committet** — Projektüberblick (deutsch, Quelle der Wahrheit) + Sprachen-Links + Lizenz |
+| `docs/<sprache>/README.md` | **committet** — README-Übersetzungen EN/FR/NL/ES/IT |
+| `docs/handbuch/Feeder-Relais-Handbuch.pdf` | **committet** — deutsches Handbuch-PDF |
+| `docs/<sprache>/Feeder-Relais-*.pdf` | **committet** — Handbuch-PDFs EN/FR/NL/ES/IT |
+| `LICENSE` | **committet** — CC BY-NC-SA 4.0 |
+| `docs/handbuch/handbuch*.html`, `build.sh`, `direktziele.py`, `pruefe_*.py`, `umbrueche.py`, `img/` | **lokal** — Handbuch-Bauwerkzeug (nicht committet) |
+| `docs/DOKUMENTATION.md` (+ `.pdf`) | **lokal** — technische Referenz (deutsche Quelle der Wahrheit) |
+| `docs/PROJEKTPLAN.md` (+ `.pdf`) | **lokal** — Phasen, Risiken, Entscheidungslog (nur Deutsch) |
+| `tools/md2pdf.py` | **lokal** — Markdown → PDF für DOKUMENTATION/PROJEKTPLAN |
 
 ## Board↔Firmware programmatisch abgleichen (Kurzrezept)
 

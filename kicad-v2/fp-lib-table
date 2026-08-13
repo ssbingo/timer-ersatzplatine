@@ -1,5 +1,6 @@
 (fp_lib_table
 	(version 7)
-	(lib (name "Wago 250") (type "KiCad") (uri "${KICAD10_FOOTPRINT_DIR}/Wago 250.pretty") (options "") (descr ""))
-	(lib (name "G3VM_601AY2") (type "KiCad") (uri "${KICAD10_FOOTPRINT_DIR}/G3VM_601AY2.pretty") (options "") (descr ""))
+	(lib (name "Wago 250") (type "KiCad") (uri "${KIPRJMOD}/Wago 250.pretty") (options "") (descr "Wago-250-Klemmen (projektlokal)"))
+	(lib (name "G3VM_601AY2") (type "KiCad") (uri "${KIPRJMOD}/G3VM_601AY2.pretty") (options "") (descr "Omron PhotoMOS (projektlokal)"))
+	(lib (name "ESP32-C3-SuperMini") (type "KiCad") (uri "${KIPRJMOD}/ESP32-C3-SuperMini.pretty") (options "") (descr "ESP32-C3 Super Mini (projektlokal)"))
 )
