@@ -24,14 +24,18 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "2.2.0"
+#define FW_VERSION "2.2.1"
 
 namespace esphome {
+
+// Projekt-Logo (Schaltpuls): wird als /favicon.svg ausgeliefert und im Tab gezeigt.
+static const char LOGO_SVG[] PROGMEM = R"SVG(<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e7490"/><stop offset="1" stop-color="#0b3a4a"/></linearGradient></defs><rect x="20" y="20" width="472" height="472" rx="116" fill="url(#b)"/><circle cx="256" cy="256" r="150" fill="none" stroke="#67e8f9" stroke-width="40"/><path d="M300 150 L206 286 L252 286 L214 362 L318 224 L270 224 Z" fill="#fff"/></svg>)SVG";
 
 static const char TIMER_INDEX_HTML[] PROGMEM = R"HTMLPAGE(<!doctype html>
 <html lang=de><head><meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Feeder-Relais</title>
+<link rel=icon type="image/svg+xml" href="/favicon.svg">
 <style>
 :root{--bg:#0f1420;--card:#1a2232;--line:#232d42;--mut:#8595ad;--fg:#eef2f8;
 --acc:#3b82f6;--ok:#22c55e;--warn:#f59e0b}
@@ -86,12 +90,12 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
   <div class=card>
    <label data-i18n=lang_label>Sprache</label>
    <select id=langsel onchange="changeLang()">
-    <option value=de>🇩🇪 Deutsch</option>
-    <option value=en>🇬🇧 English</option>
-    <option value=fr>🇫🇷 Français</option>
-    <option value=nl>🇳🇱 Nederlands</option>
-    <option value=es>🇪🇸 Español</option>
-    <option value=it>🇮🇹 Italiano</option>
+    <option value=de>Deutsch</option>
+    <option value=en>English</option>
+    <option value=fr>Français</option>
+    <option value=nl>Nederlands</option>
+    <option value=es>Español</option>
+    <option value=it>Italiano</option>
    </select>
   </div>
   <div class=card>
@@ -390,7 +394,7 @@ class TimerWebHandler : public AsyncWebHandler {
   bool canHandle(AsyncWebServerRequest *req) const override {
     char urlbuf[AsyncWebServerRequest::URL_BUF_SIZE];
     const std::string u(req->url_to(urlbuf));
-    return u == "/" || u == "/help" || u.rfind("/api/", 0) == 0;
+    return u == "/" || u == "/help" || u == "/favicon.svg" || u.rfind("/api/", 0) == 0;
   }
   bool isRequestHandlerTrivial() const override { return false; }
 
@@ -508,6 +512,10 @@ class TimerWebHandler : public AsyncWebHandler {
       }
       static const char *const pages[] = {HELP_DE, HELP_EN, HELP_FR, HELP_NL, HELP_ES, HELP_IT};
       req->send(200, "text/html", pages[L]);
+      return;
+    }
+    if (u == "/favicon.svg") {
+      req->send(200, "image/svg+xml", LOGO_SVG);
       return;
     }
     if (u == "/api/trigger") {

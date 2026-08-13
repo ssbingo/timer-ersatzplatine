@@ -147,7 +147,7 @@
 
   .kv { display: inline-block; background: #eef2f7; border-radius: 5px; padding: 0 4px; font-family: "DejaVu Sans Mono", monospace; font-size: 0.9em; }
 </style>
-
+<link rel=icon type="image/svg+xml" href="logo.svg"><link rel=icon type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" href="favicon-180.png">
 <style>
 @media screen {
   .fusssteg { display: none !important; }
@@ -157,12 +157,14 @@
 }
 .langbar { position: sticky; top: 0; z-index: 100; background: #0e7490;
   padding: 7px 10px; text-align: center; font: 14px system-ui, sans-serif; }
-.langbar a { color: #cffafe; text-decoration: none; margin: 0 7px; }
+.langbar a { color: #cffafe; text-decoration: none; margin: 0 7px; white-space: nowrap; }
 .langbar a.on { color: #fff; font-weight: 700; text-decoration: underline; }
+.fl { height: .82em; width: auto; border-radius: 2px; vertical-align: -.1em;
+  margin-right: .34em; box-shadow: 0 0 0 .5px rgba(255,255,255,.35); display: inline-block; }
 </style>
 </head>
 <body>
-<div class=langbar><a href="index.html">🇩🇪 DE</a> <a href="en.html">🇬🇧 EN</a> <a href="fr.html">🇫🇷 FR</a> <a href="nl.html">🇳🇱 NL</a> <a class=on href="es.html">🇪🇸 ES</a> <a href="it.html">🇮🇹 IT</a></div>
+<div class=langbar><a href="index.html"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#000"/><rect y="0.667" width="3" height="0.667" fill="#D00"/><rect y="1.333" width="3" height="0.667" fill="#FFCE00"/></svg> DE</a> <a href="en.html"><svg class=fl viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0 60,30 M60,0 0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 60,30 M60,0 0,30" stroke="#C8102E" stroke-width="2"/><path d="M30,0 V30 M0,15 H60" stroke="#fff" stroke-width="10"/><path d="M30,0 V30 M0,15 H60" stroke="#C8102E" stroke-width="6"/></svg> EN</a> <a href="fr.html"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#0055A4"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg> FR</a> <a href="nl.html"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="3" height="0.667" fill="#AE1C28"/><rect y="1.333" width="3" height="0.667" fill="#21468B"/></svg> NL</a> <a class=on href="es.html"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/></svg> ES</a> <a href="it.html"><svg class=fl viewBox="0 0 3 2"><rect width="3" height="2" fill="#fff"/><rect width="1" height="2" fill="#009246"/><rect x="2" width="1" height="2" fill="#CE2B37"/></svg> IT</a></div>
 <div class="fusssteg">
   <span class="links">© 2026 S. Sternitzke · CC BY-NC-SA 4.0</span>
   <span class="mitte"><a href="#inhalt">↑ Contenido</a></span>
