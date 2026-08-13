@@ -11,14 +11,16 @@
 OUT_W      = 109.8;   // Aussenmass X (Breite)
 OUT_Y      = 90.8;    // Aussenmass Y (Hoehe des Korpus, ohne Lasche)
 CORNER_R   = 5.0;     // Eckradius aussen
-WALL       = 1.3;     // Wandstaerke (Dichtkante gegen Dichtung im Oberteil)
-FLOOR      = 1.3;     // Rueckwandstaerke
+WALL       = 1.3;     // Dichtkante oben (gegen Dichtung im Oberteil) - NICHT aendern
+WALL2      = 2.5;     // verstaerkte Aussenwand unterhalb der Dichtzone
+SEAL_H     = 1.0;     // Hoehe der Dichtzone unter der Randoberkante (bleibt WALL)
+FLOOR      = 2.5;     // Rueckwandstaerke (Boden)
 
 BOSS_OD    = 8.0;     // Dom-Aussendurchmesser
 BOSS_ID    = 3.2;     // Schraubloch (Durchgang, Schraube von hinten)
 BOSS_PROUD = 1.75;    // Ueberstand Domoberkante ueber Dichtebene (aus E=6.15)
-CS_D       = 6.0;     // Senkung fuer Schraubenkopf hinten (Durchmesser)
-CS_DEPTH   = 2.0;     // Senkungstiefe hinten
+CB_D       = 6.0;     // Senkung (Counterbore) fuer Schraubenkopf hinten - Durchmesser
+CB_DEPTH   = 34.5;    // Senkungstiefe: tiefer Zugangskanal, damit kurze Originalschrauben oben greifen
 
 COL_PITCH  = 45.0;    // Domraster X
 ROW_PITCH  = 70.0;    // Domraster Y
@@ -58,15 +60,15 @@ module bosses_solid(){
         translate([x,y,FLOOR-EPS])
             cylinder(d=BOSS_OD, h=BOSS_TOP-FLOOR+EPS);
 }
-REAR_COUNTERSINK = false;   // Boden geschlossen: nur reine Schraubenbohrung
+REAR_COUNTERBORE = true;    // ~6mm tiefe Senkung fuer Schraubenkoepfe (Rueckseite)
 
 module boss_holes(){
     for(x=col) for(y=row){
-        // Durchgangsloch komplett durch (reine Schraubenbohrung Ø BOSS_ID)
+        // Durchgangsloch komplett durch (Schraubenschaft Ø BOSS_ID)
         translate([x,y,-1]) cylinder(d=BOSS_ID, h=BOSS_TOP+2);
-        // optionale Senkung hinten (standardmaessig AUS)
-        if(REAR_COUNTERSINK)
-            translate([x,y,-EPS]) cylinder(d1=CS_D, d2=BOSS_ID, h=CS_DEPTH);
+        // zylindrische Senkung fuer den Schraubenkopf, von hinten in den Dom
+        if(REAR_COUNTERBORE)
+            translate([x,y,-EPS]) cylinder(d=CB_D, h=CB_DEPTH+EPS);
     }
 }
 
@@ -91,13 +93,19 @@ module keyhole(){
 module feeder_back(){
     difference(){
         union(){
-            // Aussen-Tray
+            // Aussen-Tray (Aussenkontur unveraendert; Verstaerkung nach innen)
             difference(){
                 rrect_prism(OUT_W, OUT_Y, CORNER_R, H_OUT, 0);
-                // Kavitaet (offen nach oben), um WALL nach innen versetzt
+                // untere, verstaerkte Zone: Aussenwand = WALL2
+                translate([WALL2, WALL2, 0])
+                    rrect_prism(OUT_W-2*WALL2, OUT_Y-2*WALL2,
+                                max(CORNER_R-WALL2,0.5),
+                                H_OUT-SEAL_H-FLOOR+EPS, FLOOR);
+                // obere Dichtzone (letzte SEAL_H unter dem Rand): Wand = WALL
                 translate([WALL, WALL, 0])
                     rrect_prism(OUT_W-2*WALL, OUT_Y-2*WALL,
-                                max(CORNER_R-WALL,0.5), H_OUT, FLOOR);
+                                max(CORNER_R-WALL,0.5),
+                                SEAL_H+1, H_OUT-SEAL_H);
             }
             bosses_solid();
             tab();
