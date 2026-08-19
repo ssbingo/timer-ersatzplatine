@@ -52,7 +52,7 @@ aislamiento galvánico**. Gracias a ello, la función principal es
 
 1. [Descripción general](#descripción-general)
 2. [La cadena de señal](#la-cadena-de-señal)
-3. [La placa (hardware v2)](#la-placa-hardware-v2)
+3. [La placa (hardware v3)](#la-placa-hardware-v3)
 4. [El firmware](#el-firmware)
 5. [Manejo](#manejo)
 6. [La carcasa (impresión 3D)](#la-carcasa-impresión-3d)
@@ -69,7 +69,7 @@ aislamiento galvánico**. Gracias a ello, la función principal es
 El dispositivo sustituye una placa temporizadora original detrás de un panel
 frontal existente. Consta de cuatro módulos claramente separables:
 
-- **Placa** (`kicad-v2/`) — ESP32-C3, fuente de alimentación, PhotoMOS y los
+- **Placa** (`kicad-v3/`) — ESP32-C3, fuente de alimentación, PhotoMOS y los
   bornes de 230 V, de cuatro capas, con toda la electrónica en la cara
   posterior.
 - **Firmware** (`firmware/`) — proyecto ESPHome con su propia aplicación web
@@ -106,9 +106,9 @@ tensión y la tensión de red mediante *luz*. El Shelly se configura en
 **Switch/Follow**: su relé permanece encendido exactamente el tiempo que
 nuestra señal esté activa; toda la temporización sigue en manos del ESP.
 
-## La placa (hardware v2)
+## La placa (hardware v3)
 
-La versión 2 actual está terminada como proyecto KiCad en `kicad-v2/`.
+La versión 2 actual está terminada como proyecto KiCad en `kicad-v3/`.
 
 - **Medida exterior** 101,6 × 77,5 mm, **cuatro capas** (1,6 mm).
 - **Toda la electrónica en la cara posterior** — en la parte delantera solo
@@ -230,7 +230,7 @@ por uno mismo:
   quepan la placa *y* el Shelly.
 - Seis columnas de tornillo (retícula 45 × 70 mm), lengüeta de suspensión
   con ojo de cerradura.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` es una **maqueta 1:1** de la placa —
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` es una **maqueta 1:1** de la placa —
   imprímela plana y colócala dentro para comprobar el ajuste **antes** de
   encargar la placa real.
 
@@ -280,7 +280,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Estructura del proyecto
 
 ```
-kicad-v2/     Placa v2 (KiCad: esquemático, layout, regla de 6 mm, footprints, modelos 3D)
+kicad-v3/     Placa v3 (KiCad: esquemático, layout, regla de 6 mm, footprints, modelos 3D)
 box/          Parte trasera de la carcasa (fuente OpenSCAD + STL) y maqueta de la placa
 firmware/     Firmware ESPHome (.yaml + .h), imágenes de flasheo listas en build/
 docs/         PDF del manual (alemán) y traducciones en docs/<idioma>/

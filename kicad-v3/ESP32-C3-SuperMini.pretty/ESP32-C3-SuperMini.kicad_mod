@@ -54,7 +54,7 @@
 		)
 	)
 	(sheetname "/")
-	(sheetfile "Timer-Ersatzplatine-v2.kicad_sch")
+	(sheetfile "Timer-Ersatzplatine-v3.kicad_sch")
 	(attr through_hole)
 	(duplicate_pad_numbers_are_jumpers no)
 	(fp_rect

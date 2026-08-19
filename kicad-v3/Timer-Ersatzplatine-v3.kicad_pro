@@ -488,7 +488,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "Timer-Ersatzplatine-v2.kicad_pro",
+    "filename": "Timer-Ersatzplatine-v3.kicad_pro",
     "version": 3
   },
   "net_settings": {
@@ -561,7 +561,7 @@
       "idf": "",
       "netlist": "",
       "plot": "",
-      "specctra_dsn": "Timer-Ersatzplatine-v2.dsn",
+      "specctra_dsn": "Timer-Ersatzplatine-v3.dsn",
       "step": "",
       "vrml": ""
     },
@@ -680,8 +680,8 @@
     "subpart_id_separator": 0,
     "top_level_sheets": [
       {
-        "filename": "Timer-Ersatzplatine-v2.kicad_sch",
-        "name": "Timer-Ersatzplatine-v2",
+        "filename": "Timer-Ersatzplatine-v3.kicad_sch",
+        "name": "Timer-Ersatzplatine-v3",
         "uuid": "6fdc0117-6431-4b50-96f7-364e63d39938"
       }
     ],
@@ -691,7 +691,7 @@
   "sheets": [
     [
       "6fdc0117-6431-4b50-96f7-364e63d39938",
-      "Timer-Ersatzplatine-v2"
+      "Timer-Ersatzplatine-v3"
     ]
   ],
   "text_variables": {},

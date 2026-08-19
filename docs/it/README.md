@@ -51,7 +51,7 @@ principale è **indipendente dal Wi-Fi**.
 
 1. [Panoramica](#panoramica)
 2. [La catena di segnale](#la-catena-di-segnale)
-3. [La scheda (hardware v2)](#la-scheda-hardware-v2)
+3. [La scheda (hardware v3)](#la-scheda-hardware-v3)
 4. [Il firmware](#il-firmware)
 5. [Utilizzo](#utilizzo)
 6. [L'involucro (stampa 3D)](#linvolucro-stampa-3d)
@@ -68,7 +68,7 @@ principale è **indipendente dal Wi-Fi**.
 Il dispositivo sostituisce una scheda timer originale dietro un pannello
 frontale esistente. È composto da quattro moduli ben separabili:
 
-- **Scheda** (`kicad-v2/`) — ESP32-C3, alimentatore, PhotoMOS e i morsetti a
+- **Scheda** (`kicad-v3/`) — ESP32-C3, alimentatore, PhotoMOS e i morsetti a
   230 V, quattro strati, tutta l'elettronica sul retro.
 - **Firmware** (`firmware/`) — progetto ESPHome con una propria app web
   mobile, interfaccia JSON, orologio NTP, display OLED, LED di stato e
@@ -104,10 +104,10 @@ tensione di rete tramite la *luce*. Lo Shelly viene impostato su
 **Switch/Follow** — il suo relè resta acceso esattamente per tutto il tempo
 in cui è presente il nostro segnale; l'intera temporizzazione resta all'ESP.
 
-## La scheda (hardware v2)
+## La scheda (hardware v3)
 
 L'attuale versione 2 è disponibile come progetto KiCad completo in
-`kicad-v2/`.
+`kicad-v3/`.
 
 - **Dimensioni esterne** 101,6 × 77,5 mm, **quattro strati** (1,6 mm).
 - **Tutta l'elettronica sul retro** — davanti restano solo i tre pulsanti e
@@ -228,7 +228,7 @@ posteriore** stampata in proprio:
   scheda *e* Shelly.
 - Sei colonnette filettate (passo 45 × 70 mm), linguetta di sospensione con
   foro a serratura.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` è una **sagoma in scala 1:1**
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` è una **sagoma in scala 1:1**
   della scheda — stamparla piatta e inserirla per verificare
   l'accoppiamento **prima** di ordinare la scheda vera.
 
@@ -278,7 +278,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Struttura del progetto
 
 ```
-kicad-v2/     Scheda v2 (KiCad: schema elettrico, layout, regola dei 6 mm, footprint, modelli 3D)
+kicad-v3/     Scheda v3 (KiCad: schema elettrico, layout, regola dei 6 mm, footprint, modelli 3D)
 box/          Parte posteriore dell'involucro (sorgente OpenSCAD + STL) e sagoma della scheda
 firmware/     Firmware ESPHome (.yaml + .h), immagini flash già pronte in build/
 docs/         PDF del manuale (tedesco) e traduzioni in docs/<lingua>/

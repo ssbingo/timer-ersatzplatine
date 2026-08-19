@@ -51,7 +51,7 @@ gescheiden** aan via een **PhotoMOS-relais**. Daardoor is de kernfunctie
 
 1. [Overzicht](#overzicht)
 2. [De signaalketen](#de-signaalketen)
-3. [De printplaat (hardware v2)](#de-printplaat-hardware-v2)
+3. [De printplaat (hardware v3)](#de-printplaat-hardware-v3)
 4. [De firmware](#de-firmware)
 5. [Bediening](#bediening)
 6. [De behuizing (3D-print)](#de-behuizing-3d-print)
@@ -68,7 +68,7 @@ gescheiden** aan via een **PhotoMOS-relais**. Daardoor is de kernfunctie
 Het apparaat vervangt een originele timerprintplaat achter een bestaande
 frontplaat. Het bestaat uit vier goed te scheiden bouwstenen:
 
-- **Printplaat** (`kicad-v2/`) — ESP32-C3, voeding, PhotoMOS en de
+- **Printplaat** (`kicad-v3/`) — ESP32-C3, voeding, PhotoMOS en de
   230-V-klemmen, vierlaags, alle elektronica op de achterzijde.
 - **Firmware** (`firmware/`) — ESPHome-project met eigen mobiele webapp,
   JSON-interface, NTP-klok, OLED-weergave, statusled en meertalige
@@ -102,9 +102,9 @@ volledig door *licht*. De Shelly wordt op **Switch/Follow** ingesteld — het
 relais ervan staat precies zo lang aan als ons signaal actief is; de
 volledige timing blijft bij de ESP.
 
-## De printplaat (hardware v2)
+## De printplaat (hardware v3)
 
-De huidige versie 2 is klaar als KiCad-project onder `kicad-v2/`.
+De huidige versie 2 is klaar als KiCad-project onder `kicad-v3/`.
 
 - **Buitenmaat** 101,6 × 77,5 mm, **vierlaags** (1,6 mm).
 - **Alle elektronica op de achterzijde** — aan de voorzijde blijven alleen de
@@ -216,7 +216,7 @@ kijkvenster en druktaster-stoterpennen) en een zelf geprint **achterstuk**:
 - **35 mm diep** (in plaats van de originele 5,7 mm), zodat printplaat *en*
   Shelly erin passen.
 - Zes schroefdomes (raster 45 × 70 mm), ophanglipje met sleutelgat.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` is een **1:1-attrappe** van de
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` is een **1:1-attrappe** van de
   printplaat — plat printen en erin leggen om de pasvorm te controleren,
   **voordat** de echte printplaat wordt besteld.
 
@@ -265,7 +265,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Projectstructuur
 
 ```
-kicad-v2/     Printplaat v2 (KiCad: schema, layout, 6-mm-regel, footprints, 3D-modellen)
+kicad-v3/     Printplaat v3 (KiCad: schema, layout, 6-mm-regel, footprints, 3D-modellen)
 box/          Behuizing-achterstuk (OpenSCAD-bron + STL) en printplaat-attrappe
 firmware/     ESPHome-firmware (.yaml + .h), kant-en-klare flashimages in build/
 docs/         Handleiding-PDF (Duits) en vertalingen onder docs/<taal>/

@@ -51,7 +51,7 @@ relay**. This makes the core function **independent of Wi-Fi**.
 
 1. [Overview](#overview)
 2. [The Signal Chain](#the-signal-chain)
-3. [The PCB (Hardware v2)](#the-pcb-hardware-v2)
+3. [The PCB (Hardware v3)](#the-pcb-hardware-v3)
 4. [The Firmware](#the-firmware)
 5. [Operation](#operation)
 6. [The Enclosure (3D Printing)](#the-enclosure-3d-printing)
@@ -68,7 +68,7 @@ relay**. This makes the core function **independent of Wi-Fi**.
 The device replaces an original timer board behind an existing front panel.
 It consists of four cleanly separable building blocks:
 
-- **PCB** (`kicad-v2/`) — ESP32-C3, power supply, PhotoMOS, and the 230 V
+- **PCB** (`kicad-v3/`) — ESP32-C3, power supply, PhotoMOS, and the 230 V
   terminal blocks; four layers, all electronics on the back.
 - **Firmware** (`firmware/`) — an ESPHome project with its own mobile web
   app, JSON interface, NTP clock, OLED display, status LED, and
@@ -103,9 +103,9 @@ voltage using *light*. The Shelly is set to **Switch/Follow** — its relay is
 on for exactly as long as our signal is present; all the timing stays with
 the ESP.
 
-## The PCB (Hardware v2)
+## The PCB (Hardware v3)
 
-The current version 2 is complete as a KiCad project under `kicad-v2/`.
+The current version 2 is complete as a KiCad project under `kicad-v3/`.
 
 - **Outer dimensions** 101,6 × 77,5 mm, **four layers** (1,6 mm).
 - **All electronics on the back** — only the three buttons and the OLED
@@ -220,7 +220,7 @@ piece**:
 - **35 mm deep** (instead of the original 5,7 mm), so that the board *and*
   the Shelly fit inside.
 - Six screw bosses (45 × 70 mm grid), a mounting tab with a keyhole slot.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` is a **1:1 mock-up** of the board
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` is a **1:1 mock-up** of the board
   — print it flat and insert it to check the fit **before** ordering the
   real board.
 
@@ -268,7 +268,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Project Structure
 
 ```
-kicad-v2/     PCB v2 (KiCad: schematic, layout, 6 mm rule, footprints, 3D models)
+kicad-v3/     PCB v3 (KiCad: schematic, layout, 6 mm rule, footprints, 3D models)
 box/          Enclosure back (OpenSCAD source + STL) and PCB mock-up
 firmware/     ESPHome firmware (.yaml + .h), ready-made flash images in build/
 docs/         Manual PDF (German) and translations under docs/<language>/
@@ -277,7 +277,7 @@ README.md     this document (German; translations under docs/<language>/)
 
 ## Status
 
-**Version 2 fully developed — ready for production.** Board routed in 4
+**Version 3 fully developed — ready for production.** Board routed in 4
 layers (DRC with no real errors), board ↔ firmware aligned (OLED SDA on
 GPIO7), enclosure and documentation complete. Remaining: regenerate the
 Gerber files, fit-check the mock-up, order in 4 layers, assembly, and
