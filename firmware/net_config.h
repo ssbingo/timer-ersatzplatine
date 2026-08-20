@@ -22,7 +22,7 @@
 namespace esphome {
 
 struct NetCfg {
-  uint8_t version;      // Layout-Version (aktuell 4)
+  uint8_t version;      // Layout-Version (aktuell 5)
   uint8_t use_static;   // 0 = DHCP, 1 = statisch
   char ip[16];
   char gw[16];
@@ -32,6 +32,7 @@ struct NetCfg {
   char host[32];        // Hostname (mDNS + DHCP)
   uint8_t roaming;      // 0 = aus (ESPHome-Scan-Roaming), 1 = 802.11k/v (BTM/RRM)
   char lang[4];         // UI-/OLED-Sprache: "de" | "en" | "fr"
+  uint8_t led_bri;      // Status-LED-Helligkeit 0..100 % (WebUI-Regler)
 };
 
 static NetCfg g_netcfg;
@@ -42,7 +43,7 @@ static bool g_prefs_save_pending = false;
 
 inline void netcfg_defaults(NetCfg &c) {
   memset(&c, 0, sizeof(c));
-  c.version = 3;
+  c.version = 5;
   c.use_static = 0;
   strncpy(c.ip,  "192.168.1.50",   sizeof(c.ip) - 1);
   strncpy(c.gw,  "192.168.1.1",    sizeof(c.gw) - 1);
@@ -52,11 +53,12 @@ inline void netcfg_defaults(NetCfg &c) {
   strncpy(c.host, "feeder-relais", sizeof(c.host) - 1);
   c.roaming = 0;  // Default: kein k/v -> ESPHome-Scan-Roaming wie bisher
   strncpy(c.lang, "de", sizeof(c.lang) - 1);  // Default-Sprache Deutsch
+  c.led_bri = 25;  // Status-LED-Default 25 %
 }
 
 inline void netcfg_load() {
   g_netcfg_pref = global_preferences->make_preference<NetCfg>((uint32_t) 0x4E657444);  // 'NetD'
-  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 4)
+  if (!g_netcfg_pref.load(&g_netcfg) || g_netcfg.version != 5)
     netcfg_defaults(g_netcfg);
 }
 

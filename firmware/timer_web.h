@@ -24,7 +24,7 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "3.0.1"
+#define FW_VERSION "3.0.2"
 
 namespace esphome {
 
@@ -87,17 +87,6 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
  </section>
 
  <section id=p_cfg class=hide>
-  <div class=card>
-   <label data-i18n=lang_label>Sprache</label>
-   <select id=langsel onchange="changeLang()">
-    <option value=de>Deutsch</option>
-    <option value=en>English</option>
-    <option value=fr>Français</option>
-    <option value=nl>Nederlands</option>
-    <option value=es>Español</option>
-    <option value=it>Italiano</option>
-   </select>
-  </div>
   <div class=card>
    <label data-i18n=cfg_t1>Zeit Taster 1 (Sekunden)</label><input id=c1 type=number min=1 max=600 inputmode=numeric>
    <label data-i18n=cfg_t2>Zeit Taster 2 (Sekunden)</label><input id=c2 type=number min=1 max=600 inputmode=numeric>
@@ -183,7 +172,19 @@ padding:10px 18px;border-radius:22px;opacity:0;pointer-events:none;transition:.3
   </div>
   <div class=card>
    <b data-i18n=device>Gerät</b>
-   <button class=stop style="background:#b45309;margin-top:4px" onclick="reboot()" data-i18n=reboot>Neustart</button>
+   <label data-i18n=lang_label>Sprache</label>
+   <select id=langsel onchange="changeLang()">
+    <option value=de>Deutsch</option>
+    <option value=en>English</option>
+    <option value=fr>Français</option>
+    <option value=nl>Nederlands</option>
+    <option value=es>Español</option>
+    <option value=it>Italiano</option>
+   </select>
+   <label style="margin-top:12px"><span data-i18n=led_label>Status-LED Helligkeit</span>: <span id=ledv>25</span>&nbsp;%</label>
+   <input id=led type=range min=0 max=100 step=5 style="width:100%"
+    oninput="$('ledv').textContent=this.value" onchange="saveLed()">
+   <button class=stop style="background:#b45309;margin-top:14px" onclick="reboot()" data-i18n=reboot>Neustart</button>
   </div>
  </section>
  <footer class=foot><a href="/help"><span data-i18n=manual>Handbuch</span></a></footer>
@@ -209,6 +210,7 @@ var T={
  cfg_t2:{de:'Zeit Taster 2 (Sekunden)',en:'Time button 2 (seconds)',fr:'Durée bouton 2 (secondes)',nl:'Tijd knop 2 (seconden)',es:'Tiempo botón 2 (segundos)',it:'Durata pulsante 2 (secondi)'},
  cfg_t3:{de:'Zeit Taster 3 (Sekunden)',en:'Time button 3 (seconds)',fr:'Durée bouton 3 (secondes)',nl:'Tijd knop 3 (seconden)',es:'Tiempo botón 3 (segundos)',it:'Durata pulsante 3 (secondi)'},
  save:{de:'Speichern',en:'Save',fr:'Enregistrer',nl:'Opslaan',es:'Guardar',it:'Salva'},
+ led_label:{de:'Status-LED Helligkeit',en:'Status LED brightness',fr:'Luminosité LED d’état',nl:'Status-LED helderheid',es:'Brillo LED de estado',it:'Luminosità LED di stato'},
  wifi_t:{de:'WLAN',en:'Wi-Fi',fr:'Wi-Fi',nl:'Wi-Fi',es:'Wi-Fi',it:'Wi-Fi'},
  cur:{de:'Aktuell verbunden',en:'Currently connected',fr:'Connecté actuellement',nl:'Nu verbonden',es:'Conectado actualmente',it:'Connesso attualmente'},
  wifi_switch:{de:'Auf anderes WLAN wechseln – Netzwerkname (SSID)',en:'Switch to another Wi-Fi – network name (SSID)',fr:'Changer de Wi-Fi – nom du réseau (SSID)',nl:'Wisselen naar ander Wi-Fi-netwerk – netwerknaam (SSID)',es:'Cambiar a otra Wi-Fi – nombre de red (SSID)',it:'Passa a un’altra rete Wi-Fi – nome rete (SSID)'},
@@ -346,6 +348,7 @@ function trig(n){api('/api/trigger?button='+n,'POST').then(refresh);}
 function stop(){api('/api/stop','POST').then(refresh);}
 function save(){var q='time1='+$('c1').value+'&time2='+$('c2').value+'&time3='+$('c3').value;
  api('/api/config?'+q,'POST').then(function(r){toast(r&&r.ok?tr('t_saved'):tr('t_error'));refresh();});}
+function saveLed(){api('/api/config?led='+$('led').value,'POST').then(function(r){toast(r&&r.ok?tr('t_saved'):tr('t_error'));});}
 function up(s){var d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);
  return (d?d+'d ':'')+('0'+h).slice(-2)+':'+('0'+m).slice(-2);}
 function rows(box,arr){$(box).innerHTML=arr.map(function(kv){
@@ -365,6 +368,7 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
  $('stSub').textContent=s.active?(tr('run')+' '+(s.last||'?')):tr('ready');
  $('t1s').textContent=s.times[0]+' s';$('t2s').textContent=s.times[1]+' s';$('t3s').textContent=s.times[2]+' s';
  if(document.activeElement.tagName!='INPUT'){$('c1').value=s.times[0];$('c2').value=s.times[1];$('c3').value=s.times[2];}
+ if($('led')&&s.led!=null&&document.activeElement!==$('led')){$('led').value=s.led;$('ledv').textContent=s.led;}
  var rn=$('n_roam');if(rn&&rn!==document.activeElement&&Date.now()>roamHold)rn.checked=!!s.roaming;
  rows('statbox',[[tr('st_ver'),s.ver||'&ndash;'],[tr('st_fw'),s.fw],[tr('st_uptime'),up(s.uptime)],[tr('st_heap'),(s.heap/1024).toFixed(1)+' kB'],
   [tr('st_wifi'),twifi(s.wifi)],[tr('st_ssid'),s.ssid||'&ndash;'],
@@ -467,7 +471,7 @@ class TimerWebHandler : public AsyncWebHandler {
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
       "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\",\"roaming\":%d,"
-      "\"ver\":\"%s\"}",
+      "\"led\":%d,\"ver\":\"%s\"}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
       fault ? "true" : "false",
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
@@ -485,6 +489,7 @@ class TimerWebHandler : public AsyncWebHandler {
       reset_reason(),
       g_netcfg.lang,
       g_netcfg.roaming,
+      g_netcfg.led_bri,
       FW_VERSION);
     req->send(200, "application/json", buf);
     delete[] buf;   // send() kopiert synchron -> danach freigeben
@@ -543,6 +548,12 @@ class TimerWebHandler : public AsyncWebHandler {
       apply_num(time1, qparam(req, "time1", -1));
       apply_num(time2, qparam(req, "time2", -1));
       apply_num(time3, qparam(req, "time3", -1));
+      if (req->hasParam("led")) {                 // Status-LED-Helligkeit 0..100 %
+        int v = qparam(req, "led", 25);
+        if (v < 0) v = 0; if (v > 100) v = 100;
+        g_netcfg.led_bri = (uint8_t) v;
+        netcfg_save();                            // markiert; Flush im 1s-Interval
+      }
       send_status(req);
       return;
     }
