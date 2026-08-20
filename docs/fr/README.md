@@ -54,7 +54,7 @@ ainsi **indépendante du Wi-Fi**.
 
 1. [Aperçu](#aperçu)
 2. [La chaîne de signal](#la-chaîne-de-signal)
-3. [La carte (matériel v2)](#la-carte-matériel-v2)
+3. [La carte (matériel v3)](#la-carte-matériel-v3)
 4. [Le firmware](#le-firmware)
 5. [Utilisation](#utilisation)
 6. [Le boîtier (impression 3D)](#le-boîtier-impression-3d)
@@ -71,7 +71,7 @@ ainsi **indépendante du Wi-Fi**.
 L'appareil remplace une carte de minuterie d'origine derrière une façade
 existante. Il se compose de quatre blocs bien séparables :
 
-- **Carte** (`kicad-v2/`) — ESP32-C3, alimentation, PhotoMOS et les bornes
+- **Carte** (`kicad-v3/`) — ESP32-C3, alimentation, PhotoMOS et les bornes
   230 V, quatre couches, électronique entièrement au dos.
 - **Firmware** (`firmware/`) — projet ESPHome avec sa propre application
   web mobile, interface JSON, horloge NTP, affichage OLED, LED d'état et
@@ -107,10 +107,10 @@ Shelly est réglé sur **Switch/Follow** — son relais reste activé exactement
 aussi longtemps que notre signal est présent ; tout le minutage reste du
 côté de l'ESP.
 
-## La carte (matériel v2)
+## La carte (matériel v3)
 
 La version 2 actuelle est disponible, terminée, sous forme de projet KiCad
-dans `kicad-v2/`.
+dans `kicad-v3/`.
 
 - **Dimensions extérieures** 101,6 × 77,5 mm, **quatre couches** (1,6 mm).
 - **Électronique entièrement au dos** — à l'avant ne restent que les trois
@@ -230,7 +230,7 @@ avec vitre et poussoirs) et d'une **partie arrière** imprimée soi-même :
   *et* le Shelly y trouvent leur place.
 - Six colonnettes de vissage (pas 45 × 70 mm), patte de suspension à trou
   en serrure.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` est une **maquette 1:1** de la
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` est une **maquette 1:1** de la
   carte — à imprimer à plat et à poser à l'intérieur pour vérifier
   l'ajustement **avant** de commander la vraie carte.
 
@@ -282,7 +282,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Structure du projet
 
 ```
-kicad-v2/     carte v2 (KiCad : schéma, routage, règle des 6 mm, empreintes, modèles 3D)
+kicad-v3/     carte v3 (KiCad : schéma, routage, règle des 6 mm, empreintes, modèles 3D)
 box/          partie arrière du boîtier (source OpenSCAD + STL) et maquette de la carte
 firmware/     firmware ESPHome (.yaml + .h), images de flashage prêtes dans build/
 docs/         PDF du manuel (allemand) et traductions sous docs/<langue>/
@@ -291,7 +291,7 @@ README.md     ce document (allemand ; traductions sous docs/<langue>/)
 
 ## Statut
 
-**Version 2 entièrement développée — avant la fabrication.** Carte routée
+**Version 3 entièrement développée — avant la fabrication.** Carte routée
 en 4 couches (DRC sans erreur réelle), carte et firmware alignés
 (OLED-SDA sur GPIO7), boîtier et documentation terminés. Restant à
 faire : régénérer les fichiers Gerber, essayage de la maquette, commande

@@ -32,9 +32,9 @@ fp-info-cache
 *.rules
 
 # KiCad Fertigungsausgaben (vor Bestellung frisch erzeugen; nicht tracken)
-kicad-v2/Timer-Ersatz-Gerber/
-kicad-v2/Timer-Ersatz-Gerber.zip
-kicad-v2/Timer-Ersatzplatine-v2-BOARD.stl
+kicad-v3/Timer-Ersatz-Gerber/
+kicad-v3/Timer-Ersatz-Gerber.zip
+kicad-v3/Timer-Ersatzplatine-v3-BOARD.stl
 
 # Editor Local History (VSCode-Erweiterung)
 .history/

@@ -2223,7 +2223,7 @@
 					)
 				)
 				(pin unspecified line
-					(at 27.94 -10.16 180)
+					(at 27.94 0 180)
 					(length 7.62)
 					(name "3"
 						(effects
@@ -2241,7 +2241,7 @@
 					)
 				)
 				(pin unspecified line
-					(at 27.94 0 180)
+					(at 27.94 -10.16 180)
 					(length 7.62)
 					(name "4"
 						(effects
@@ -3147,9 +3147,9 @@
 					)
 				)
 				(pin passive line
-					(at 10.16 2.54 180)
+					(at 10.16 -2.54 180)
 					(length 2.54)
-					(name "+5V"
+					(name "GND"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3165,9 +3165,9 @@
 					)
 				)
 				(pin passive line
-					(at 10.16 -2.54 180)
+					(at 10.16 2.54 180)
 					(length 2.54)
-					(name "GND"
+					(name "+5V"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3588,36 +3588,6 @@
 	)
 	(wire
 		(pts
-			(xy 143.764 149.352) (xy 146.304 149.352)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "05c19644-7479-4152-a413-3385267a34f2")
-	)
-	(wire
-		(pts
-			(xy 101.092 143.764) (xy 98.044 143.764)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "09fa51b8-bb65-4e12-95c9-0c8d89bb33f7")
-	)
-	(wire
-		(pts
-			(xy 76.708 146.05) (xy 79.756 146.05)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0ea58fae-c347-4d3d-bac6-a303ba98b2fc")
-	)
-	(wire
-		(pts
 			(xy 29.972 41.656) (xy 22.352 41.656)
 		)
 		(stroke
@@ -3625,26 +3595,6 @@
 			(type default)
 		)
 		(uuid "12a49255-fd75-4a19-8e56-947a4a7a51c0")
-	)
-	(wire
-		(pts
-			(xy 172.212 147.066) (xy 164.592 147.066)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "19b1d8d1-cb0c-4d86-8f45-be4de460462d")
-	)
-	(wire
-		(pts
-			(xy 143.51 146.812) (xy 146.304 146.812)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1b0fe66a-c203-41d5-85da-99884fc13517")
 	)
 	(wire
 		(pts
@@ -3718,16 +3668,6 @@
 	)
 	(wire
 		(pts
-			(xy 76.708 148.59) (xy 79.756 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "32d5a0df-dbec-4515-af62-10702b0c844c")
-	)
-	(wire
-		(pts
 			(xy 29.972 46.736) (xy 22.352 46.736)
 		)
 		(stroke
@@ -3758,16 +3698,6 @@
 	)
 	(wire
 		(pts
-			(xy 210.058 90.17) (xy 220.218 90.17)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "427e9873-68ee-4663-9673-b6c74cfd8408")
-	)
-	(wire
-		(pts
 			(xy 217.932 101.346) (xy 210.312 101.346)
 		)
 		(stroke
@@ -3785,16 +3715,6 @@
 			(type default)
 		)
 		(uuid "4bdf6087-7990-4172-b8c4-7f40d6092c19")
-	)
-	(wire
-		(pts
-			(xy 172.212 144.526) (xy 164.592 144.526)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "517e40c8-77d7-45ec-b24f-247e5950551f")
 	)
 	(wire
 		(pts
@@ -3835,16 +3755,6 @@
 			(type default)
 		)
 		(uuid "5ca4fce2-08e3-4065-b79e-4d20f02b4b95")
-	)
-	(wire
-		(pts
-			(xy 210.058 86.36) (xy 220.218 86.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6ef59dd8-5a4e-41fa-89e3-13f4d58bbe65")
 	)
 	(wire
 		(pts
@@ -3968,26 +3878,6 @@
 	)
 	(wire
 		(pts
-			(xy 210.058 82.55) (xy 220.218 82.55)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "949a3668-da2a-43e4-aae6-265c0dc55e51")
-	)
-	(wire
-		(pts
-			(xy 143.764 141.732) (xy 146.304 141.732)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9737ceee-7042-4d27-95b2-53e0ab24f973")
-	)
-	(wire
-		(pts
 			(xy 123.952 105.156) (xy 131.572 105.156)
 		)
 		(stroke
@@ -4005,26 +3895,6 @@
 			(type default)
 		)
 		(uuid "990bcf0a-fc32-42e6-a0e9-02dc7fa26ac4")
-	)
-	(wire
-		(pts
-			(xy 79.756 140.97) (xy 76.708 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9e20d41e-f69f-47ba-af98-a7d94d3d7295")
-	)
-	(wire
-		(pts
-			(xy 172.212 141.986) (xy 164.592 141.986)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a0dc1ba6-f841-48b6-a7d2-17013f7fd4d4")
 	)
 	(wire
 		(pts
@@ -4078,36 +3948,6 @@
 	)
 	(wire
 		(pts
-			(xy 98.044 148.844) (xy 101.092 148.844)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b4a27a02-5cad-4e48-b4c1-cc8e2734e562")
-	)
-	(wire
-		(pts
-			(xy 143.764 144.272) (xy 146.304 144.272)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bb10a8c7-6432-4960-b907-3a536458943c")
-	)
-	(wire
-		(pts
-			(xy 79.756 143.51) (xy 76.708 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "be3ef165-3f23-425f-983d-b03215ae3085")
-	)
-	(wire
-		(pts
 			(xy 119.888 149.098) (xy 122.682 149.098)
 		)
 		(stroke
@@ -4115,16 +3955,6 @@
 			(type default)
 		)
 		(uuid "c04c6d80-37e0-42d2-a479-b9ac84665678")
-	)
-	(wire
-		(pts
-			(xy 98.044 146.304) (xy 101.092 146.304)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c8bb4018-abf8-412a-9be1-a3d895d8267c")
 	)
 	(wire
 		(pts
@@ -4178,16 +4008,6 @@
 	)
 	(wire
 		(pts
-			(xy 210.058 78.74) (xy 220.218 78.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ee534f2b-17e7-42df-91eb-6fe57865617d")
-	)
-	(wire
-		(pts
 			(xy 123.952 115.316) (xy 131.572 115.316)
 		)
 		(stroke
@@ -4205,26 +4025,6 @@
 			(type default)
 		)
 		(uuid "f9950468-5d35-4348-b65a-43c8eb280b91")
-	)
-	(wire
-		(pts
-			(xy 172.212 149.606) (xy 164.592 149.606)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fa00b668-8151-4144-8cbb-2b786cf23639")
-	)
-	(wire
-		(pts
-			(xy 98.044 141.224) (xy 101.092 141.224)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fabddbe8-a8a3-40ce-8ce4-09a1dd9ea5e6")
 	)
 	(wire
 		(pts
@@ -4276,16 +4076,6 @@
 		)
 		(uuid "01404d52-f03d-4316-8f04-f51a87da5db2")
 	)
-	(label "+3V3"
-		(at 76.708 143.51 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "02548c80-e5f0-4318-b669-efffff716129")
-	)
 	(label "SCL"
 		(at 131.572 117.856 0)
 		(effects
@@ -4305,26 +4095,6 @@
 			(justify right bottom)
 		)
 		(uuid "0680783c-11b3-47b7-ac8e-2be129843a0d")
-	)
-	(label "N"
-		(at 210.058 78.74 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "0805fe59-0fd9-480f-96d7-feee60c601c1")
-	)
-	(label "+3V3"
-		(at 164.592 144.526 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "097dddc4-e0e2-41c8-9f03-8be216b13403")
 	)
 	(label "+5V"
 		(at 154.432 31.496 0)
@@ -4375,16 +4145,6 @@
 			(justify right bottom)
 		)
 		(uuid "26547b38-333f-48c1-abd9-409fa97d0211")
-	)
-	(label "SCL"
-		(at 98.044 146.304 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "27322b32-29f4-465f-a898-a62004ae190f")
 	)
 	(label "BTN1"
 		(at 131.572 100.076 0)
@@ -4646,26 +4406,6 @@
 		)
 		(uuid "a207f46d-6fb0-4242-9de0-792a0c79cdae")
 	)
-	(label "GND"
-		(at 76.708 140.97 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "a37995f2-7265-4d4c-b6d6-5abbc410f137")
-	)
-	(label "SDA"
-		(at 76.708 148.59 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "a4a5eacf-00d8-4eed-a1f8-53bca70bf18b")
-	)
 	(label "N"
 		(at 80.772 49.276 0)
 		(effects
@@ -4675,36 +4415,6 @@
 			(justify left bottom)
 		)
 		(uuid "a6c95a2b-8863-497e-9b6d-81bd1166a553")
-	)
-	(label "SW_SHELLY"
-		(at 210.058 90.17 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "af027619-3483-401e-99f9-8fd6dbac73a0")
-	)
-	(label "SCL"
-		(at 76.708 146.05 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "b0c5e462-5aeb-42a3-92f0-88cc10a5e28f")
-	)
-	(label "GND"
-		(at 98.044 141.224 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "b5618418-4a7c-4718-bca8-3d1e54564957")
 	)
 	(label "GND"
 		(at 126.492 46.736 0)
@@ -4776,16 +4486,6 @@
 		)
 		(uuid "df3681a0-468b-451e-8fb9-22a2025bcc0a")
 	)
-	(label "+3V3"
-		(at 98.044 143.764 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "dffc40e6-87c7-43c4-9aae-f969c4d607d2")
-	)
 	(label "BTN3"
 		(at 22.352 120.396 180)
 		(effects
@@ -4806,36 +4506,6 @@
 		)
 		(uuid "e49bf4df-dde7-4834-9f27-b8ab4a037ccd")
 	)
-	(label "SDA"
-		(at 164.592 149.606 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "e4b2e2c4-50a0-4c77-803c-45895d57ffc3")
-	)
-	(label "SCL"
-		(at 164.592 147.066 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "e855f57f-7488-42d4-b077-45863796c9a9")
-	)
-	(label "L_F"
-		(at 210.058 82.55 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "e8ca79ad-9903-4024-adc3-19c2e1c22e11")
-	)
 	(label "SCL"
 		(at 119.888 146.558 180)
 		(effects
@@ -4845,36 +4515,6 @@
 			(justify right bottom)
 		)
 		(uuid "f094b406-fa30-4437-bdfa-bfc1a809bd14")
-	)
-	(label "O_LAST"
-		(at 210.058 86.36 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f19eb393-e018-4ed2-b489-3c30483f7c95")
-	)
-	(label "SDA"
-		(at 98.044 148.844 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f28efd9b-f673-46cf-812f-0a8d7f933a7c")
-	)
-	(label "GND"
-		(at 164.592 141.986 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "f2efaba2-4696-4968-b03b-d1b566820264")
 	)
 	(label "GND"
 		(at 85.852 102.616 180)
@@ -4986,7 +4626,7 @@
 			(uuid "317d9d89-5ce4-4965-93fa-b21ec4d8b956")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW2")
 					(unit 1)
@@ -5064,7 +4704,7 @@
 			(uuid "64411036-2179-446b-8af3-d556a0f29177")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW1")
 					(unit 1)
@@ -5152,7 +4792,7 @@
 			(uuid "30678ccb-7dad-4318-b6a1-c4c967008728")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "K1")
 					(unit 1)
@@ -5230,7 +4870,7 @@
 			(uuid "7cbc9a64-1192-40ee-8d07-4e512016053a")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "#PWR01")
 					(unit 1)
@@ -5308,93 +4948,9 @@
 			(uuid "138b0fa1-9e70-458b-b4f4-2d5ff212d594")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "F1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "timer:Conn_01x04")
-		(at 153.924 145.542 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "49b32f3b-bcc4-4ec8-a3b8-63ac4a273a3b")
-		(property "Reference" "J3"
-			(at 153.924 131.542 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "OLED SSD1306 0,91 Zoll"
-			(at 153.924 156.972 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
-			(at 153.924 145.542 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 153.924 145.542 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 153.924 145.542 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "2e6eb2de-42a9-4ac5-893d-1fc546216aa6")
-		)
-		(pin "2"
-			(uuid "7aa93cdd-176d-43e8-91dc-11c8eefcb9a6")
-		)
-		(pin "3"
-			(uuid "4a47e889-366f-4061-8685-d0f6faa9ff88")
-		)
-		(pin "4"
-			(uuid "d48da34d-ef8e-4240-9a5a-c6e6dc03d6e8")
-		)
-		(instances
-			(project "Timer-Ersatzplatine-v2"
-				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
-					(reference "J3")
 					(unit 1)
 				)
 			)
@@ -5473,7 +5029,7 @@
 			(uuid "8dc262fd-017e-4773-acc1-0fa63427a6ba")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "C2")
 					(unit 1)
@@ -5557,7 +5113,7 @@
 			(uuid "acb3f4de-4c88-4c68-bc04-c25a8e94945d")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "PS1")
 					(unit 1)
@@ -5713,7 +5269,7 @@
 			(uuid "bfc79130-c7c5-41dc-9ccc-4824c54d9f18")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X3")
 					(unit 1)
@@ -5803,7 +5359,7 @@
 			(uuid "38bc7011-0c1a-4b33-8599-88cd84697559")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J1")
 					(unit 1)
@@ -5959,7 +5515,7 @@
 			(uuid "7d33d7b8-dc8b-4cd7-b3ce-48740964d78b")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X2")
 					(unit 1)
@@ -6058,7 +5614,7 @@
 			(uuid "edde5bb5-4e1e-4d20-8455-fe864ee101dd")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "U1")
 					(unit 1)
@@ -6136,93 +5692,9 @@
 			(uuid "8b2fe0a2-7535-4033-b46e-762e6009f40c")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "SW3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "timer:Conn_01x04")
-		(at 87.376 144.78 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "af318b7b-6fcd-4fc8-bd35-f8920b6fb126")
-		(property "Reference" "J6"
-			(at 87.376 130.78 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "OLED SSD1306 0,91 Zoll"
-			(at 87.376 153.416 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
-			(at 87.376 144.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 87.376 144.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 87.376 144.78 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f2bda5e9-8e90-4af4-8141-b13bfded3505")
-		)
-		(pin "2"
-			(uuid "c155f170-fd88-4e39-a80f-4f32c75d16ed")
-		)
-		(pin "3"
-			(uuid "9704692d-608b-45e0-8fa3-29fe15748776")
-		)
-		(pin "4"
-			(uuid "0a77dbf8-cdbb-4ff3-8e8a-05e307c2bdc7")
-		)
-		(instances
-			(project "Timer-Ersatzplatine-v2"
-				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
-					(reference "J6")
 					(unit 1)
 				)
 			)
@@ -6298,7 +5770,7 @@
 			(uuid "a42d42ed-ad44-479e-ad0e-14a8a82bf9b1")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "RV1")
 					(unit 1)
@@ -6382,93 +5854,9 @@
 			(uuid "fd3d33d5-e47e-4413-a23a-6cc44661918a")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "J4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "timer:Conn_01x04")
-		(at 179.832 145.796 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "d7e231bc-f98f-4aa1-aa4f-33024a146a2f")
-		(property "Reference" "J2"
-			(at 179.832 131.796 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "OLED SSD1306 0,91 Zoll"
-			(at 179.832 154.178 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
-			(at 179.832 145.796 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 179.832 145.796 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 179.832 145.796 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "72834bf8-e063-4423-a27e-a52ac71ae7b4")
-		)
-		(pin "2"
-			(uuid "3809ca39-a7f7-4dc9-be51-6f874e3cb595")
-		)
-		(pin "3"
-			(uuid "c4313b83-30fd-462b-beb3-4d92f985619e")
-		)
-		(pin "4"
-			(uuid "65beeefb-8e89-4d5d-83ef-37b86caa44b1")
-		)
-		(instances
-			(project "Timer-Ersatzplatine-v2"
-				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
-					(reference "J2")
 					(unit 1)
 				)
 			)
@@ -6547,7 +5935,7 @@
 			(uuid "0704f4d0-9961-4e25-8e10-a8d880a9b337")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "C1")
 					(unit 1)
@@ -6703,93 +6091,9 @@
 			(uuid "685f41e7-3019-4991-8104-5987669f6fa3")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "X1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "timer:Conn_01x04")
-		(at 108.712 145.034 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "f163eef4-2ba0-4012-8741-cf6c2277e5e9")
-		(property "Reference" "J5"
-			(at 108.712 131.034 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "OLED SSD1306 0,91 Zoll"
-			(at 108.712 156.21 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
-			(at 108.712 145.034 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 108.712 145.034 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 108.712 145.034 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "d0634dc2-2c58-44ad-b396-2a9808b88d95")
-		)
-		(pin "2"
-			(uuid "23a1420e-e2e6-4dee-8853-0d0ae6cea196")
-		)
-		(pin "3"
-			(uuid "6c322661-c98f-419b-a794-f50c40b03010")
-		)
-		(pin "4"
-			(uuid "30c9dae4-64bf-4995-b834-e443ed82273c")
-		)
-		(instances
-			(project "Timer-Ersatzplatine-v2"
-				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
-					(reference "J5")
 					(unit 1)
 				)
 			)
@@ -6865,7 +6169,7 @@
 			(uuid "bfe50920-a786-4855-8ca3-b1cd26040e27")
 		)
 		(instances
-			(project "Timer-Ersatzplatine-v2"
+			(project "Timer-Ersatzplatine-v3"
 				(path "/6fdc0117-6431-4b50-96f7-364e63d39938"
 					(reference "R1")
 					(unit 1)

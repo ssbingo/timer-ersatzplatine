@@ -50,7 +50,7 @@ ohne Cloud**. Das eigentliche Schalten und die Leistungsmessung übernimmt ein
 
 1. [Überblick](#überblick)
 2. [Die Signalkette](#die-signalkette)
-3. [Die Platine (Hardware v2)](#die-platine-hardware-v2)
+3. [Die Platine (Hardware v3)](#die-platine-hardware-v3)
 4. [Die Firmware](#die-firmware)
 5. [Bedienung](#bedienung)
 6. [Das Gehäuse (3D-Druck)](#das-gehäuse-3d-druck)
@@ -67,7 +67,7 @@ ohne Cloud**. Das eigentliche Schalten und die Leistungsmessung übernimmt ein
 Das Gerät ersetzt eine originale Timer-Platine hinter einer vorhandenen
 Frontplatte. Es besteht aus vier gut trennbaren Bausteinen:
 
-- **Platine** (`kicad-v2/`) — ESP32-C3, Netzteil, PhotoMOS und die 230-V-Klemmen,
+- **Platine** (`kicad-v3/`) — ESP32-C3, Netzteil, PhotoMOS und die 230-V-Klemmen,
   vierlagig, gesamte Elektronik auf der Rückseite.
 - **Firmware** (`firmware/`) — ESPHome-Projekt mit eigener Mobil-Web-App,
   JSON-Schnittstelle, NTP-Uhr, OLED-Anzeige, Status-LED und mehrsprachiger
@@ -99,9 +99,9 @@ Der **PhotoMOS** ist die Brücke: Er trennt Klein- und Netzspannung vollständig
 durch *Licht*. Der Shelly wird auf **Switch/Follow** gestellt — sein Relais ist
 genau so lange an, wie unser Signal anliegt; das gesamte Timing bleibt beim ESP.
 
-## Die Platine (Hardware v2)
+## Die Platine (Hardware v3)
 
-Die aktuelle Version 2 liegt fertig als KiCad-Projekt unter `kicad-v2/`.
+Die aktuelle Version 3 liegt fertig als KiCad-Projekt unter `kicad-v3/`.
 
 - **Außenmaß** 101,6 × 77,5 mm, **vierlagig** (1,6 mm).
 - **Gesamte Elektronik auf der Rückseite** — vorne bleiben nur die drei Taster
@@ -216,7 +216,7 @@ Sichtfenster und Tast-Stößeln) und einem selbst gedruckten **Rückteil**:
 - Wandaufbau: Dichtkante oben **1,3 mm**, verstärkte Außenwand darunter **2,5 mm**,
   Boden **2,5 mm**. Sechs Schraubdome (Raster 45 × 70 mm) mit tiefem Senkkanal für
   die kurzen Originalschrauben; Aufhängelasche mit Schlüsselloch.
-- `box/Timer-Ersatzplatine-v2-BOARD.stl` ist eine **1:1-Attrappe** der Platine —
+- `box/Timer-Ersatzplatine-v3-BOARD.stl` ist eine **1:1-Attrappe** der Platine —
   flach drucken und einlegen, um die Passung zu prüfen, **bevor** die echte
   Platine bestellt wird.
 
@@ -264,7 +264,7 @@ esphome run firmware/timer-relais-c3.yaml
 ## Projektstruktur
 
 ```
-kicad-v2/     Platine v2 (KiCad: Schaltplan, Layout, 6-mm-Regel, Footprints, 3D-Modelle)
+kicad-v3/     Platine v3 (KiCad: Schaltplan, Layout, 6-mm-Regel, Footprints, 3D-Modelle)
 box/          Gehäuse-Rückteil (OpenSCAD-Quelle + STL) und Platinen-Attrappe
 firmware/     ESPHome-Firmware (.yaml + .h), fertige Flash-Images in build/
 docs/         Handbuch-PDF (deutsch) und Übersetzungen unter docs/<sprache>/
@@ -273,7 +273,7 @@ README.md     dieses Dokument (deutsch; Übersetzungen unter docs/<sprache>/)
 
 ## Status
 
-**Version 2 fertig entwickelt — vor der Fertigung.** Platine 4-lagig geroutet
+**Version 3 fertig entwickelt — vor der Fertigung.** Platine 4-lagig geroutet
 (DRC ohne echte Fehler), Board ↔ Firmware abgeglichen (OLED-SDA auf GPIO7),
 Gehäuse und Dokumentation fertig. Offen: Gerber frisch erzeugen, Passprobe der
 Attrappe, 4-Lagen-Bestellung, Aufbau und Funktionstest.
