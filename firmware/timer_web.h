@@ -24,7 +24,7 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "3.0.3"
+#define FW_VERSION "3.1.0"
 
 namespace esphome {
 
@@ -265,6 +265,10 @@ var T={
  st_reset:{de:'Reset-Grund',en:'Reset reason',fr:'Cause du redémarrage',nl:'Resetoorzaak',es:'Motivo de reinicio',it:'Causa del riavvio'},
  st_relay:{de:'Relais',en:'Relay',fr:'Relais',nl:'Relais',es:'Relé',it:'Relè'},
  st_rem:{de:'Restzeit',en:'Remaining',fr:'Temps restant',nl:'Resterende tijd',es:'Tiempo restante',it:'Tempo rimanente'},
+ st_src:{de:'Auslöser',en:'Trigger',fr:'Déclencheur',nl:'Trigger',es:'Disparador',it:'Attivazione'},
+ trg_button:{de:'Taster',en:'Button',fr:'Bouton',nl:'Knop',es:'Botón',it:'Pulsante'},
+ trg_api:{de:'API',en:'API',fr:'API',nl:'API',es:'API',it:'API'},
+ trg_adapter:{de:'Adapter',en:'Adapter',fr:'Adaptateur',nl:'Adapter',es:'Adaptador',it:'Adattatore'},
  st_roam:{de:'WLAN-Roaming (802.11k/v)',en:'Wi-Fi roaming (802.11k/v)',fr:'Itinérance Wi-Fi (802.11k/v)',nl:'Wi-Fi-roaming (802.11k/v)',es:'Itinerancia Wi-Fi (802.11k/v)',it:'Roaming Wi-Fi (802.11k/v)'},
  chan_pfx:{de:'Kanal ',en:'Channel ',fr:'Canal ',nl:'Kanaal ',es:'Canal ',it:'Canale '},
  on:{de:'AN',en:'ON',fr:'MARCHE',nl:'AAN',es:'ON',it:'ON'},
@@ -303,6 +307,7 @@ var T={
 function tr(k){var e=T[k];return e?(e[LANG]||e.de):k;}
 function twifi(c){return tr('wifi_'+c);}
 function treset(c){return tr('rst_'+c);}
+function ttrg(c){return tr('trg_'+c);}
 function applyStatic(){document.documentElement.lang=LANG;
  var els=document.querySelectorAll('[data-i18n]');
  for(var i=0;i<els.length;i++)els[i].textContent=tr(els[i].getAttribute('data-i18n'));
@@ -376,7 +381,8 @@ function refresh(){return api('/api/status').then(function(s){if(!s)return;
   [tr('st_roam'),s.roaming?tr('ein'):tr('aus')],
   [tr('st_host'),s.host||'&ndash;'],
   [tr('st_ip'),s.ip||'&ndash;'],[tr('st_mac'),s.mac],[tr('st_ap'),s.ap],[tr('st_reset'),treset(s.reset)],
-  [tr('st_relay'),s.relay?tr('on'):tr('off')],[tr('st_rem'),s.remaining+' s']]);
+  [tr('st_relay'),s.relay?tr('on'):tr('off')],[tr('st_rem'),s.remaining+' s'],
+  [tr('st_src'),(s.trg&&s.trg!=='none')?ttrg(s.trg):'&ndash;']]);
 });}
 refresh();setInterval(refresh,1000);
 </script></body></html>)HTMLPAGE";
@@ -387,6 +393,7 @@ class TimerWebHandler : public AsyncWebHandler {
   switch_::Switch *relay{nullptr};
   int *remaining{nullptr};
   int last_button{0};
+  int *last_src{nullptr};   // Quelle des letzten Starts: -1 keiner, 0 Taster, 1 API, 2 Adapter
   // Diagnose-Entitaeten (in on_boot gesetzt) fuer die Status-/Netzwerk-Seite
   sensor::Sensor *rssi{nullptr};
   sensor::Sensor *uptime{nullptr};
@@ -461,6 +468,15 @@ class TimerWebHandler : public AsyncWebHandler {
     if (!connected || esp_wifi_get_channel(&chan, &sch) != ESP_OK) chan = 0;
     // Stoerung im Ruhezustand: OLED fehlerhaft oder kein WLAN.
     bool fault = (oled != nullptr && oled->is_failed()) || !connected;
+    // Quelle des letzten Timer-Starts (button/api/adapter; none = seit Boot keiner)
+    const char *trg = "none";
+    if (last_src != nullptr) {
+      switch (*last_src) {
+        case 0: trg = "button"; break;
+        case 1: trg = "api"; break;
+        case 2: trg = "adapter"; break;
+      }
+    }
     // JSON auf dem HEAP bauen, nicht auf dem knappen httpd-Task-Stack
     // (HTTPD_DEFAULT_CONFIG ~4 KB; hier laeuft zusaetzlich urlbuf[513]).
     const size_t cap = 960;
@@ -471,7 +487,7 @@ class TimerWebHandler : public AsyncWebHandler {
       "\"times\":[%d,%d,%d],\"host\":\"%s\",\"ip\":\"%s\",\"ssid\":\"%s\","
       "\"rssi\":%d,\"chan\":%d,\"mac\":\"%s\",\"ap\":\"%s\",\"fw\":\"%s\",\"uptime\":%lu,"
       "\"heap\":%u,\"wifi\":\"%s\",\"reset\":\"%s\",\"lang\":\"%s\",\"roaming\":%d,"
-      "\"led\":%d,\"ver\":\"%s\"}",
+      "\"led\":%d,\"ver\":\"%s\",\"trg\":\"%s\"}",
       (rem > 0) ? "true" : "false", rem, on ? "true" : "false", last_button,
       fault ? "true" : "false",
       time1 ? (int) time1->state : 0, time2 ? (int) time2->state : 0, time3 ? (int) time3->state : 0,
@@ -490,7 +506,8 @@ class TimerWebHandler : public AsyncWebHandler {
       g_netcfg.lang,
       g_netcfg.roaming,
       g_netcfg.led_bri,
-      FW_VERSION);
+      FW_VERSION,
+      trg);
     req->send(200, "application/json", buf);
     delete[] buf;   // send() kopiert synchron -> danach freigeben
   }
@@ -526,14 +543,24 @@ class TimerWebHandler : public AsyncWebHandler {
     if (u == "/api/trigger") {
       int b = qparam(req, "button", 0);
       int secs = qparam(req, "seconds", 0);
+      int src = 1;   // Quelle: 0 Taster, 1 API (seconds ohne src), 2 Adapter (?src=adapter)
       if (b >= 1 && b <= 3) {
         number::Number *n = (b == 1) ? time1 : (b == 2) ? time2 : time3;
         if (n != nullptr) secs = (int) n->state;
         last_button = b;
+        src = 0;                       // Web-Taster (button=N)
+      } else if (req->hasParam("src")) {
+        std::string sv = req->getParam("src")->value();  // gleiches Muster wie copy_param()
+        if (sv == "adapter") src = 2;  // ioBroker-Adapter (?src=adapter)
       }
       if (secs > 0) {  // entspricht dem Script start_timer: Restzeit setzen + Relais an
         if (remaining != nullptr) *remaining = secs;
         if (relay != nullptr) relay->turn_on();
+        if (last_src != nullptr) *last_src = src;
+        const char *sname = (src == 2) ? "Adapter" : (src == 0) ? "Taster" : "API";
+        char lg[64];
+        snprintf(lg, sizeof(lg), "Start via %s (%ds)", sname, secs);
+        log_ring_push(3, "timer", lg);   // 3 = INFO
       }
       send_status(req);
       return;

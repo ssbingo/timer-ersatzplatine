@@ -146,7 +146,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpunkt</th><th>Zweck</th></tr>
 <tr><td><code>GET /api/status</code></td><td>Status (Version, Relais, Restzeit, WLAN …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Timer auslösen</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>Timer auslösen (auch <code>?seconds=N</code>); optional <code>&amp;src=adapter</code> — Quelle erscheint im Status-Feld <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>alle Timer stoppen</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>Zeiten setzen</td></tr>
 </table></li>
@@ -321,7 +321,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpoint</th><th>Purpose</th></tr>
 <tr><td><code>GET /api/status</code></td><td>Status (version, relay, remaining time, WiFi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Trigger timer</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>Trigger timer (also <code>?seconds=N</code>); optional <code>&amp;src=adapter</code> — the source appears in the status field <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>Stop all timers</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>Set times</td></tr>
 </table></li>
@@ -496,7 +496,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Point d'accès</th><th>Objectif</th></tr>
 <tr><td><code>GET /api/status</code></td><td>statut (version, relais, temps restant, Wi-Fi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>déclencher un minuteur</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>déclencher un minuteur (aussi <code>?seconds=N</code>) ; optionnel <code>&amp;src=adapter</code> — la source apparaît dans le champ d'état <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>arrêter tous les minuteurs</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>régler les durées</td></tr>
 </table></li>
@@ -671,7 +671,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Eindpunt</th><th>Doel</th></tr>
 <tr><td><code>GET /api/status</code></td><td>status (versie, relais, resttijd, wifi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>timer starten</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>timer starten (ook <code>?seconds=N</code>); optioneel <code>&amp;src=adapter</code> — de bron verschijnt in het statusveld <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>alle timers stoppen</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>tijden instellen</td></tr>
 </table></li>
@@ -846,7 +846,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpoint</th><th>Función</th></tr>
 <tr><td><code>GET /api/status</code></td><td>Estado (versión, relé, tiempo restante, Wi-Fi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Activar temporizador</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>Activar temporizador (también <code>?seconds=N</code>); opcional <code>&amp;src=adapter</code> — el origen aparece en el campo de estado <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>detener todos los temporizadores</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>configurar tiempos</td></tr>
 </table></li>
@@ -1021,7 +1021,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpoint</th><th>Scopo</th></tr>
 <tr><td><code>GET /api/status</code></td><td>stato (versione, relè, tempo rimanente, Wi-Fi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>attivare un timer</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>attivare un timer (anche <code>?seconds=N</code>); opzionale <code>&amp;src=adapter</code> — l'origine appare nel campo di stato <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>fermare tutti i timer</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>impostare le durate</td></tr>
 </table></li>

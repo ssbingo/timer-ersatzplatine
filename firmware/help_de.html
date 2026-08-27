@@ -141,7 +141,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpunkt</th><th>Zweck</th></tr>
 <tr><td><code>GET /api/status</code></td><td>Status (Version, Relais, Restzeit, WLAN …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Timer auslösen</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>Timer auslösen (auch <code>?seconds=N</code>); optional <code>&amp;src=adapter</code> — Quelle erscheint im Status-Feld <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>alle Timer stoppen</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>Zeiten setzen</td></tr>
 </table></li>

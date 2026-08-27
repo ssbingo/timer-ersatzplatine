@@ -31,6 +31,7 @@ esphome:
           h->time3 = id(time3);
           h->relay = id(shelly_trigger);
           h->remaining = &id(remaining);
+          h->last_src = &id(last_src);
           h->rssi = id(wifi_rssi);
           h->uptime = id(uptime_s);
           h->ip = id(ip_addr);
@@ -157,6 +158,10 @@ globals:
     type: uint32_t
     restore_value: no
     initial_value: '0'
+  - id: last_src           # Quelle des letzten Timer-Starts: -1 keiner, 0 Taster, 1 API, 2 Adapter
+    type: int
+    restore_value: no
+    initial_value: '-1'
 
 switch:
   - platform: gpio
@@ -225,6 +230,7 @@ binary_sensor:
           if (id(ui_mode) == 0) {                 // Normal: Timer 1 ausloesen
             id(remaining) = (int) id(time1).state;
             id(shelly_trigger).turn_on();
+            id(last_src) = 0;                   // Taster
           } else {                                // Menue: vorblaettern
             id(menu_page) = (id(menu_page) + 1) % 4;
           }
@@ -254,6 +260,7 @@ binary_sensor:
           } else if (id(ui_mode) == 0) {          // kurz, Normal: Timer 2
             id(remaining) = (int) id(time2).state;
             id(shelly_trigger).turn_on();
+            id(last_src) = 0;                   // Taster
           } else {                                // kurz, im Menue: schliessen
             id(ui_mode) = 0;
             id(menu_page) = 0;
@@ -286,6 +293,7 @@ binary_sensor:
           } else {                                // Normal + kurz: Timer 3
             id(remaining) = (int) id(time3).state;
             id(shelly_trigger).turn_on();
+            id(last_src) = 0;                   // Taster
           }
       - script.execute: ui_timeout
       - component.update: oled

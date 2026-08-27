@@ -947,6 +947,7 @@ Die wichtigsten Endpunkte:</p>
 <tr><td><code>GET /api/status</code></td><td>alle Werte als JSON (aktiv, Restzeit, Relais, Zeiten, WLAN …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>Taster N (1–3) mit seiner Zeit auslösen</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>ad-hoc für N Sekunden schalten</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>wie oben, markiert die Quelle — erscheint als <code>trg</code> (button/api/adapter) im Status und im Log</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>sofort abschalten</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>Zeiten setzen (je 1–600 s)</td></tr>
 </table>

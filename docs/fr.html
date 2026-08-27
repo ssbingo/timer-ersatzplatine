@@ -1005,6 +1005,7 @@ points d'accès les plus importants :</p>
 <tr><td><code>GET /api/status</code></td><td>toutes les valeurs en JSON (actif, temps restant, relais, durées, Wi-Fi …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>déclencher le bouton N (1–3) avec sa durée</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>commuter ponctuellement pendant N secondes</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>comme ci-dessus, marque la source — apparaît comme <code>trg</code> (button/api/adapter) dans le statut et le journal</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>couper immédiatement</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>régler les durées (chacune 1–600 s)</td></tr>
 </table>

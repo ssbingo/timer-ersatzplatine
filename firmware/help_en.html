@@ -141,7 +141,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpoint</th><th>Purpose</th></tr>
 <tr><td><code>GET /api/status</code></td><td>Status (version, relay, remaining time, WiFi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>Trigger timer</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>Trigger timer (also <code>?seconds=N</code>); optional <code>&amp;src=adapter</code> — the source appears in the status field <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>Stop all timers</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>Set times</td></tr>
 </table></li>

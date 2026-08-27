@@ -141,7 +141,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Endpoint</th><th>Scopo</th></tr>
 <tr><td><code>GET /api/status</code></td><td>stato (versione, relè, tempo rimanente, Wi-Fi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>attivare un timer</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>attivare un timer (anche <code>?seconds=N</code>); opzionale <code>&amp;src=adapter</code> — l'origine appare nel campo di stato <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>fermare tutti i timer</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>impostare le durate</td></tr>
 </table></li>

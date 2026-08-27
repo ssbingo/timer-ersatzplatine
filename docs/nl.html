@@ -985,6 +985,7 @@ De belangrijkste endpoints:</p>
 <tr><td><code>GET /api/status</code></td><td>alle waarden als JSON (actief, resttijd, relais, tijden, wifi …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>knop N (1–3) met zijn tijd activeren</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>ad-hoc voor N seconden schakelen</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>als hierboven, markeert de bron — verschijnt als <code>trg</code> (button/api/adapter) in de status en het logboek</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>direct uitschakelen</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>tijden instellen (elk 1–600 s)</td></tr>
 </table>
