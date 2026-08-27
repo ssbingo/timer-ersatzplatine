@@ -1010,6 +1010,7 @@ endpoint principali:</p>
 <tr><td><code>GET /api/status</code></td><td>tutti i valori come JSON (attivo, tempo residuo, relè, tempi, Wi-Fi …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>avvia il pulsante N (1–3) con il suo tempo</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>commuta ad hoc per N secondi</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>come sopra, marca l'origine — appare come <code>trg</code> (button/api/adapter) nello stato e nel log</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>spegne immediatamente</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>imposta i tempi (ciascuno 1–600 s)</td></tr>
 </table>

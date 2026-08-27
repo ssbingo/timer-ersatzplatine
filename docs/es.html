@@ -1006,6 +1006,7 @@ puntos finales más importantes:</p>
 <tr><td><code>GET /api/status</code></td><td>todos los valores en JSON (activo, tiempo restante, relé, tiempos, WiFi …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>activa el pulsador N (1–3) con su tiempo</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>conmuta ad hoc durante N segundos</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>como arriba, marca el origen — aparece como <code>trg</code> (button/api/adapter) en el estado y el registro</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>apaga de inmediato</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>fija los tiempos (1–600 s cada uno)</td></tr>
 </table>

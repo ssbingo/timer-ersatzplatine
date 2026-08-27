@@ -230,7 +230,9 @@ gut in eine Hausautomatisierung einbinden:
   dort direkt sichtbar und steuerbar.
 - Die **eigene JSON-API** des Geräts (`/api/status | trigger | stop | config`)
   lässt sich per REST/Skript (z. B. `simple-api`, JavaScript-Adapter) auslesen
-  und bedienen — für Timer-Auslösung und Statusabfrage.
+  und bedienen — für Timer-Auslösung und Statusabfrage. Ein Timer-Start lässt sich
+  mit `&src=adapter` kennzeichnen; die Quelle des letzten Starts steht dann im
+  Status-Feld `trg` (`button`/`api`/`adapter`) und in einer Log-Zeile der Platine.
 
 Im selben „Smart-Pond/Feeder“-Umfeld gibt es zwei passende Adapter desselben
 Autors, die die **Software-Seite** bilden:

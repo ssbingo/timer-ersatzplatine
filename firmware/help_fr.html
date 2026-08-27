@@ -141,7 +141,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Point d'accès</th><th>Objectif</th></tr>
 <tr><td><code>GET /api/status</code></td><td>statut (version, relais, temps restant, Wi-Fi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>déclencher un minuteur</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>déclencher un minuteur (aussi <code>?seconds=N</code>) ; optionnel <code>&amp;src=adapter</code> — la source apparaît dans le champ d'état <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>arrêter tous les minuteurs</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>régler les durées</td></tr>
 </table></li>

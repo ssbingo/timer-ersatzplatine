@@ -141,7 +141,7 @@ kbd{background:#0d1424;border:1px solid #2b3855;border-radius:5px;padding:0 5px;
 <table>
 <tr><th>Eindpunt</th><th>Doel</th></tr>
 <tr><td><code>GET /api/status</code></td><td>status (versie, relais, resttijd, wifi …)</td></tr>
-<tr><td><code>POST /api/trigger?ch=1|2|3</code></td><td>timer starten</td></tr>
+<tr><td><code>POST /api/trigger?button=1|2|3</code></td><td>timer starten (ook <code>?seconds=N</code>); optioneel <code>&amp;src=adapter</code> — de bron verschijnt in het statusveld <code>trg</code> (button/api/adapter).</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>alle timers stoppen</td></tr>
 <tr><td><code>POST /api/config?...</code></td><td>tijden instellen</td></tr>
 </table></li>

@@ -958,6 +958,7 @@ most important endpoints:</p>
 <tr><td><code>GET /api/status</code></td><td>all values as JSON (active, time remaining, relay, times, Wi-Fi …)</td></tr>
 <tr><td><code>POST /api/trigger?button=N</code></td><td>trigger button N (1–3) with its time</td></tr>
 <tr><td><code>POST /api/trigger?seconds=N</code></td><td>switch on ad hoc for N seconds</td></tr>
+<tr><td><code>POST /api/trigger?seconds=N&amp;src=adapter</code></td><td>as above, tags the source — appears as <code>trg</code> (button/api/adapter) in the status and log</td></tr>
 <tr><td><code>POST /api/stop</code></td><td>switch off immediately</td></tr>
 <tr><td><code>POST /api/config?time1=A&amp;time2=B&amp;time3=C</code></td><td>set the times (each 1–600 s)</td></tr>
 </table>
