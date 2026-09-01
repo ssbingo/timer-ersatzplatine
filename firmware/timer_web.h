@@ -24,7 +24,7 @@
 
 // Geflashte Firmware-Version (im Status oben angezeigt). Bei jedem Release
 // mitziehen (siehe Release-Ablauf / github-repo-Memory).
-#define FW_VERSION "3.1.0"
+#define FW_VERSION "3.1.1"
 
 namespace esphome {
 
