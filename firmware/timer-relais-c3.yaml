@@ -69,6 +69,10 @@ wifi:
   #     (mit einkompiliertem WLAN haengt der Key am Config-Hash -> geht verloren).
   # Werksreset (keine alten Daten): Factory-Image MIT Flash-Erase flashen.
   power_save_mode: none
+  # Maximale Sendeleistung (2,4-GHz-EU-/HW-Grenze = 20 dBm/100 mW). Stellt sicher,
+  # dass der C3 nicht gedrosselt sendet. Der eigentliche Empfangsgewinn kommt aber
+  # aus Antenne/Platzierung (Keramikantenne freistellen, weg vom Netzteil/Metall).
+  output_power: 20dB
   # 802.11k/v (RRM/BTM) fest EINKOMPILIEREN (CONFIG_WPA_11KV_SUPPORT). Das ist
   # nur die Faehigkeit - das tatsaechliche Ein/Aus schaltet net_config.h zur
   # Laufzeit (set_btm/set_rrm), gesteuert per Web (Netzwerk-Tab, g_netcfg.roaming).
